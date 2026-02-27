@@ -5,27 +5,73 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   
-  --color-substrate-orange: #F27D26;
-  --color-hardware-bg: #0A0A0B;
-  --color-hardware-card: #151619;
-  --color-hardware-border: #26282E;
+  --color-substrate-accent: #7F55FF;
+  --color-substrate-uv-glow: #AF95FF;
+  --color-hardware-bg: #050506;
+  --color-hardware-card: #0F0F12;
+  --color-hardware-border: #1F1F23;
+  --color-cyber-pink: #FF00C1;
+  --color-cyber-cyan: #00FFF9;
 }
 
 @layer base {
   body {
-    @apply bg-hardware-bg text-slate-200 font-sans selection:bg-substrate-orange/30;
+    @apply bg-hardware-bg text-slate-200 font-sans selection:bg-substrate-accent/30 overflow-x-hidden;
   }
 }
 
+/* Noise Overlay */
+.noise-bg::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* CRT Flicker */
+@keyframes flicker {
+  0% { opacity: 0.97; }
+  5% { opacity: 0.95; }
+  10% { opacity: 0.9; }
+  15% { opacity: 0.95; }
+  20% { opacity: 0.98; }
+  25% { opacity: 0.95; }
+  30% { opacity: 0.9; }
+  35% { opacity: 0.95; }
+  40% { opacity: 0.98; }
+  45% { opacity: 0.95; }
+  50% { opacity: 0.9; }
+  55% { opacity: 0.95; }
+  60% { opacity: 0.98; }
+  65% { opacity: 0.95; }
+  70% { opacity: 0.9; }
+  75% { opacity: 0.95; }
+  80% { opacity: 0.98; }
+  85% { opacity: 0.95; }
+  90% { opacity: 0.9; }
+  95% { opacity: 0.95; }
+  100% { opacity: 0.98; }
+}
+
+.crt-flicker {
+  animation: flicker 0.15s infinite;
+}
+
 .grid-bg {
-  background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+  background-image: radial-gradient(circle at 1px 1px, rgba(127, 85, 255, 0.1) 1px, transparent 0);
   background-size: 40px 40px;
 }
 
 .scanline {
   width: 100%;
   height: 2px;
-  background: rgba(242, 125, 38, 0.1);
+  background: linear-gradient(to right, transparent, rgba(127, 85, 255, 0.3), transparent);
   opacity: 0.75;
   position: absolute;
   bottom: 100%;
@@ -35,4 +81,167 @@
 @keyframes scanline {
   0% { bottom: 100%; }
   100% { bottom: 0%; }
+}
+
+/* Glitch Effect */
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+}
+
+.glitch::before {
+  left: 2px;
+  text-shadow: -2px 0 var(--color-cyber-pink);
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+  left: -2px;
+  text-shadow: -2px 0 var(--color-cyber-cyan), 2px 2px var(--color-cyber-pink);
+  animation: glitch-anim2 1s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% { clip: rect(31px, 9999px, 94px, 0); }
+  20% { clip: rect(62px, 9999px, 42px, 0); }
+  40% { clip: rect(16px, 9999px, 78px, 0); }
+  60% { clip: rect(87px, 9999px, 11px, 0); }
+  80% { clip: rect(54px, 9999px, 63px, 0); }
+  100% { clip: rect(29px, 9999px, 85px, 0); }
+}
+
+@keyframes glitch-anim2 {
+  0% { clip: rect(12px, 9999px, 56px, 0); }
+  20% { clip: rect(89px, 9999px, 12px, 0); }
+  40% { clip: rect(45px, 9999px, 78px, 0); }
+  60% { clip: rect(23px, 9999px, 45px, 0); }
+  80% { clip: rect(67px, 9999px, 23px, 0); }
+  100% { clip: rect(11px, 9999px, 89px, 0); }
+}
+
+/* Refined Glitch Effect for Main Heading */
+.glitch-main {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-main::before,
+.glitch-main::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-hardware-bg);
+}
+
+.glitch-main::before {
+  left: 3px;
+  text-shadow: -3px 0 var(--color-cyber-pink);
+  clip: rect(24px, 550px, 90px, 0);
+  animation: glitch-anim-main 3s infinite linear alternate-reverse;
+}
+
+.glitch-main::after {
+  left: -3px;
+  text-shadow: -3px 0 var(--color-cyber-cyan);
+  clip: rect(85px, 550px, 140px, 0);
+  animation: glitch-anim-main-2 2s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim-main {
+  0% { clip: rect(10px, 9999px, 40px, 0); transform: skew(0.5deg); }
+  20% { clip: rect(50px, 9999px, 20px, 0); transform: skew(-0.5deg); }
+  40% { clip: rect(30px, 9999px, 80px, 0); transform: skew(0.8deg); }
+  60% { clip: rect(70px, 9999px, 10px, 0); transform: skew(-0.8deg); }
+  80% { clip: rect(20px, 9999px, 60px, 0); transform: skew(0.3deg); }
+  100% { clip: rect(90px, 9999px, 30px, 0); transform: skew(-0.3deg); }
+}
+
+@keyframes glitch-anim-main-2 {
+  0% { clip: rect(80px, 9999px, 100px, 0); transform: skew(-0.5deg); }
+  20% { clip: rect(20px, 9999px, 50px, 0); transform: skew(0.5deg); }
+  40% { clip: rect(60px, 9999px, 10px, 0); transform: skew(-0.8deg); }
+  60% { clip: rect(10px, 9999px, 90px, 0); transform: skew(0.8deg); }
+  80% { clip: rect(40px, 9999px, 30px, 0); transform: skew(-0.3deg); }
+  100% { clip: rect(70px, 9999px, 80px, 0); transform: skew(0.3deg); }
+}
+
+.cyber-icon-box {
+  @apply relative flex items-center justify-center w-16 h-16 bg-hardware-bg border border-substrate-accent/30 rounded-lg overflow-hidden;
+  box-shadow: inset 0 0 10px rgba(127, 85, 255, 0.2);
+}
+
+.cyber-icon-box::before {
+  content: "";
+  @apply absolute inset-0 opacity-20;
+  background-image: linear-gradient(45deg, var(--color-substrate-accent) 25%, transparent 25%, transparent 50%, var(--color-substrate-accent) 50%, var(--color-substrate-accent) 75%, transparent 75%, transparent);
+  background-size: 4px 4px;
+}
+
+.cyber-border-accent {
+  @apply absolute top-0 left-0 w-full h-full pointer-events-none;
+  border: 1px solid transparent;
+  background: linear-gradient(90deg, var(--color-substrate-accent) 2px, transparent 2px) 0 0,
+              linear-gradient(90deg, var(--color-substrate-accent) 2px, transparent 2px) 100% 100%,
+              linear-gradient(0deg, var(--color-substrate-accent) 2px, transparent 2px) 0 0,
+              linear-gradient(0deg, var(--color-substrate-accent) 2px, transparent 2px) 100% 100%;
+  background-repeat: no-repeat;
+  background-size: 10px 10px;
+}
+
+.cyber-badge {
+  @apply relative px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest;
+  background: rgba(127, 85, 255, 0.9);
+  color: white;
+  clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0% 30%);
+  box-shadow: 0 0 15px rgba(127, 85, 255, 0.5);
+}
+
+.cyber-badge-planned {
+  background: rgba(255, 0, 193, 0.9);
+  box-shadow: 0 0 15px rgba(255, 0, 193, 0.5);
+}
+
+.cyber-card {
+  @apply relative overflow-hidden transition-all duration-300;
+  border: 1px solid var(--color-hardware-border);
+}
+
+.cyber-card:hover {
+  border-color: var(--color-substrate-accent);
+  box-shadow: 0 0 20px rgba(127, 85, 255, 0.15);
+}
+
+.cyber-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background: var(--color-substrate-accent);
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+  opacity: 0.3;
+}
+
+.cyber-image {
+  filter: contrast(1.2) brightness(0.8) sepia(0.3) hue-rotate(240deg);
+  transition: all 0.5s ease;
+}
+
+.cyber-card:hover .cyber-image {
+  filter: contrast(1.1) brightness(1) sepia(0);
 }
