@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Github, 
   Cpu, 
@@ -13,7 +13,11 @@ import {
   ChevronRight,
   Monitor,
   Info,
-  X
+  X,
+  ArrowUp,
+  CheckCircle2,
+  Send,
+  MessageSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -53,7 +57,8 @@ const ProjectCard = ({
   tags, 
   status,
   icon: Icon = Layers,
-  repoUrl
+  repoUrl,
+  siteUrl
 }: { 
   title: string; 
   description: string; 
@@ -62,6 +67,7 @@ const ProjectCard = ({
   status?: string;
   icon?: any;
   repoUrl?: string;
+  siteUrl?: string;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -78,11 +84,18 @@ const ProjectCard = ({
         <div className="cyber-icon-box">
           <Icon size={32} className="text-substrate-accent relative z-10" />
         </div>
-        {status && (
-          <div className={`cyber-badge ${status === 'PLANNED' ? 'cyber-badge-planned' : ''}`}>
-            {status}
-          </div>
-        )}
+        <div className="flex flex-col items-end gap-2">
+          {status && (
+            <div className={`cyber-badge ${status === 'PLANNED' ? 'cyber-badge-planned' : ''}`}>
+              {status}
+            </div>
+          )}
+          {siteUrl && (
+            <div className="text-[8px] font-mono text-substrate-accent animate-pulse">
+              LIVE_DEPLOYMENT_ACTIVE
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="flex-grow flex flex-col">
@@ -101,14 +114,27 @@ const ProjectCard = ({
           </div>
           
           <div className="flex items-center justify-between border-t border-hardware-border pt-4">
-            <button 
-              onClick={() => setIsExpanded(true)}
-              className="flex items-center gap-2 text-xs font-mono text-substrate-accent hover:text-white transition-colors group/btn"
-            >
-              <Info size={14} />
-              VIEW DETAILS
-              <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
-            </button>
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => setIsExpanded(true)}
+                className="flex items-center gap-2 text-xs font-mono text-substrate-accent hover:text-white transition-colors group/btn"
+              >
+                <Info size={14} />
+                DETAILS
+              </button>
+
+              {siteUrl && (
+                <a 
+                  href={siteUrl.startsWith('http') ? siteUrl : `https://${siteUrl}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-xs font-mono text-substrate-accent hover:text-white transition-colors"
+                >
+                  <ExternalLink size={14} />
+                  LIVE
+                </a>
+              )}
+            </div>
 
             {repoUrl && (
               <a 
@@ -161,15 +187,37 @@ const ProjectCard = ({
                 </div>
                 
                 <div className="prose prose-invert max-w-none text-slate-400 leading-relaxed max-h-[60vh] overflow-y-auto pr-4 custom-scrollbar">
-                  <p className="mb-4 text-slate-200">{description}</p>
-                  <div className="h-px w-full bg-hardware-border my-6" />
-                  <div className="space-y-4">
-                    <h5 className="text-substrate-accent font-mono text-xs uppercase tracking-widest">Technical Breakdown</h5>
-                    <p className="whitespace-pre-line text-sm">{details}</p>
+                  <div className="bg-black/40 p-4 rounded-lg border border-hardware-border mb-6 font-mono text-xs">
+                    <div className="flex items-center gap-2 text-substrate-accent mb-2">
+                      <Terminal size={12} />
+                      <span>SYSTEM_LOG // {title.toUpperCase().replace(/\s+/g, '_')}</span>
+                    </div>
+                    <p className="text-slate-300 leading-relaxed">{description}</p>
+                  </div>
+                  
+                  <div className="space-y-6">
+                    <div>
+                      <h5 className="text-substrate-accent font-mono text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <Code2 size={14} />
+                        Technical Breakdown
+                      </h5>
+                      <p className="whitespace-pre-line text-sm text-slate-300 bg-slate-900/30 p-4 rounded-lg border border-hardware-border/50">{details}</p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="mt-8 flex justify-end gap-4">
+                <div className="mt-8 flex flex-wrap justify-end gap-4">
+                  {siteUrl && (
+                    <a 
+                      href={siteUrl.startsWith('http') ? siteUrl : `https://${siteUrl}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-3 bg-substrate-accent text-white font-bold rounded-lg hover:bg-blue-700 transition-all flex items-center gap-2 shadow-lg shadow-substrate-accent/20"
+                    >
+                      <ExternalLink size={18} />
+                      VISIT SITE
+                    </a>
+                  )}
                   {repoUrl && (
                     <a 
                       href={repoUrl}
@@ -178,14 +226,14 @@ const ProjectCard = ({
                       className="px-6 py-3 bg-hardware-card border border-hardware-border text-white font-bold rounded-lg hover:border-substrate-accent/50 transition-all flex items-center gap-2"
                     >
                       <Github size={18} />
-                      VIEW REPOSITORY
+                      REPOSITORY
                     </a>
                   )}
                   <button 
                     onClick={() => setIsExpanded(false)}
-                    className="px-8 py-3 bg-substrate-accent text-white font-bold rounded-lg hover:bg-blue-700 transition-all shadow-lg shadow-substrate-accent/20"
+                    className="px-8 py-3 bg-slate-800 text-white font-bold rounded-lg hover:bg-slate-700 transition-all"
                   >
-                    CLOSE INTERFACE
+                    CLOSE
                   </button>
                 </div>
               </div>
@@ -198,12 +246,78 @@ const ProjectCard = ({
 };
 
 export default function App() {
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [isTransmitting, setIsTransmitting] = useState(false);
+  const [isSent, setIsSent] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const copyEmail = () => {
+    navigator.clipboard.writeText('Vatteck@gmail.com');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email || !formData.message) return;
+
+    setIsTransmitting(true);
+    
+    // Construct mailto link
+    const subject = `[CONTACT] ${formData.subject || 'New Message'}`;
+    const body = `Identity: ${formData.name}\nReturn Address: ${formData.email}\n\nPayload:\n${formData.message}`;
+    const mailtoUrl = `mailto:vatteck@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    // Aesthetic delay for "transmission"
+    setTimeout(() => {
+      window.location.href = mailtoUrl;
+      setIsTransmitting(false);
+      setIsSent(true);
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setTimeout(() => setIsSent(false), 5000);
+    }, 1500);
+  };
+
   return (
     <div className="min-h-screen selection:bg-substrate-accent/30 noise-bg crt-flicker">
       {/* Scanline Effect */}
       <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
         <div className="scanline" />
       </div>
+
+      {/* Scroll to Top */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="fixed bottom-8 right-8 z-[60] p-3 bg-substrate-accent text-white rounded-full shadow-lg shadow-substrate-accent/40 hover:bg-blue-700 transition-all"
+          >
+            <ArrowUp size={20} />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Hero Section */}
       <header className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
@@ -298,21 +412,28 @@ export default function App() {
         <section id="about" className="grid md:grid-cols-2 gap-16 items-center">
           <div className="space-y-6">
             <SectionHeader title="Bio" subtitle="Hardware Soul, Software Mind" glitch />
-            <div className="space-y-4 text-slate-400 leading-relaxed text-lg">
-              <p>
-                I operate at the intersection of physical hardware and low-level software. As a professional 
-                <span className="text-white font-medium"> Hardware Device Technician</span>, I've spent years 
-                diagnosing, repairing, and optimizing complex circuitry.
-              </p>
-              <p>
-                My digital home is built on <span className="text-substrate-accent font-mono">Arch Linux</span> (specifically CachyOS), 
-                where I indulge my obsession with performance and customization. From kernel-tweaking Android devices 
-                to rooting and modding everything I own, I believe technology is meant to be mastered, not just used.
-              </p>
-              <p>
-                When I'm not in the terminal or under the microscope, I'm deeply immersed in gaming and game modding, 
-                translating that passion into interactive experiences through game development.
-              </p>
+            <div className="bg-hardware-card border border-hardware-border p-6 rounded-2xl relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-full h-1 bg-substrate-accent/30" />
+              <div className="flex items-center gap-2 mb-4 text-substrate-accent font-mono text-xs">
+                <Terminal size={14} />
+                <span>USER_BIO_DECRYPTED // ACCESS_GRANTED</span>
+              </div>
+              <div className="space-y-4 text-slate-400 leading-relaxed">
+                <p>
+                  I operate at the intersection of physical hardware and low-level software. As a professional 
+                  <span className="text-white font-medium"> Hardware Device Technician</span>, I've spent years 
+                  diagnosing, repairing, and optimizing complex circuitry.
+                </p>
+                <p>
+                  My digital home is built on <span className="text-substrate-accent font-mono">Arch Linux</span> (specifically CachyOS), 
+                  where I indulge my obsession with performance and customization. From kernel-tweaking Android devices 
+                  to rooting and modding everything I own, I believe technology is meant to be mastered, not just used.
+                </p>
+                <p>
+                  When I'm not in the terminal or under the microscope, I'm deeply immersed in gaming and game modding, 
+                  translating that passion into interactive experiences through game development.
+                </p>
+              </div>
             </div>
           </div>
           
@@ -403,6 +524,7 @@ export default function App() {
               title="SUBSTRATE: Miner"
               icon={Cpu}
               repoUrl="https://github.com/Vatteck/SiliconSageAIMiner"
+              siteUrl="vatteck.com/SubstrateMiner"
               description="An upcoming Android idle-clicker tycoon game where players build and optimize a massive mining operation."
               details={`SUBSTRATE: Miner is a deep dive into the world of industrial mining automation. 
 
@@ -477,35 +599,174 @@ export default function App() {
           </div>
         </section>
 
+        {/* Contact Section */}
+        <section id="contact" className="pb-24">
+          <SectionHeader title="Contact" subtitle="Establish Connection" glitch />
+          <div className="grid lg:grid-cols-2 gap-12">
+            <div className="space-y-8">
+              <div className="bg-hardware-card border border-hardware-border p-8 rounded-2xl relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-substrate-accent/30" />
+                <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
+                  <MessageSquare className="text-substrate-accent" />
+                  Direct Uplink
+                </h3>
+                <p className="text-slate-400 leading-relaxed mb-6">
+                  Have a project in mind or want to discuss hardware optimization? Drop a message through the secure channel. I'm always open to technical collaborations and architectural challenges.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4 text-sm font-mono text-slate-300">
+                    <div className="w-10 h-10 bg-substrate-accent/10 rounded-lg flex items-center justify-center text-substrate-accent border border-substrate-accent/20">
+                      <Mail size={18} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-500 uppercase tracking-widest">Primary Email</p>
+                      <p>Vatteck@gmail.com</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 text-sm font-mono text-slate-300">
+                    <div className="w-10 h-10 bg-substrate-accent/10 rounded-lg flex items-center justify-center text-substrate-accent border border-substrate-accent/20">
+                      <Github size={18} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-500 uppercase tracking-widest">GitHub Handle</p>
+                      <p>@Vatteck</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 bg-substrate-accent/5 border border-substrate-accent/20 rounded-xl font-mono text-[10px] text-substrate-accent/60 space-y-2">
+                <p>// ENCRYPTION: AES-256-GCM</p>
+                <p>// STATUS: SECURE_CHANNEL_READY</p>
+                <p>// ORIGIN: {typeof window !== 'undefined' ? window.location.hostname : 'LOCAL_HOST'}</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4 bg-hardware-card border border-hardware-border p-8 rounded-2xl relative">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Identity</label>
+                  <input 
+                    type="text" 
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="NAME / ALIAS"
+                    className="w-full bg-black/40 border border-hardware-border rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-600 focus:border-substrate-accent/50 focus:outline-none transition-all"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Return Address</label>
+                  <input 
+                    type="email" 
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="EMAIL@DOMAIN.COM"
+                    className="w-full bg-black/40 border border-hardware-border rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-600 focus:border-substrate-accent/50 focus:outline-none transition-all"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Subject</label>
+                <input 
+                  type="text" 
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleInputChange}
+                  placeholder="ENQUIRY_TYPE"
+                  className="w-full bg-black/40 border border-hardware-border rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-600 focus:border-substrate-accent/50 focus:outline-none transition-all"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Payload</label>
+                <textarea 
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  required
+                  rows={5}
+                  placeholder="ENTER_MESSAGE_DATA..."
+                  className="w-full bg-black/40 border border-hardware-border rounded-lg px-4 py-4 text-sm text-white placeholder:text-slate-600 focus:border-substrate-accent/50 focus:outline-none transition-all resize-none"
+                ></textarea>
+              </div>
+              <motion.button
+                type="submit"
+                disabled={isTransmitting}
+                whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(127, 85, 255, 0.3)' }}
+                whileTap={{ scale: 0.98 }}
+                className={`w-full py-4 font-bold rounded-lg flex items-center justify-center gap-3 transition-all ${
+                  isSent 
+                    ? 'bg-green-600 text-white' 
+                    : 'bg-substrate-accent text-white hover:bg-blue-700 shadow-lg shadow-substrate-accent/20'
+                } ${isTransmitting ? 'opacity-70 cursor-wait' : ''}`}
+              >
+                {isTransmitting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    TRANSMITTING...
+                  </>
+                ) : isSent ? (
+                  <>
+                    <CheckCircle2 size={18} />
+                    TRANSMISSION SUCCESSFUL
+                  </>
+                ) : (
+                  <>
+                    <Send size={18} />
+                    TRANSMIT MESSAGE
+                  </>
+                )}
+              </motion.button>
+              {isSent && (
+                <p className="text-[10px] font-mono text-green-500 text-center mt-2 animate-pulse">
+                  // MAIL_CLIENT_TRIGGERED // PLEASE_COMPLETE_SEND
+                </p>
+              )}
+            </form>
+          </div>
+        </section>
+
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-hardware-border bg-hardware-card/50 py-12 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+      <footer className="border-t border-hardware-border bg-hardware-card/50 py-12 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 grid-bg opacity-10" />
+        <div className="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex flex-col items-center md:items-start gap-2">
             <div className="text-xl font-bold tracking-tighter glitch" data-text="VATTECK">
               VATTECK<span className="text-substrate-accent">.</span>
             </div>
-            <p className="text-xs font-mono text-slate-500 uppercase tracking-widest">
-              &copy; {new Date().getFullYear()} // All Rights Reserved
+            <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+              &copy; {new Date().getFullYear()} // All Rights Reserved // AUTH_SIG_VALID
             </p>
           </div>
           
           <div className="flex items-center gap-6">
-            <a href="mailto:Vatteck@gmail.com" className="text-slate-400 hover:text-substrate-accent transition-colors">
-              <Mail size={20} />
-            </a>
+            <button 
+              onClick={copyEmail}
+              className="text-slate-400 hover:text-substrate-accent transition-all relative group"
+              title="Copy Email"
+            >
+              {copied ? <CheckCircle2 size={20} className="text-green-500" /> : <Mail size={20} />}
+              <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-substrate-accent text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                {copied ? 'COPIED!' : 'COPY EMAIL'}
+              </span>
+            </button>
             <a href="https://github.com/Vatteck" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-substrate-accent transition-colors">
               <Github size={20} />
             </a>
-            <a href="#" className="text-slate-400 hover:text-substrate-accent transition-colors">
+            <a href="https://steamcommunity.com/id/vatteck" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-substrate-accent transition-colors" title="Steam Profile">
               <Gamepad2 size={20} />
             </a>
           </div>
           
-          <div className="text-xs font-mono text-slate-500 uppercase text-center md:text-right">
+          <div className="text-[10px] font-mono text-slate-500 uppercase text-center md:text-right leading-relaxed">
             Built with React & Tailwind<br />
-            Optimized for Substrate Architect
+            Optimized for Substrate Architect<br />
+            <span className="text-substrate-accent/40">LAST_UPDATE: {new Date().toLocaleDateString()}</span>
           </div>
         </div>
       </footer>
