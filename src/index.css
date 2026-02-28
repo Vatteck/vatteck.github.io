@@ -229,9 +229,88 @@
   border: 1px solid var(--color-hardware-border);
 }
 
+/* Data Stream Animation */
+@keyframes data-stream {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+.data-stream {
+  @apply fixed top-0 right-4 h-[200vh] w-8 pointer-events-none opacity-10 z-0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  animation: data-stream 20s linear infinite;
+  color: var(--color-substrate-accent);
+}
+
+.data-stream-left {
+  @apply fixed top-0 left-4 h-[200vh] w-8 pointer-events-none opacity-10 z-0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  animation: data-stream 25s linear infinite reverse;
+  color: var(--color-cyber-purple);
+}
+
+/* Corner Accents */
+.cyber-corner {
+  @apply absolute w-4 h-4 pointer-events-none;
+}
+
+.cyber-corner-tl {
+  @apply top-0 left-0 border-t-2 border-l-2 border-substrate-accent;
+}
+
+.cyber-corner-tr {
+  @apply top-0 right-0 border-t-2 border-r-2 border-substrate-accent;
+}
+
+.cyber-corner-bl {
+  @apply bottom-0 left-0 border-b-2 border-l-2 border-substrate-accent;
+}
+
+.cyber-corner-br {
+  @apply bottom-0 right-0 border-b-2 border-r-2 border-substrate-accent;
+}
+
+/* Enhanced Glitch for Images */
+.cyber-image-container {
+  @apply relative overflow-hidden rounded-xl;
+}
+
+.cyber-image-container::before {
+  content: "";
+  @apply absolute inset-0 z-10 opacity-0 transition-opacity duration-300 pointer-events-none;
+  background: linear-gradient(rgba(255, 31, 31, 0.2) 50%, transparent 50%);
+  background-size: 100% 4px;
+}
+
+.cyber-image-container:hover::before {
+  @apply opacity-100;
+}
+
+.cyber-image-container:hover .cyber-image {
+  transform: scale(1.05);
+  filter: contrast(1.2) brightness(1.1) saturate(1.2);
+}
+
+/* Terminal Text Typing */
+.typing-text::after {
+  content: "|";
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  from, to { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 .cyber-card:hover {
   border-color: var(--color-substrate-accent);
-  box-shadow: 0 0 20px rgba(255, 31, 31, 0.15);
+  box-shadow: 0 0 20px rgba(255, 31, 31, 0.15), inset 0 0 10px rgba(255, 31, 31, 0.05);
 }
 
 .cyber-card::after {
