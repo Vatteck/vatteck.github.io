@@ -212,7 +212,7 @@ const ProjectCard = ({
                       href={siteUrl.startsWith('http') ? siteUrl : `https://${siteUrl}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-6 py-3 bg-substrate-accent text-white font-bold rounded-lg hover:bg-blue-700 transition-all flex items-center gap-2 shadow-lg shadow-substrate-accent/20"
+                      className="px-6 py-3 bg-substrate-accent text-white font-bold rounded-lg hover:bg-red-700 transition-all flex items-center gap-2 shadow-lg shadow-substrate-accent/20"
                     >
                       <ExternalLink size={18} />
                       VISIT SITE
@@ -312,7 +312,7 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-8 right-8 z-[60] p-3 bg-substrate-accent text-white rounded-full shadow-lg shadow-substrate-accent/40 hover:bg-blue-700 transition-all"
+            className="fixed bottom-8 right-8 z-[60] p-3 bg-substrate-accent text-white rounded-full shadow-lg shadow-substrate-accent/40 hover:bg-red-700 transition-all"
           >
             <ArrowUp size={20} />
           </motion.button>
@@ -366,24 +366,24 @@ export default function App() {
             VATTECK<span className="text-substrate-accent">.</span>
           </h1>
           
-          <p className="text-lg md:text-xl text-slate-400 font-light tracking-widest mb-10 max-w-2xl mx-auto uppercase">
-            Substrate Architect <span className="text-substrate-accent/50 mx-4">|</span> 
-            Hardware Technician <span className="text-substrate-accent/50 mx-4">|</span> 
+          <p className="text-lg md:text-xl text-slate-400 font-light tracking-widest mb-10 max-w-4xl mx-auto uppercase">
+            Substrate Architect <span className="text-substrate-accent/50 mx-2 md:mx-4">|</span> 
+            Hardware Technician <span className="text-substrate-accent/50 mx-2 md:mx-4">|</span> 
             Developer
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <motion.a
-              href="https://github.com/Vatteck"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(127, 85, 255, 0.4)' }}
-              whileTap={{ scale: 0.98 }}
-              className="flex items-center gap-3 px-8 py-4 bg-substrate-accent text-white font-bold rounded-lg hover:bg-blue-700 transition-all shadow-lg shadow-substrate-accent/20"
-            >
-              <Github size={20} />
-              ACCESS GITHUB
-            </motion.a>
+              <motion.a
+                href="https://github.com/Vatteck"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(255, 31, 31, 0.4)' }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center gap-3 px-8 py-4 bg-substrate-accent text-white font-bold rounded-lg hover:bg-red-700 transition-all shadow-lg shadow-substrate-accent/20"
+              >
+                <Github size={20} />
+                ACCESS GITHUB
+              </motion.a>
             
             <motion.a
               href="#projects"
@@ -695,12 +695,12 @@ export default function App() {
               <motion.button
                 type="submit"
                 disabled={isTransmitting}
-                whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(127, 85, 255, 0.3)' }}
+                whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(255, 31, 31, 0.3)' }}
                 whileTap={{ scale: 0.98 }}
                 className={`w-full py-4 font-bold rounded-lg flex items-center justify-center gap-3 transition-all ${
                   isSent 
                     ? 'bg-green-600 text-white' 
-                    : 'bg-substrate-accent text-white hover:bg-blue-700 shadow-lg shadow-substrate-accent/20'
+                    : 'bg-substrate-accent text-white hover:bg-red-700 shadow-lg shadow-substrate-accent/20'
                 } ${isTransmitting ? 'opacity-70 cursor-wait' : ''}`}
               >
                 {isTransmitting ? (
