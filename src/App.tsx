@@ -511,6 +511,7 @@ const ProjectCard = ({
                   href={siteUrl.startsWith('http') ? siteUrl : `https://${siteUrl}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  title={`View Live Deployment of ${title}`}
                   className="flex items-center gap-2 text-xs font-mono text-substrate-accent hover:text-white transition-colors"
                 >
                   <ExternalLink size={14} />
@@ -524,6 +525,7 @@ const ProjectCard = ({
                 href={repoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                title={`View Source Code for ${title} on GitHub`}
                 className="flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-white transition-colors"
               >
                 <Github size={14} />
@@ -829,6 +831,7 @@ export default function App() {
                 href="https://github.com/Vatteck"
                 target="_blank"
                 rel="noopener noreferrer"
+                title="Visit VATTECK's GitHub Profile"
                 whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(255, 31, 31, 0.4)' }}
                 whileTap={{ scale: 0.98 }}
                 className="flex items-center gap-3 px-8 py-4 bg-substrate-accent text-white font-bold rounded-lg hover:bg-red-700 transition-all shadow-lg shadow-substrate-accent/20"
@@ -839,6 +842,7 @@ export default function App() {
             
             <motion.a
               href="#projects"
+              title="View VATTECK's Hardware and Software Projects"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="flex items-center gap-3 px-8 py-4 bg-hardware-card border border-hardware-border text-white font-bold rounded-lg hover:border-substrate-accent/50 transition-all"
@@ -853,6 +857,7 @@ export default function App() {
           <div className="mt-8 flex justify-center">
             <motion.button
               onClick={triggerScan}
+              aria-label="Run Hardware Diagnostics Scan"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="flex items-center gap-3 px-8 py-4 bg-hardware-card border border-substrate-accent/50 text-substrate-accent font-bold rounded-lg hover:bg-substrate-accent/10 transition-all"
@@ -921,7 +926,7 @@ export default function App() {
                 <div className="absolute inset-0 bg-substrate-accent/20 blur-xl group-hover:bg-substrate-accent/40 transition-all duration-500 rounded-xl z-0" />
                 <img 
                   src="input_file_1.png" 
-                  alt="Vatteck Profile" 
+                  alt="VATTECK - Substrate Architect and Hardware Systems Engineer Profile" 
                   className="relative w-full aspect-[4/3] object-cover rounded-xl border border-substrate-accent/30 grayscale hover:grayscale-0 transition-all duration-700 cyber-image z-10"
                   referrerPolicy="no-referrer"
                   onError={(e) => {
@@ -1365,7 +1370,7 @@ ACCELERATION: HARDWARE_GPU_RENDERED
                 {copied ? 'COPIED!' : 'COPY EMAIL'}
               </span>
             </button>
-            <a href="https://github.com/Vatteck" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-substrate-accent transition-colors">
+            <a href="https://github.com/Vatteck" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-substrate-accent transition-colors" title="GitHub Profile">
               <Github size={20} />
             </a>
             <a href="https://steamcommunity.com/id/vatteck" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-substrate-accent transition-colors" title="Steam Profile">
