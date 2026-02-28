@@ -16,8 +16,43 @@
 
 @layer base {
   body {
-    @apply bg-hardware-bg text-slate-200 font-sans selection:bg-substrate-accent/30 overflow-x-hidden;
+    @apply bg-hardware-bg text-slate-300 font-sans selection:bg-substrate-accent/30 overflow-x-hidden cursor-none;
   }
+}
+
+/* Custom Cursor */
+.custom-cursor {
+  @apply fixed top-0 left-0 w-6 h-6 border border-substrate-accent/50 rounded-sm pointer-events-none z-[9999] mix-blend-difference transition-transform duration-100 ease-out;
+  transform: translate(-50%, -50%);
+}
+
+.custom-cursor::after {
+  content: "";
+  @apply absolute top-1/2 left-1/2 w-1 h-1 bg-substrate-accent rounded-full -translate-x-1/2 -translate-y-1/2;
+}
+
+.custom-cursor.hovering {
+  @apply w-12 h-12 border-substrate-accent bg-substrate-accent/10;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* Circuit Background */
+.circuit-bg {
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 h80 v80 h-80 z' fill='none' stroke='rgba(255,31,31,0.08)' stroke-width='0.5'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='rgba(255,31,31,0.2)'/%3E%3Ccircle cx='90' cy='10' r='1.5' fill='rgba(255,31,31,0.2)'/%3E%3Ccircle cx='90' cy='90' r='1.5' fill='rgba(255,31,31,0.2)'/%3E%3Ccircle cx='10' cy='90' r='1.5' fill='rgba(255,31,31,0.2)'/%3E%3Cpath d='M10 50 h20 M80 50 h10 M50 10 v20 M50 80 v10' stroke='rgba(255,31,31,0.12)' stroke-width='0.5'/%3E%3C/svg%3E");
+}
+
+/* Boot Sequence */
+.boot-screen {
+  @apply fixed inset-0 bg-black z-[10000] flex flex-col items-center justify-center p-8 font-mono text-substrate-accent overflow-hidden;
+}
+
+.boot-log {
+  @apply w-full max-w-2xl h-96 overflow-hidden flex flex-col gap-1 text-[10px] md:text-xs;
+}
+
+/* Matrix Rain Effect */
+.matrix-canvas {
+  @apply fixed inset-0 pointer-events-none z-[9998] opacity-20;
 }
 
 /* Noise Overlay */
@@ -35,6 +70,11 @@
 }
 
 /* CRT Flicker */
+@keyframes scan {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
 @keyframes flicker {
   0% { opacity: 0.97; }
   5% { opacity: 0.95; }
