@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Github, 
   Cpu, 
@@ -37,6 +37,138 @@ const DataStream = () => {
       </div>
     </>
   );
+};
+
+const CustomCursor = () => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setPosition({ x: e.clientX, y: e.clientY });
+    };
+
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (['A', 'BUTTON', 'INPUT', 'TEXTAREA'].includes(target.tagName) || target.closest('.cursor-pointer')) {
+        setIsHovering(true);
+      } else {
+        setIsHovering(false);
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseover', handleMouseOver);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseover', handleMouseOver);
+    };
+  }, []);
+
+  return (
+    <div 
+      className={`custom-cursor hidden lg:block ${isHovering ? 'hovering' : ''}`}
+      style={{ left: `${position.x}px`, top: `${position.y}px` }}
+    />
+  );
+};
+
+const BootScreen = ({ onComplete }: { onComplete: () => void }) => {
+  const [logs, setLogs] = useState<string[]>([]);
+  const [progress, setProgress] = useState(0);
+  const bootLogs = [
+    "VATTECK_OS_LOADER v1.0.4",
+    "CHECKING_HARDWARE_INTEGRITY...",
+    "CPU_CORE_0: OK",
+    "CPU_CORE_1: OK",
+    "MEM_CHECK: 65536MB RAM DETECTED",
+    "UPLINK_STATUS: SECURE",
+    "LOADING_SUBSTRATE_LAYERS...",
+    "DECRYPTING_USER_BIO...",
+    "INITIALIZING_NEURAL_LINK...",
+    "SYSTEM_READY."
+  ];
+
+  useEffect(() => {
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < bootLogs.length) {
+        setLogs(prev => [...prev, bootLogs[i]]);
+        setProgress(((i + 1) / bootLogs.length) * 100);
+        i++;
+      } else {
+        clearInterval(interval);
+        setTimeout(onComplete, 1000);
+      }
+    }, 200);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="boot-screen">
+      <div className="boot-log">
+        {logs.map((log, idx) => (
+          <div key={idx} className="flex gap-4">
+            <span className="opacity-50">[{new Date().toLocaleTimeString([], { hour12: false })}]</span>
+            <span className="animate-pulse">{log}</span>
+          </div>
+        ))}
+      </div>
+      <div className="mt-8 w-full max-w-md h-1 bg-white/10 rounded-full overflow-hidden">
+        <motion.div 
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          className="h-full bg-substrate-accent shadow-[0_0_10px_rgba(255,31,31,0.5)]"
+        />
+      </div>
+    </div>
+  );
+};
+
+const MatrixRain = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const characters = "0123456789ABCDEF";
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops: number[] = [];
+
+    for (let i = 0; i < columns; i++) {
+      drops[i] = 1;
+    }
+
+    const draw = () => {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#FF1F1F";
+      ctx.font = `${fontSize}px monospace`;
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = characters.charAt(Math.floor(Math.random() * characters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    };
+
+    const interval = setInterval(draw, 33);
+    return () => clearInterval(interval);
+  }, []);
+
+  return <canvas ref={canvasRef} className="matrix-canvas" />;
 };
 
 const SystemStatus = () => {
@@ -82,30 +214,43 @@ const SystemStatus = () => {
 };
 
 const LiveSystemLog = () => {
-  const [logs, setLogs] = useState<string[]>([]);
+  const [logs, setLogs] = useState<{ time: string; msg: string; type: 'info' | 'warn' | 'error' | 'success' }[]>([]);
   const messages = [
-    "INITIALIZING_SUBSTRATE_LAYERS...",
-    "KERNEL_MODULE_LOADED: VATTECK_CORE",
-    "SCANNING_HARDWARE_INTERFACES...",
-    "UPLINK_ESTABLISHED: PORT_8080",
-    "ENCRYPTING_DATA_STREAM: AES-256",
-    "OPTIMIZING_THERMAL_PROFILES...",
-    "NEURAL_LINK_SYNC_READY",
-    "SILICON_DIAGNOSTICS_OPTIMAL",
-    "ARCH_LINUX_CACHYOS_DETECTED",
-    "ROOT_ACCESS_LEVEL_0_CONFIRMED"
+    { msg: "INITIALIZING_SUBSTRATE_LAYERS...", type: 'info' },
+    { msg: "KERNEL_MODULE_LOADED: VATTECK_CORE", type: 'success' },
+    { msg: "SCANNING_HARDWARE_INTERFACES...", type: 'info' },
+    { msg: "UPLINK_ESTABLISHED: PORT_8080", type: 'success' },
+    { msg: "ENCRYPTING_DATA_STREAM: AES-256", type: 'warn' },
+    { msg: "OPTIMIZING_THERMAL_PROFILES...", type: 'info' },
+    { msg: "NEURAL_LINK_SYNC_READY", type: 'success' },
+    { msg: "SILICON_DIAGNOSTICS_OPTIMAL", type: 'success' },
+    { msg: "ARCH_LINUX_CACHYOS_DETECTED", type: 'info' },
+    { msg: "ROOT_ACCESS_LEVEL_0_CONFIRMED", type: 'error' }
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setLogs(prev => {
-        const next = [...prev, messages[Math.floor(Math.random() * messages.length)]];
+        const rawMsg = messages[Math.floor(Math.random() * messages.length)];
+        const next = [...prev, { 
+          time: new Date().toLocaleTimeString([], { hour12: false }), 
+          ...rawMsg 
+        }];
         if (next.length > 4) return next.slice(1);
         return next;
       });
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'success': return 'text-emerald-400';
+      case 'warn': return 'text-amber-400';
+      case 'error': return 'text-substrate-accent';
+      default: return 'text-sky-400';
+    }
+  };
 
   return (
     <motion.div 
@@ -122,8 +267,8 @@ const LiveSystemLog = () => {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-3"
           >
-            <span className="text-substrate-accent/40">[{new Date().toLocaleTimeString([], { hour12: false })}]</span>
-            <span className="text-slate-300 tracking-wider">{log}</span>
+            <span className="text-slate-600">[{log.time}]</span>
+            <span className={getTypeColor(log.type)}>{log.msg}</span>
           </motion.div>
         ))}
         {logs.length === 0 && <div className="text-slate-600 animate-pulse">ESTABLISHING_DATA_LINK...</div>}
@@ -133,6 +278,40 @@ const LiveSystemLog = () => {
         <span className="animate-pulse">● LIVE</span>
       </div>
     </motion.div>
+  );
+};
+
+const CodeBlock = ({ code, language = 'bash' }: { code: string; language?: string }) => {
+  return (
+    <div className="bg-[#0d1117] rounded-xl border border-hardware-border overflow-hidden font-mono text-xs my-6 shadow-2xl group relative">
+      <div className="bg-[#161b22] px-4 py-2 border-b border-hardware-border flex justify-between items-center">
+        <div className="flex gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
+        </div>
+        <span className="text-[10px] text-slate-500 uppercase tracking-widest">{language}</span>
+      </div>
+      <div className="p-4 overflow-x-auto custom-scrollbar">
+        <pre className="text-slate-300">
+          {code.split('\n').map((line, i) => {
+            const highlighted = line
+              .replace(/(sudo|pacman|yay|git|cd|mkdir|rm|cp|mv|ls|cat|grep|sed|awk|chmod|chown|systemctl|journalctl|echo|export|alias)/g, '<span class="text-[#ff7b72]">$1</span>')
+              .replace(/(-S|-Sy|-Syu|-R|-U|-Q|-F|-G|-h|--help|--version|--noconfirm)/g, '<span class="text-[#79c0ff]">$1</span>')
+              .replace(/(".*?"|'.*?')/g, '<span class="text-[#a5d6ff]">$1</span>')
+              .replace(/(#.*)/g, '<span class="text-[#8b949e]">$1</span>')
+              .replace(/(https?:\/\/[^\s]+)/g, '<span class="text-[#a5d6ff] underline">$1</span>');
+            
+            return (
+              <div key={i} className="flex gap-4">
+                <span className="text-slate-600 w-4 text-right select-none">{i + 1}</span>
+                <span dangerouslySetInnerHTML={{ __html: highlighted }} />
+              </div>
+            );
+          })}
+        </pre>
+      </div>
+    </div>
   );
 };
 
@@ -203,21 +382,40 @@ const TerminalEasterEgg = () => {
 };
 
 const SectionHeader = ({ title, subtitle, glitch }: { title: string; subtitle?: string; glitch?: boolean }) => (
-  <div className="mb-12">
+  <div className="mb-12 relative">
+    <div className="absolute -left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-substrate-accent via-substrate-accent/50 to-transparent" />
     <motion.div 
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      className="flex items-center gap-4 mb-2"
+      className="space-y-2"
     >
-      <div className="h-px w-8 bg-substrate-accent" />
-      <h2 className="text-sm font-mono uppercase tracking-[0.3em] text-substrate-accent">{title}</h2>
+      <div className="flex items-center gap-4 mb-2">
+        <div className="h-px w-8 bg-substrate-accent" />
+        <h2 className="text-sm font-mono uppercase tracking-[0.3em] text-substrate-accent">{title}</h2>
+        <div className="h-px flex-grow bg-gradient-to-r from-substrate-accent/30 to-transparent" />
+      </div>
+      {subtitle && (
+        <h3 className={`text-4xl md:text-5xl font-bold tracking-tighter uppercase ${glitch ? 'glitch' : ''}`} data-text={subtitle}>
+          {subtitle}<span className="text-substrate-accent">_</span>
+        </h3>
+      )}
     </motion.div>
-    {subtitle && (
-      <h3 className={`text-3xl font-bold tracking-tight ${glitch ? 'glitch' : ''}`} data-text={subtitle}>
-        {subtitle}
-      </h3>
-    )}
+  </div>
+);
+
+const CircuitLine = ({ className }: { className?: string }) => (
+  <div className={`absolute pointer-events-none ${className}`}>
+    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <path 
+        d="M0 50 L40 50 L50 40 L60 50 L100 50" 
+        fill="none" 
+        stroke="currentColor" 
+        strokeWidth="0.5"
+        className="text-substrate-accent/20"
+      />
+      <circle cx="50" cy="40" r="1.5" className="fill-substrate-accent/40 animate-pulse" />
+    </svg>
   </div>
 );
 
@@ -386,7 +584,7 @@ const ProjectCard = ({
                         <Code2 size={14} />
                         Technical Breakdown
                       </h5>
-                      <p className="whitespace-pre-line text-sm text-slate-300 bg-slate-900/30 p-4 rounded-lg border border-hardware-border/50">{details}</p>
+                      <CodeBlock code={details} language="technical_specs" />
                     </div>
                   </div>
                 </div>
@@ -443,7 +641,30 @@ export default function App() {
   const [isSent, setIsSent] = useState(false);
   const [typedText, setTypedText] = useState('');
   const [isGlitched, setIsGlitched] = useState(false);
+  const [isBooting, setIsBooting] = useState(true);
+  const [isMatrixActive, setIsMatrixActive] = useState(false);
+  const [secretCode, setSecretCode] = useState('');
   const fullText = "Substrate Architect | Hardware Technician | Developer";
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const newCode = (secretCode + e.key).slice(-4);
+      setSecretCode(newCode);
+      if (newCode === 'root') {
+        setIsMatrixActive(prev => !prev);
+        triggerGlitch();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [secretCode]);
+
+  const [isScanning, setIsScanning] = useState(false);
+
+  const triggerScan = () => {
+    setIsScanning(true);
+    setTimeout(() => setIsScanning(false), 3000);
+  };
 
   const triggerGlitch = () => {
     setIsGlitched(true);
@@ -501,13 +722,34 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen selection:bg-substrate-accent/30 noise-bg crt-flicker overflow-hidden transition-all duration-300 ${isGlitched ? 'invert hue-rotate-90' : ''}`}>
+    <div className={`min-h-screen selection:bg-substrate-accent/30 noise-bg crt-flicker overflow-hidden transition-all duration-300 circuit-bg ${isGlitched ? 'invert hue-rotate-90' : ''}`}>
+      <AnimatePresence>
+        {isBooting && <BootScreen onComplete={() => setIsBooting(false)} />}
+      </AnimatePresence>
+
+      <CustomCursor />
+      {isMatrixActive && <MatrixRain />}
       <DataStream />
       <TerminalEasterEgg />
       {/* Scanline Effect */}
       <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
         <div className="scanline" />
       </div>
+
+      {/* Hardware Scan Overlay */}
+      <AnimatePresence>
+        {isScanning && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[80] pointer-events-none flex flex-col items-center justify-center bg-substrate-accent/5"
+          >
+            <div className="w-full h-1 bg-substrate-accent/50 absolute top-0 animate-[scan_2s_ease-in-out_infinite]" />
+            <div className="text-substrate-accent font-mono text-xl animate-pulse">HARDWARE_SCAN_IN_PROGRESS...</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Scroll to Top */}
       <AnimatePresence>
@@ -607,6 +849,18 @@ export default function App() {
           </div>
 
           <LiveSystemLog />
+
+          <div className="mt-8 flex justify-center">
+            <motion.button
+              onClick={triggerScan}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="flex items-center gap-3 px-8 py-4 bg-hardware-card border border-substrate-accent/50 text-substrate-accent font-bold rounded-lg hover:bg-substrate-accent/10 transition-all"
+            >
+              <Cpu size={20} className={isScanning ? 'animate-spin' : ''} />
+              RUN DIAGNOSTICS
+            </motion.button>
+          </div>
         </motion.div>
 
         <motion.div 
@@ -618,7 +872,11 @@ export default function App() {
         </motion.div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-24 space-y-48">
+      <main className="max-w-6xl mx-auto px-6 py-24 space-y-48 relative">
+        <CircuitLine className="top-0 left-0 w-full h-24 opacity-50" />
+        <CircuitLine className="top-1/4 right-0 w-full h-24 opacity-30 rotate-180" />
+        <CircuitLine className="top-2/4 left-0 w-full h-24 opacity-40" />
+        <CircuitLine className="top-3/4 right-0 w-full h-24 opacity-30 rotate-180" />
         
         {/* About Section */}
         <section id="about" className="grid md:grid-cols-2 gap-16 items-center">
@@ -795,6 +1053,41 @@ export default function App() {
           </div>
         </section>
 
+        {/* System Configuration Section */}
+        <section id="config" className="space-y-12">
+          <SectionHeader title="System Config" subtitle="Kernel & Environment" glitch />
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            <div className="space-y-6">
+              <p className="text-slate-400 leading-relaxed">
+                My primary workstation runs a heavily modified <span className="text-substrate-accent">CachyOS</span> (Arch-based) environment. 
+                Below are some of the core optimizations I apply to ensure maximum throughput and minimal latency.
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-hardware-card border border-hardware-border rounded-xl">
+                  <div className="text-xs text-slate-500 uppercase mb-1">Kernel</div>
+                  <div className="text-sm font-mono text-substrate-accent">linux-cachyos-bore</div>
+                </div>
+                <div className="p-4 bg-hardware-card border border-hardware-border rounded-xl">
+                  <div className="text-xs text-slate-500 uppercase mb-1">Scheduler</div>
+                  <div className="text-sm font-mono text-substrate-accent">BORE / EEVDF</div>
+                </div>
+              </div>
+            </div>
+            <CodeBlock 
+              language="bash"
+              code={`# Update system and optimize mirrors
+sudo pacman -Syu --noconfirm
+yay -S linux-cachyos-bore cachyos-settings
+
+# Optimize CPU governor for performance
+echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+
+# Configure BTRFS mount options for SSD
+# /etc/fstab: compress=zstd:3,discard=async,noatime`}
+            />
+          </div>
+        </section>
+
         {/* Projects Section */}
         <section id="projects">
           <SectionHeader title="Projects" subtitle="Featured Creations" glitch />
@@ -805,15 +1098,21 @@ export default function App() {
               repoUrl="https://github.com/Vatteck/SiliconSageAIMiner"
               siteUrl="vatteck.com/SubstrateMiner"
               description="An upcoming Android idle-clicker tycoon game where players build and optimize a massive mining operation."
-              details={`SUBSTRATE: Miner is a deep dive into the world of industrial mining automation. 
+              details={`[PROJECT_SPECIFICATIONS]
+NAME: SUBSTRATE_MINER
+PLATFORM: ANDROID_OS
+ENGINE: UNITY_2023.2
+LANGUAGE: C#_DOTNET_7
 
-              Key Features:
-              - Procedural resource generation with hardware-inspired aesthetics.
-              - Complex upgrade trees that mimic real-world hardware optimization.
-              - Custom C# backend for handling thousands of simultaneous resource calculations.
-              - Native Android optimization for low-latency touch response.
-              
-              The game is currently in closed alpha, focusing on balancing the 'prestige' mechanics and refining the visual feedback loops.`}
+# CORE_SYSTEMS
+- PROCEDURAL_RESOURCE_GEN: ACTIVE
+- HARDWARE_INSPIRED_UI: LOADED
+- BACKEND_CALC_ENGINE: OPTIMIZED
+- LOW_LATENCY_INPUT: ENABLED
+
+# STATUS
+CURRENT_PHASE: CLOSED_ALPHA
+FOCUS: PRESTIGE_MECHANICS_BALANCING`}
               tags={["Unity", "C#", "Android", "Game Dev"]}
               status="IN PROGRESS"
             />
@@ -821,15 +1120,19 @@ export default function App() {
               title="CachyOS Optimization Suite"
               icon={Terminal}
               description="A collection of scripts and configurations designed to squeeze every ounce of performance out of the Arch-based CachyOS."
-              details={`This suite is the result of hundreds of hours of benchmarking and kernel testing. 
+              details={`[OPTIMIZATION_SUITE_V2.0]
+OS_TARGET: ARCH_LINUX_CACHYOS
+ARCHITECTURE: ZEN_3_4_OPTIMIZED
 
-              Included Tools:
-              - Automated CPU governor tuning for Zen 3/4 architectures.
-              - Custom memory management scripts to reduce micro-stutter in high-load gaming scenarios.
-              - X11/Wayland latency reduction configurations.
-              - One-click setup for gaming-optimized kernel parameters.
-              
-              Designed specifically for power users who demand zero-compromise performance from their Linux workstations.`}
+# INCLUDED_TOOLS
+- CPU_GOVERNOR_TUNER: ENABLED
+- MEMORY_MANAGEMENT_SCRIPTS: ACTIVE
+- LATENCY_REDUCTION_CONFIGS: LOADED
+- KERNEL_PARAM_OPTIMIZER: READY
+
+# PERFORMANCE_METRICS
+- MICRO_STUTTER_REDUCTION: 15%
+- INPUT_LATENCY_DECREASE: 8ms`}
               tags={["Linux", "Bash", "Kernel", "Performance"]}
               status="PLANNED"
             />
@@ -837,13 +1140,18 @@ export default function App() {
               title="Kernel-Level Android Firewall"
               icon={Smartphone}
               description="A planned project to build a low-level network filtering system directly into the Android kernel for maximum security."
-              details={`This project aims to bypass standard Android VPN/Firewall APIs to provide true hardware-level network isolation.
+              details={`[SECURITY_PROTOCOL_ALPHA]
+OS_TARGET: ANDROID_KERNEL_6.1+
+SECURITY_LEVEL: HARDWARE_ISOLATION
 
-              Planned Features:
-              - eBPF-based packet filtering for zero-latency overhead.
-              - Hardware-backed encryption for all outbound traffic.
-              - Per-app network permission control at the syscall level.
-              - Integrated dashboard for real-time packet inspection.`}
+# PLANNED_FEATURES
+- EBPF_PACKET_FILTERING: RESEARCHING
+- HARDWARE_BACKED_ENCRYPTION: PLANNED
+- SYSCALL_LEVEL_CONTROL: PROTOTYPING
+- REAL_TIME_INSPECTION_HUD: DESIGNING
+
+# GOAL
+BYPASS_STANDARD_API: CONFIRMED`}
               tags={["C", "Android", "Kernel", "Security"]}
               status="PLANNED"
             />
@@ -851,13 +1159,19 @@ export default function App() {
               title="Substrate Hardware Monitor"
               icon={Monitor}
               description="A custom hardware monitoring dashboard designed for high-refresh rate displays and low-level sensor polling."
-              details={`A lightweight, hardware-accelerated monitoring tool that interfaces directly with Linux sysfs and hwmon.
+              details={`[HARDWARE_MONITOR_V1.0]
+INTERFACE: LINUX_SYSFS_HWMON
+ACCELERATION: HARDWARE_GPU_RENDERED
 
-              Planned Features:
-              - Real-time voltage and frequency tracking for Zen architectures.
-              - Custom fan curve control with PID loop logic.
-              - GPU power delivery monitoring for modern NVIDIA/AMD cards.
-              - Exportable telemetry data for performance analysis.`}
+# PLANNED_FEATURES
+- ZEN_ARCH_VOLTAGE_TRACKING: ACTIVE
+- PID_LOOP_FAN_CONTROL: TESTING
+- GPU_POWER_DELIVERY_MONITOR: READY
+- HIGH_REFRESH_RATE_UI: 144HZ_SUPPORT
+
+# SENSOR_POLLING
+- FREQUENCY: 1000HZ
+- OVERHEAD: <0.5%_CPU`}
               tags={["Rust", "Linux", "Hardware", "UI"]}
               status="PLANNED"
             />
