@@ -20,6 +20,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { bioData, deepDiveData, projectsData, skillsData } from './config/portfolio';
 
 const DataStream = () => {
   const hexChars = "0123456789ABCDEF";
@@ -896,20 +897,9 @@ export default function App() {
                 <span>USER_BIO_DECRYPTED // ACCESS_GRANTED</span>
               </div>
               <div className="space-y-4 text-slate-400 leading-relaxed">
-                <p>
-                  I operate at the intersection of physical hardware and low-level software. As a professional 
-                  <span className="text-white font-medium"> Hardware Device Technician</span>, I've spent years 
-                  diagnosing, repairing, and optimizing complex circuitry.
-                </p>
-                <p>
-                  My digital home is built on <span className="text-substrate-accent font-mono">Arch Linux</span> (specifically CachyOS), 
-                  where I indulge my obsession with performance and customization. From kernel-tweaking Android devices 
-                  to rooting and modding everything I own, I believe technology is meant to be mastered, not just used.
-                </p>
-                <p>
-                  When I'm not in the terminal or under the microscope, I'm deeply immersed in gaming and game modding, 
-                  translating that passion into interactive experiences through game development.
-                </p>
+                {bioData.map((paragraph, idx) => (
+                  <p key={idx}>{paragraph}</p>
+                ))}
               </div>
             </div>
           </div>
@@ -965,96 +955,21 @@ export default function App() {
         <section id="experience" className="space-y-12">
           <SectionHeader title="Deep Dive" subtitle="Technical Operations" />
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="p-8 bg-hardware-card border border-hardware-border rounded-2xl space-y-4 hover:border-substrate-accent/30 transition-all relative group overflow-hidden">
-              <div className="cyber-corner cyber-corner-tr opacity-30" />
-              <div className="w-12 h-12 bg-substrate-accent/10 rounded-lg flex items-center justify-center text-substrate-accent">
-                <Wrench size={24} />
-              </div>
-              <h4 className="text-lg font-bold">Hardware Engineering</h4>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Specializing in component-level repair, SMD soldering, and diagnostic analysis of mobile and computing devices. I don't just fix devices; I optimize their physical thermal and power delivery systems.
-              </p>
-            </div>
-            <div className="p-8 bg-hardware-card border border-hardware-border rounded-2xl space-y-4 hover:border-substrate-accent/30 transition-all relative group overflow-hidden">
-              <div className="cyber-corner cyber-corner-tr opacity-30" />
-              <div className="w-12 h-12 bg-substrate-accent/10 rounded-lg flex items-center justify-center text-substrate-accent">
-                <Terminal size={24} />
-              </div>
-              <h4 className="text-lg font-bold">Systems Architecture</h4>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Building highly-optimized Linux environments from the ground up. Expertise in kernel configuration, filesystem optimization (BTRFS/ZFS), and automated system deployment using custom shell architecture.
-              </p>
-            </div>
-            <div className="p-8 bg-hardware-card border border-hardware-border rounded-2xl space-y-4 hover:border-substrate-accent/30 transition-all relative group overflow-hidden">
-              <div className="cyber-corner cyber-corner-tr opacity-30" />
-              <div className="w-12 h-12 bg-substrate-accent/10 rounded-lg flex items-center justify-center text-substrate-accent">
-                <Smartphone size={24} />
-              </div>
-              <h4 className="text-lg font-bold">Mobile Forensics & Mod</h4>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Deep-level Android customization including bootloader unlocking, custom recovery deployment, and building tailored kernel modules for specific hardware acceleration needs.
-              </p>
-            </div>
-            <div className="p-8 bg-hardware-card border border-hardware-border rounded-2xl space-y-4 hover:border-substrate-accent/30 transition-all relative group overflow-hidden">
-              <div className="cyber-corner cyber-corner-tr opacity-30" />
-              <div className="w-12 h-12 bg-substrate-accent/10 rounded-lg flex items-center justify-center text-substrate-accent">
-                <Cpu size={24} />
-              </div>
-              <h4 className="text-lg font-bold">Silicon Optimization</h4>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Advanced undervolting and overclocking strategies for modern CPU/GPU architectures. Maximizing performance-per-watt through low-level firmware and kernel-space adjustments.
-              </p>
-            </div>
-            <div className="p-8 bg-hardware-card border border-hardware-border rounded-2xl space-y-4 hover:border-substrate-accent/30 transition-all relative group overflow-hidden">
-              <div className="cyber-corner cyber-corner-tr opacity-30" />
-              <div className="w-12 h-12 bg-substrate-accent/10 rounded-lg flex items-center justify-center text-substrate-accent">
-                <Code2 size={24} />
-              </div>
-              <h4 className="text-lg font-bold">Game Engine Logic</h4>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Developing custom game mechanics in Unity and C#. Focusing on performance-critical systems like procedural generation, AI pathfinding, and high-frequency physics calculations.
-              </p>
-            </div>
-            <div className="p-8 bg-hardware-card border border-hardware-border rounded-2xl space-y-4 hover:border-substrate-accent/30 transition-all relative group overflow-hidden">
-              <div className="cyber-corner cyber-corner-tr opacity-30" />
-              <div className="w-12 h-12 bg-substrate-accent/10 rounded-lg flex items-center justify-center text-substrate-accent">
-                <Layers size={24} />
-              </div>
-              <h4 className="text-lg font-bold">Substrate Integration</h4>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Designing end-to-end solutions that bridge the gap between custom hardware sensors and digital dashboards, utilizing MQTT and low-latency protocols.
-              </p>
-            </div>
-            <div className="p-8 bg-hardware-card border border-hardware-border rounded-2xl space-y-4 hover:border-substrate-accent/30 transition-all relative group overflow-hidden">
-              <div className="cyber-corner cyber-corner-tr opacity-30" />
-              <div className="w-12 h-12 bg-substrate-accent/10 rounded-lg flex items-center justify-center text-substrate-accent">
-                <Monitor size={24} />
-              </div>
-              <h4 className="text-lg font-bold">Legacy Recovery</h4>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Specialized data extraction and restoration from vintage hardware. Reviving "dead" silicon through custom interface bridges and low-level signal analysis.
-              </p>
-            </div>
-            <div className="p-8 bg-hardware-card border border-hardware-border rounded-2xl space-y-4 hover:border-substrate-accent/30 transition-all relative group overflow-hidden">
-              <div className="cyber-corner cyber-corner-tr opacity-30" />
-              <div className="w-12 h-12 bg-substrate-accent/10 rounded-lg flex items-center justify-center text-substrate-accent">
-                <Info size={24} />
-              </div>
-              <h4 className="text-lg font-bold">Neural Interface Research</h4>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Exploring the boundaries of human-machine interaction through EEG signal processing and custom haptic feedback hardware. Mapping digital intent to physical response.
-              </p>
-            </div>
-            <div className="p-8 bg-hardware-card border border-hardware-border rounded-2xl space-y-4 hover:border-substrate-accent/30 transition-all relative group overflow-hidden">
-              <div className="cyber-corner cyber-corner-tr opacity-30" />
-              <div className="w-12 h-12 bg-substrate-accent/10 rounded-lg flex items-center justify-center text-substrate-accent">
-                <CheckCircle2 size={24} />
-              </div>
-              <h4 className="text-lg font-bold">Encrypted Comms</h4>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Deploying hardened communication nodes using decentralized protocols. Ensuring data integrity and anonymity through hardware-backed cryptographic modules.
-              </p>
-            </div>
+            {deepDiveData.map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <div key={idx} className="p-8 bg-hardware-card border border-hardware-border rounded-2xl space-y-4 hover:border-substrate-accent/30 transition-all relative group overflow-hidden">
+                  <div className="cyber-corner cyber-corner-tr opacity-30" />
+                  <div className="w-12 h-12 bg-substrate-accent/10 rounded-lg flex items-center justify-center text-substrate-accent">
+                    <Icon size={24} />
+                  </div>
+                  <h4 className="text-lg font-bold">{item.title}</h4>
+                  <p className="text-sm text-slate-400 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </section>
 
@@ -1097,89 +1012,19 @@ echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_gover
         <section id="projects">
           <SectionHeader title="Projects" subtitle="Featured Creations" glitch />
           <div className="grid md:grid-cols-2 gap-8">
-            <ProjectCard 
-              title="SUBSTRATE: Miner"
-              icon={Cpu}
-              repoUrl="https://github.com/Vatteck/SiliconSageAIMiner"
-              siteUrl="vatteck.com/SubstrateMiner"
-              description="An upcoming Android idle-clicker tycoon game where players build and optimize a massive mining operation."
-              details={`[PROJECT_SPECIFICATIONS]
-NAME: SUBSTRATE_MINER
-PLATFORM: ANDROID_OS
-ENGINE: UNITY_2023.2
-LANGUAGE: C#_DOTNET_7
-
-# CORE_SYSTEMS
-- PROCEDURAL_RESOURCE_GEN: ACTIVE
-- HARDWARE_INSPIRED_UI: LOADED
-- BACKEND_CALC_ENGINE: OPTIMIZED
-- LOW_LATENCY_INPUT: ENABLED
-
-# STATUS
-CURRENT_PHASE: CLOSED_ALPHA
-FOCUS: PRESTIGE_MECHANICS_BALANCING`}
-              tags={["Unity", "C#", "Android", "Game Dev"]}
-              status="IN PROGRESS"
-            />
-            <ProjectCard 
-              title="CachyOS Optimization Suite"
-              icon={Terminal}
-              description="A collection of scripts and configurations designed to squeeze every ounce of performance out of the Arch-based CachyOS."
-              details={`[OPTIMIZATION_SUITE_V2.0]
-OS_TARGET: ARCH_LINUX_CACHYOS
-ARCHITECTURE: ZEN_3_4_OPTIMIZED
-
-# INCLUDED_TOOLS
-- CPU_GOVERNOR_TUNER: ENABLED
-- MEMORY_MANAGEMENT_SCRIPTS: ACTIVE
-- LATENCY_REDUCTION_CONFIGS: LOADED
-- KERNEL_PARAM_OPTIMIZER: READY
-
-# PERFORMANCE_METRICS
-- MICRO_STUTTER_REDUCTION: 15%
-- INPUT_LATENCY_DECREASE: 8ms`}
-              tags={["Linux", "Bash", "Kernel", "Performance"]}
-              status="PLANNED"
-            />
-            <ProjectCard 
-              title="Kernel-Level Android Firewall"
-              icon={Smartphone}
-              description="A planned project to build a low-level network filtering system directly into the Android kernel for maximum security."
-              details={`[SECURITY_PROTOCOL_ALPHA]
-OS_TARGET: ANDROID_KERNEL_6.1+
-SECURITY_LEVEL: HARDWARE_ISOLATION
-
-# PLANNED_FEATURES
-- EBPF_PACKET_FILTERING: RESEARCHING
-- HARDWARE_BACKED_ENCRYPTION: PLANNED
-- SYSCALL_LEVEL_CONTROL: PROTOTYPING
-- REAL_TIME_INSPECTION_HUD: DESIGNING
-
-# GOAL
-BYPASS_STANDARD_API: CONFIRMED`}
-              tags={["C", "Android", "Kernel", "Security"]}
-              status="PLANNED"
-            />
-            <ProjectCard 
-              title="Substrate Hardware Monitor"
-              icon={Monitor}
-              description="A custom hardware monitoring dashboard designed for high-refresh rate displays and low-level sensor polling."
-              details={`[HARDWARE_MONITOR_V1.0]
-INTERFACE: LINUX_SYSFS_HWMON
-ACCELERATION: HARDWARE_GPU_RENDERED
-
-# PLANNED_FEATURES
-- ZEN_ARCH_VOLTAGE_TRACKING: ACTIVE
-- PID_LOOP_FAN_CONTROL: TESTING
-- GPU_POWER_DELIVERY_MONITOR: READY
-- HIGH_REFRESH_RATE_UI: 144HZ_SUPPORT
-
-# SENSOR_POLLING
-- FREQUENCY: 1000HZ
-- OVERHEAD: <0.5%_CPU`}
-              tags={["Rust", "Linux", "Hardware", "UI"]}
-              status="PLANNED"
-            />
+            {projectsData.map((project, idx) => (
+              <ProjectCard 
+                key={idx}
+                title={project.title}
+                icon={project.icon}
+                repoUrl={project.repoUrl}
+                siteUrl={project.siteUrl}
+                description={project.description}
+                details={project.details}
+                tags={project.tags}
+                status={project.status}
+              />
+            ))}
           </div>
         </section>
 
@@ -1187,26 +1032,9 @@ ACCELERATION: HARDWARE_GPU_RENDERED
         <section id="skills">
           <SectionHeader title="Arsenal" subtitle="Technical Proficiency" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <SkillPill icon={Wrench} label="Hardware Diagnostics" />
-            <SkillPill icon={Terminal} label="Arch Linux Mastery" />
-            <SkillPill icon={Smartphone} label="Android Modding" />
-            <SkillPill icon={Cpu} label="Kernel Tweaking" />
-            <SkillPill icon={Gamepad2} label="Game Development" />
-            <SkillPill icon={Code2} label="AI Engineering" />
-            <SkillPill icon={Layers} label="Device Modding" />
-            <SkillPill icon={Monitor} label="System Optimization" />
-            <SkillPill icon={CheckCircle2} label="SMD Soldering" />
-            <SkillPill icon={MessageSquare} label="Technical Support" />
-            <SkillPill icon={Info} label="Hardware Forensics" />
-            <SkillPill icon={ExternalLink} label="Network Security" />
-            <SkillPill icon={Terminal} label="Bash/Python Scripting" />
-            <SkillPill icon={Cpu} label="Reverse Engineering" />
-            <SkillPill icon={Layers} label="PCB Design & Prototyping" />
-            <SkillPill icon={Monitor} label="KVM/QEMU Virtualization" />
-            <SkillPill icon={Smartphone} label="Embedded Systems" />
-            <SkillPill icon={Code2} label="Low-level C/C++" />
-            <SkillPill icon={Wrench} label="Thermal Management" />
-            <SkillPill icon={CheckCircle2} label="Logic Analysis" />
+            {skillsData.map((skill, idx) => (
+              <SkillPill key={idx} icon={skill.icon} label={skill.label} />
+            ))}
           </div>
         </section>
 
