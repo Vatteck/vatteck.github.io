@@ -420,7 +420,7 @@ const CircuitLine = ({ className }: { className?: string }) => (
   </div>
 );
 
-const SkillPill = ({ icon: Icon, label }: { icon: any; label: string }) => (
+const SkillPill = ({ icon: Icon, label }: { icon: any; label: string; key?: React.Key }) => (
   <motion.div 
     whileHover={{ scale: 1.05, backgroundColor: 'rgba(255, 31, 31, 0.1)' }}
     className="flex items-center gap-3 px-4 py-3 bg-hardware-card border border-hardware-border rounded-lg transition-colors"
@@ -448,6 +448,7 @@ const ProjectCard = ({
   icon?: any;
   repoUrl?: string;
   siteUrl?: string;
+  key?: React.Key;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
