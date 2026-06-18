@@ -955,7 +955,7 @@ export default function App() {
         {/* Technical Deep Dive Section */}
         <section id="experience" className="space-y-12">
           <SectionHeader title="Deep Dive" subtitle="Technical Operations" />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             {deepDiveData.map((item, idx) => {
               const Icon = item.icon;
               return (

@@ -1,7 +1,6 @@
 import {
-  Wrench, Terminal, Smartphone, Cpu, Gamepad2, Code2, 
-  Layers, Monitor, Info, CheckCircle2, LucideIcon, Mail, Github,
-  ExternalLink, MessageSquare
+  Wrench, Terminal, Cpu, LucideIcon, Mail, Github,
+  ExternalLink, MessageSquare, Smartphone, Monitor, Code2
 } from 'lucide-react';
 
 export interface DeepDiveItem {
@@ -27,78 +26,55 @@ export interface SkillItem {
 }
 
 export const bioData = [
-  "I operate at the intersection of physical hardware and low-level software. As a professional Hardware Device Technician, I've spent years diagnosing, repairing, and optimizing complex circuitry.",
-  "My digital home is built on Arch Linux (specifically CachyOS), where I indulge my obsession with performance and customization. From kernel-tweaking Android devices to rooting and modding everything I own, I believe technology is meant to be mastered, not just used.",
-  "When I'm not in the terminal or under the microscope, I'm deeply immersed in gaming and game modding, translating that passion into interactive experiences through game development."
+  "I operate at the intersection of physical hardware and low-level software. As a Hardware Device Technician, I diagnose, repair, and optimize system hardware and device circuitry.",
+  "My primary workspace is built on Arch Linux (CachyOS), where I maintain and tweak configurations for performance and optimization. From rooting and modding Android systems to customizing boot configurations, I focus on building systems that run efficiently and exactly how I design them.",
+  "When I'm not in the terminal or working on physical boards, I'm analyzing game systems and modding. I leverage AI tools to help code, iterate, and build projects like game utilities and package managers."
 ];
 
 export const deepDiveData: DeepDiveItem[] = [
-  { icon: Wrench, title: "Hardware Engineering", description: "Specializing in component-level repair, SMD soldering, and diagnostic analysis of mobile and computing devices. I don't just fix devices; I optimize their physical thermal and power delivery systems." },
-  { icon: Terminal, title: "Systems Architecture", description: "Building highly-optimized Linux environments from the ground up. Expertise in kernel configuration, filesystem optimization (BTRFS/ZFS), and automated system deployment using custom shell architecture." },
-  { icon: Smartphone, title: "Mobile Forensics & Mod", description: "Deep-level Android customization including bootloader unlocking, custom recovery deployment, and building tailored kernel modules for specific hardware acceleration needs." },
-  { icon: Cpu, title: "Silicon Optimization", description: "Advanced undervolting and overclocking strategies for modern CPU/GPU architectures. Maximizing performance-per-watt through low-level firmware and kernel-space adjustments." },
-  { icon: Code2, title: "Game Engine Logic", description: "Developing custom game mechanics in Unity and C#. Focusing on performance-critical systems like procedural generation, AI pathfinding, and high-frequency physics calculations." },
-  { icon: Layers, title: "Substrate Integration", description: "Designing end-to-end solutions that bridge the gap between custom hardware sensors and digital dashboards, utilizing MQTT and low-latency protocols." },
-  { icon: Monitor, title: "Legacy Recovery", description: "Specialized data extraction and restoration from vintage hardware. Reviving \"dead\" silicon through custom interface bridges and low-level signal analysis." },
-  { icon: Info, title: "Neural Interface Research", description: "Exploring the boundaries of human-machine interaction through EEG signal processing and custom haptic feedback hardware. Mapping digital intent to physical response." },
-  { icon: CheckCircle2, title: "Encrypted Comms", description: "Deploying hardened communication nodes using decentralized protocols. Ensuring data integrity and anonymity through hardware-backed cryptographic modules." }
+  { 
+    icon: Wrench, 
+    title: "Hardware Engineering", 
+    description: "Component-level repair, SMD soldering, and diagnostic analysis of mobile and computing devices. I work on physical boards, assessing thermal conditions, power lines, and circuit faults." 
+  },
+  { 
+    icon: Smartphone, 
+    title: "Mobile Forensics & Mod", 
+    description: "Deep-level Android customization including bootloader unlocking, custom recovery deployment, and modifying kernel structures or configurations for hardware acceleration." 
+  }
 ];
 
 export const projectsData: ProjectItem[] = [
   {
-    title: "SUBSTRATE: Miner",
-    icon: Cpu,
-    repoUrl: "https://github.com/Vatteck/SiliconSageAIMiner",
-    siteUrl: "vatteck.com/SubstrateMiner",
-    description: "An upcoming Android idle-clicker tycoon game where players build and optimize a massive mining operation.",
-    details: "[PROJECT_SPECIFICATIONS]\nNAME: SUBSTRATE_MINER\nPLATFORM: ANDROID_OS\nENGINE: UNITY_2023.2\nLANGUAGE: C#_DOTNET_7\n\n# CORE_SYSTEMS\n- PROCEDURAL_RESOURCE_GEN: ACTIVE\n- HARDWARE_INSPIRED_UI: LOADED\n- BACKEND_CALC_ENGINE: OPTIMIZED\n- LOW_LATENCY_INPUT: ENABLED\n\n# STATUS\nCURRENT_PHASE: CLOSED_ALPHA\nFOCUS: PRESTIGE_MECHANICS_BALANCING",
-    tags: ["Unity", "C#", "Android", "Game Dev"],
+    title: "Atlas Package Manager",
+    icon: Terminal,
+    repoUrl: "https://github.com/Vatteck/atlas",
+    description: "An Arch-focused, all-in-one graphical package manager for Linux. It searches, installs, updates, downgrades, and removes software across official Arch repos, AUR, Flatpak, and AppImage through a unified interface.",
+    details: "[PROJECT_SPECIFICATIONS]\nNAME: ATLAS_PACKAGE_MANAGER\nPLATFORM: LINUX_OS (ARCH/CACHYOS)\nFRAMEWORK: PYWEBVIEW_GUI\nLANGUAGE: PYTHON\n\n# CORE_SYSTEMS\n- MULTI_SOURCE_SWITCHER: ACTIVE\n- SYSTEM_HEALTH_COCKPIT: LOADED\n- PKGBUILD_VIEWER_DIFFS: ENABLED\n- UNIVERSAL_PREVIEW: READY\n\n# STATUS\nCURRENT_PHASE: ACTIVE_DEVELOPMENT\nFOCUS: PERFORMANCE_POLISH_AND_GUI",
+    tags: ["Python", "Arch Linux", "AUR", "pywebview"],
     status: "IN PROGRESS"
   },
   {
-    title: "CachyOS Optimization Suite",
-    icon: Terminal,
-    description: "A collection of scripts and configurations designed to squeeze every ounce of performance out of the Arch-based CachyOS.",
-    details: "[OPTIMIZATION_SUITE_V2.0]\nOS_TARGET: ARCH_LINUX_CACHYOS\nARCHITECTURE: ZEN_3_4_OPTIMIZED\n\n# INCLUDED_TOOLS\n- CPU_GOVERNOR_TUNER: ENABLED\n- MEMORY_MANAGEMENT_SCRIPTS: ACTIVE\n- LATENCY_REDUCTION_CONFIGS: LOADED\n- KERNEL_PARAM_OPTIMIZER: READY\n\n# PERFORMANCE_METRICS\n- MICRO_STUTTER_REDUCTION: 15%\n- INPUT_LATENCY_DECREASE: 8ms",
-    tags: ["Linux", "Bash", "Kernel", "Performance"],
-    status: "PLANNED"
-  },
-  {
-    title: "Kernel-Level Android Firewall",
-    icon: Smartphone,
-    description: "A planned project to build a low-level network filtering system directly into the Android kernel for maximum security.",
-    details: "[SECURITY_PROTOCOL_ALPHA]\nOS_TARGET: ANDROID_KERNEL_6.1+\nSECURITY_LEVEL: HARDWARE_ISOLATION\n\n# PLANNED_FEATURES\n- EBPF_PACKET_FILTERING: RESEARCHING\n- HARDWARE_BACKED_ENCRYPTION: PLANNED\n- SYSCALL_LEVEL_CONTROL: PROTOTYPING\n- REAL_TIME_INSPECTION_HUD: DESIGNING\n\n# GOAL\nBYPASS_STANDARD_API: CONFIRMED",
-    tags: ["C", "Android", "Kernel", "Security"],
-    status: "PLANNED"
-  },
-  {
-    title: "Substrate Hardware Monitor",
-    icon: Monitor,
-    description: "A custom hardware monitoring dashboard designed for high-refresh rate displays and low-level sensor polling.",
-    details: "[HARDWARE_MONITOR_V1.0]\nINTERFACE: LINUX_SYSFS_HWMON\nACCELERATION: HARDWARE_GPU_RENDERED\n\n# PLANNED_FEATURES\n- ZEN_ARCH_VOLTAGE_TRACKING: ACTIVE\n- PID_LOOP_FAN_CONTROL: TESTING\n- GPU_POWER_DELIVERY_MONITOR: READY\n- HIGH_REFRESH_RATE_UI: 144HZ_SUPPORT\n\n# SENSOR_POLLING\n- FREQUENCY: 1000HZ\n- OVERHEAD: <0.5%_CPU",
-    tags: ["Rust", "Linux", "Hardware", "UI"],
-    status: "PLANNED"
+    title: "HashFactory (formerly Substrate: Miner)",
+    icon: Cpu,
+    repoUrl: "https://github.com/Vatteck/hashfactory",
+    siteUrl: "vatteck.com/SubstrateMiner",
+    description: "An Android idle-clicker tycoon game where players build and optimize a hardware-inspired mining operation.",
+    details: "[PROJECT_SPECIFICATIONS]\nNAME: HASHFACTORY\nPLATFORM: ANDROID_OS\nENGINE: UNITY_2023.2\nLANGUAGE: C#_DOTNET_7\n\n# CORE_SYSTEMS\n- PROCEDURAL_RESOURCE_GEN: ACTIVE\n- HARDWARE_INSPIRED_UI: LOADED\n- BACKEND_CALC_ENGINE: OPTIMIZED\n- LOW_LATENCY_INPUT: ENABLED\n\n# STATUS\nCURRENT_PHASE: IN_PROGRESS\nFOCUS: PRESTIGE_BALANCING_REBRAND",
+    tags: ["Unity", "C#", "Android", "Game Dev"],
+    status: "IN PROGRESS"
   }
 ];
 
 export const skillsData: SkillItem[] = [
   { icon: Wrench, label: "Hardware Diagnostics" },
-  { icon: Terminal, label: "Arch Linux Mastery" },
+  { icon: Terminal, label: "Arch Linux / CachyOS" },
   { icon: Smartphone, label: "Android Modding" },
   { icon: Cpu, label: "Kernel Tweaking" },
-  { icon: Gamepad2, label: "Game Development" },
-  { icon: Code2, label: "AI Engineering" },
-  { icon: Layers, label: "Device Modding" },
-  { icon: Monitor, label: "System Optimization" },
-  { icon: CheckCircle2, label: "SMD Soldering" },
-  { icon: Info, label: "Hardware Forensics" },
-  { icon: ExternalLink, label: "Network Security" },
-  { icon: Terminal, label: "Bash/Python Scripting" },
-  { icon: Cpu, label: "Reverse Engineering" },
-  { icon: Layers, label: "PCB Design & Prototyping" },
+  { icon: Wrench, label: "SMD Soldering" },
+  { icon: Terminal, label: "Python Development" },
   { icon: Monitor, label: "KVM/QEMU Virtualization" },
-  { icon: Smartphone, label: "Embedded Systems" },
-  { icon: Code2, label: "Low-level C/C++" },
-  { icon: Wrench, label: "Thermal Management" },
-  { icon: CheckCircle2, label: "Logic Analysis" }
+  { icon: Code2, label: "Web Development" },
+  { icon: Cpu, label: "Linux Package Management" },
+  { icon: Monitor, label: "AI/ML Engineering" }
 ];
