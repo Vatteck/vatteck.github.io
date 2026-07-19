@@ -26,21 +26,31 @@ export interface SkillItem {
 }
 
 export const bioData = [
-  "I operate at the intersection of physical hardware and low-level software. As a Hardware Device Technician, I diagnose, repair, and optimize system hardware and device circuitry.",
-  "My primary workspace is built on Arch Linux (CachyOS), where I maintain and tweak configurations for performance and optimization. From rooting and modding Android systems to customizing boot configurations, I focus on building systems that run efficiently and exactly how I design them.",
-  "When I'm not in the terminal or working on physical boards, I'm analyzing game systems and modding. I leverage AI tools to help code, iterate, and build projects like game utilities and package managers."
+  "I fix things. Phones, laptops, boards — if it's got a circuit, I've probably had a soldering iron on it. I'm a hardware technician by trade: component-level diagnostics, SMD rework, thermal and power rail analysis. I don't just swap parts — I find the fault.",
+  "On the software side, I build whatever the idea demands. A graphical Arch package manager in Python? Done. A Flow-style puzzle game in Flutter? Shipped to closed testing. A Unity idle tycoon, a Flutter life sim with 35 database tables — I pick the stack that fits the problem and I ship. AI-assisted tooling is part of the workflow now, and it's let me move faster than any single dev has a right to.",
+  "My daily driver is CachyOS (Arch-based) with a BORE-scheduler kernel, tuned to within an inch of its life. I root Androids, mod boot configs, and generally refuse to run anything at stock settings. If a system isn't running exactly how I designed it, I'm not done."
 ];
 
 export const deepDiveData: DeepDiveItem[] = [
   { 
     icon: Wrench, 
     title: "Hardware Engineering", 
-    description: "Component-level repair, SMD soldering, and diagnostic analysis of mobile and computing devices. I work on physical boards, assessing thermal conditions, power lines, and circuit faults." 
+    description: "Component-level diagnostics and repair. SMD soldering, thermal imaging, power rail analysis. I trace faults from symptom to root cause — no board is a mystery, just a puzzle I haven't finished." 
   },
   { 
     icon: Smartphone, 
-    title: "Mobile Forensics & Mod", 
-    description: "Deep-level Android customization including bootloader unlocking, custom recovery deployment, and modifying kernel structures or configurations for hardware acceleration." 
+    title: "Mobile & Kernel Modding", 
+    description: "Bootloader unlocks, custom recovery deployment, kernel parameter tuning. I don't run stock — every Android I touch gets optimized for what it actually needs to do, not what the OEM shipped." 
+  },
+  { 
+    icon: Code2, 
+    title: "Cross-Platform Development", 
+    description: "Flutter, Unity, Python — I don't marry a stack. Atlas is Python+pywebview, Continuity and LifeOS are Flutter, HashFactory is Unity. If it compiles and ships, I'll use it." 
+  },
+  { 
+    icon: Cpu, 
+    title: "AI-Assisted Engineering", 
+    description: "AI tooling isn't a crutch — it's a force multiplier. I use it to accelerate boilerplate, explore architecture decisions, and iterate faster than solo devs typically can. The ideas are mine; the typing speed is augmented." 
   }
 ];
 
@@ -89,13 +99,13 @@ export const projectsData: ProjectItem[] = [
 
 export const skillsData: SkillItem[] = [
   { icon: Wrench, label: "Hardware Diagnostics" },
+  { icon: Wrench, label: "SMD Soldering" },
   { icon: Terminal, label: "Arch Linux / CachyOS" },
   { icon: Smartphone, label: "Android Modding" },
-  { icon: Cpu, label: "Kernel Tweaking" },
-  { icon: Wrench, label: "SMD Soldering" },
-  { icon: Terminal, label: "Python Development" },
-  { icon: Monitor, label: "KVM/QEMU Virtualization" },
-  { icon: Code2, label: "Web Development" },
-  { icon: Cpu, label: "Linux Package Management" },
-  { icon: Monitor, label: "AI/ML Engineering" }
+  { icon: Cpu, label: "Kernel Tuning" },
+  { icon: Terminal, label: "Python" },
+  { icon: Code2, label: "Flutter / Dart" },
+  { icon: Gamepad2, label: "Unity / C#" },
+  { icon: Monitor, label: "KVM / QEMU" },
+  { icon: Cpu, label: "AI-Assisted Dev" }
 ];

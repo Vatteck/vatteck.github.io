@@ -648,7 +648,7 @@ export default function App() {
   const [isBooting, setIsBooting] = useState(true);
   const [isMatrixActive, setIsMatrixActive] = useState(false);
   const [secretCode, setSecretCode] = useState('');
-  const fullText = "Substrate Architect | Hardware Technician | Developer";
+  const fullText = "Hardware Technician · Kernel Tinkerer · Builder";
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -1053,7 +1053,7 @@ echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_gover
                   Direct Uplink
                 </h3>
                 <p className="text-slate-400 leading-relaxed mb-6">
-                  Have a project in mind or want to discuss hardware optimization? Drop a message through the secure channel. I'm always open to technical collaborations and architectural challenges.
+                  Got a board that needs fixing, a kernel that needs tuning, or an idea that needs building? I take on hardware diagnostics, custom Android configurations, and software commissions. If it's technical and interesting, I want to hear about it.
                 </p>
                 <div className="space-y-4">
                   <div className="flex items-center gap-4 text-sm font-mono text-slate-300">
