@@ -1,6 +1,6 @@
 import {
   Wrench, Terminal, Cpu, LucideIcon, Mail, Github,
-  ExternalLink, MessageSquare, Smartphone, Monitor, Code2, Gamepad2
+  ExternalLink, MessageSquare, Smartphone, Monitor, Code2, Gamepad2, Heart
 } from 'lucide-react';
 
 export interface DeepDiveItem {
@@ -74,6 +74,16 @@ export const projectsData: ProjectItem[] = [
     details: "[PROJECT_SPECIFICATIONS]\nNAME: CONTINUITY\nPLATFORM: ANDROID_OS\nFRAMEWORK: FLUTTER\nLANGUAGE: DART\n\n# CORE_SYSTEMS\n- CAMPAIGN_MODE: 300_LEVELS\n- DAILY_PUZZLE: 730_DAYS_OFFLINE\n- PLAY_GAMES: ACHIEVEMENTS_+_CLOUD_SAVE\n- THEMES: 4_PROGRESS_UNLOCKED\n- MONETIZATION: REWARDED_ADS_+_IAP\n\n# STATUS\nCURRENT_PHASE: CLOSED_TESTING\nFOCUS: PRE_LAUNCH_VALIDATION",
     tags: ["Flutter", "Dart", "Android", "Game Dev"],
     status: "CLOSED TESTING"
+  },
+  {
+    title: "LifeOS",
+    icon: Heart,
+    repoUrl: "https://github.com/Vatteck/LifeOS",
+    siteUrl: "vatteck.com/lifeos/",
+    description: "A deep cross-platform life simulator. Build a character from birth to death — careers, relationships, crime, politics, the supernatural. Every path is playable.",
+    details: "[PROJECT_SPECIFICATIONS]\nNAME: LIFEOS\nPLATFORM: CROSS_PLATFORM (ANDROID, IOS, WEB, WINDOWS, MACOS, LINUX)\nFRAMEWORK: FLUTTER\nLANGUAGE: DART\n\n# CORE_SYSTEMS\n- SVG_AVATAR_RENDERER: ACTIVE\n- EVENT_SOURCED_LIFELOG: ACTIVE\n- YARN_NARRATIVE_ENGINE: 13_SCRIPTS\n- 21_FEATURE_MODULES: LOADED\n- 35_DATABASE_TABLES: SCHEMA_V65\n\n# STATUS\nCURRENT_PHASE: ACTIVE_DEVELOPMENT\nFOCUS: FEATURE_EXPANSION",
+    tags: ["Flutter", "Dart", "Simulation", "Cross-Platform"],
+    status: "IN PROGRESS"
   }
 ];
 

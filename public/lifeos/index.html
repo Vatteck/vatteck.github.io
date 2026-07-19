@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0F1117">
+  <title>LifeOS — every choice writes your story.</title>
+  <meta name="description" content="A deep cross-platform life simulator. Build a character from birth to death — careers, relationships, crime, politics, the supernatural. Every path is playable.">
+  <link rel="canonical" href="https://vatteck.com/lifeos/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0F1117;
+      --bg-card: rgba(22,24,34,0.7);
+      --bg-card-solid: #181A25;
+      --border: rgba(255,255,255,0.06);
+      --accent: #E8A840;
+      --accent-glow: rgba(232,168,64,0.12);
+      --accent-soft: #D4952E;
+      --text: #E8E9EC;
+      --text-dim: #9A9BA6;
+      --text-muted: #6A6B76;
+      --font-display: 'Playfair Display', 'Georgia', serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --radius-card: 18px;
+      --radius-pill: 9999px;
+      --glass-bg: rgba(22,24,34,0.6);
+      --glass-border: rgba(255,255,255,0.07);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{background:var(--bg);color:var(--text);font-family:var(--font-body);scroll-behavior:smooth}
+    body{min-height:100vh;background:radial-gradient(ellipse at 20% 0%,rgba(232,168,64,0.04) 0%,transparent 55%),radial-gradient(ellipse at 80% 100%,rgba(139,92,246,0.03) 0%,transparent 50%),var(--bg);line-height:1.6;overflow-x:hidden}
+
+    /* ── Nav ── */
+    .nav{position:sticky;top:0;z-index:100;background:rgba(15,17,23,0.85);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:0 2rem}
+    .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
+    .nav-home{font-family:var(--font-body);font-size:.68rem;font-weight:700;letter-spacing:.18em;color:var(--accent);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;transition:color .2s}
+    .nav-home:hover{color:#F5C460}
+    .nav-home-arrow{font-size:.55rem;opacity:.5}
+    .nav-links{display:flex;gap:2rem;font-family:var(--font-body);font-size:.62rem;letter-spacing:.14em}
+    .nav-links a{color:var(--text-dim);text-decoration:none;text-transform:uppercase;transition:color .2s}
+    .nav-links a:hover{color:var(--accent)}
+
+    /* ── Hero ── */
+    .hero{position:relative;z-index:1;padding:7rem 2rem 0;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+    .hero-text{}
+    .hero-badge{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-body);font-size:.58rem;letter-spacing:.18em;color:var(--accent-soft);background:var(--accent-glow);border:1px solid rgba(232,168,64,0.2);padding:.35rem 1.1rem;border-radius:var(--radius-pill);margin-bottom:1.5rem;text-transform:uppercase}
+    .hero-badge-dot{display:inline-block;width:5px;height:5px;background:var(--accent);border-radius:50%;box-shadow:0 0 8px var(--accent)}
+    .hero h1{font-family:var(--font-display);font-size:clamp(2.8rem,5vw,4rem);font-weight:700;line-height:1;margin-bottom:.5rem;color:#fff;font-style:italic}
+    .hero-accent{width:40px;height:2px;background:linear-gradient(90deg,var(--accent),transparent);margin-bottom:1.25rem;border-radius:1px}
+    .hero-tagline{font-family:var(--font-display);font-size:1.1rem;color:var(--text-dim);font-style:italic;margin-bottom:2rem}
+    .hero-actions{display:flex;gap:.75rem;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-body);font-size:.75rem;font-weight:600;letter-spacing:.05em;padding:.85rem 1.8rem;border-radius:var(--radius-pill);text-decoration:none;transition:all .2s;cursor:pointer;border:none}
+    .btn-primary{background:linear-gradient(135deg,#E8A840,#D4952E);color:#1A1208;box-shadow:0 0 28px rgba(232,168,64,0.2)}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 0 40px rgba(232,168,64,0.35)}
+    .btn-outline{background:transparent;color:var(--text-dim);border:1px solid var(--border)}
+    .btn-outline:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
+    .hero-visual{position:relative;display:flex;align-items:center;justify-content:center}
+    .hero-card{background:var(--glass-bg);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:var(--radius-card);padding:1.5rem;max-width:340px;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+    .hero-card img{width:100%;border-radius:8px;display:block;margin-bottom:1rem}
+    .hero-card-meta{font-family:var(--font-mono);font-size:.58rem;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;display:flex;justify-content:space-between}
+    .hero-card-flourish{position:absolute;top:-12px;right:-8px;width:24px;height:24px;border-radius:50%;background:var(--accent);opacity:.6;box-shadow:0 0 20px var(--accent)}
+
+    /* ── Stats bar ── */
+    .stats-bar{position:relative;z-index:1;max-width:800px;margin:4rem auto 0;padding:1.5rem 2rem;background:var(--glass-bg);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:var(--radius-card);display:flex;justify-content:space-around;flex-wrap:wrap;gap:1.5rem}
+    .stat-item{text-align:center}
+    .stat-value{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:.15rem}
+    .stat-label{font-family:var(--font-body);font-size:.52rem;letter-spacing:.16em;color:var(--text-muted);text-transform:uppercase}
+
+    /* ── Sections ── */
+    .section{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:6rem 2rem}
+    .section-header{margin-bottom:3.5rem}
+    .section-label{font-family:var(--font-body);font-size:.58rem;letter-spacing:.22em;color:var(--accent);text-transform:uppercase;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+    .section-title{font-family:var(--font-display);font-size:2rem;font-weight:700;color:#fff;font-style:italic}
+    .section-sub{font-size:.82rem;color:var(--text-dim);margin-top:.5rem;font-family:var(--font-body);letter-spacing:.04em}
+
+    /* ── Life stages timeline ── */
+    .timeline{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;margin-bottom:3rem}
+    .timeline-phase{flex:1;min-width:130px;text-align:center;padding:1.25rem 1rem;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-card);transition:border-color .2s,transform .2s}
+    .timeline-phase:hover{border-color:rgba(232,168,64,0.3);transform:translateY(-2px)}
+    .timeline-icon{font-size:1.5rem;margin-bottom:.5rem}
+    .timeline-phase h4{font-family:var(--font-body);font-size:.68rem;font-weight:700;color:#fff;margin-bottom:.25rem;letter-spacing:.04em}
+    .timeline-phase p{font-size:.65rem;color:var(--text-dim);line-height:1.5}
+    .timeline-arrow{display:flex;align-items:center;font-size:1.2rem;color:var(--accent);opacity:.4;min-width:16px;justify-content:center}
+
+    /* ── Feature grid ── */
+    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+    .feature-card{position:relative;background:var(--glass-bg);backdrop-filter:blur(12px);border:1px solid var(--glass-border);border-radius:var(--radius-card);padding:1.75rem;transition:border-color .2s,transform .2s;overflow:hidden}
+    .feature-card:hover{border-color:rgba(232,168,64,0.25);transform:translateY(-2px)}
+    .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(232,168,64,0.25),transparent);opacity:0;transition:opacity .3s}
+    .feature-card:hover::before{opacity:1}
+    .feature-icon{font-size:1.3rem;margin-bottom:.75rem}
+    .feature-card h3{font-family:var(--font-body);font-size:.78rem;font-weight:700;color:#fff;margin-bottom:.4rem;letter-spacing:.04em}
+    .feature-card p{font-size:.82rem;color:var(--text-dim);line-height:1.6}
+
+    /* ── Tech stack ── */
+    .tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+    .tech-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-card);padding:1.5rem;text-align:center}
+    .tech-card h4{font-family:var(--font-body);font-size:.72rem;color:#fff;margin:.5rem 0 .25rem;letter-spacing:.04em}
+    .tech-card p{font-size:.72rem;color:var(--text-dim)}
+
+    /* ── Feature categories ── */
+    .categories{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.6rem}
+    .cat-chip{padding:.6rem 1rem;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-pill);font-family:var(--font-body);font-size:.62rem;color:var(--text-dim);text-align:center;letter-spacing:.06em;transition:all .2s}
+    .cat-chip:hover{border-color:rgba(232,168,64,0.3);color:var(--accent);background:var(--accent-glow)}
+
+    /* ── CTA ── */
+    .cta{position:relative;z-index:1;text-align:center;padding:5rem 2rem;background:radial-gradient(ellipse at 50% 50%,rgba(232,168,64,0.05) 0%,transparent 65%);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .cta h2{font-family:var(--font-display);font-size:1.75rem;color:#fff;margin-bottom:.75rem;font-style:italic}
+    .cta p{color:var(--text-dim);margin-bottom:2rem;max-width:480px;margin-left:auto;margin-right:auto;font-size:.88rem}
+
+    /* ── Footer ── */
+    .footer{position:relative;z-index:1;padding:2.5rem 2rem;text-align:center;font-family:var(--font-body);font-size:.55rem;letter-spacing:.16em;color:var(--text-muted);text-transform:uppercase}
+    .footer a{color:var(--accent);text-decoration:none}
+    .footer a:hover{color:#F5C460}
+
+    @media(max-width:768px){
+      .hero{grid-template-columns:1fr;gap:2rem;text-align:center;padding-top:4rem}
+      .hero-actions{justify-content:center}
+      .hero-accent{margin:0 auto 1.25rem}
+      .hero-visual{order:-1}
+      .hero-card{max-width:260px}
+      .stats-bar{gap:1rem}
+      .nav{padding:0 1rem}
+      .nav-links{gap:1rem}
+      .section{padding:3rem 1.25rem}
+      .features{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-home">
+      <span class="nav-home-arrow">←</span> VATTECK
+    </a>
+    <div class="nav-links">
+      <a href="/atlas/">Atlas</a>
+      <a href="/substrateminer/">HashFactory</a>
+      <a href="/continuity/">Continuity</a>
+      <a href="/lifeos/" style="color:var(--accent)">LifeOS</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span> Flutter &bull; Cross-Platform
+    </div>
+    <h1>LifeOS</h1>
+    <div class="hero-accent"></div>
+    <p class="hero-tagline">every choice writes your story.</p>
+    <div class="hero-actions">
+      <a href="https://github.com/Vatteck/LifeOS" class="btn btn-outline" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        View Source
+      </a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-card">
+      <img src="/lifeos/screenshot.png" alt="LifeOS gameplay" loading="lazy">
+      <div class="hero-card-meta">
+        <span>LIFEOS v1.0.2</span>
+        <span>AGE 24 — SOFTWARE ENGINEER</span>
+      </div>
+      <div class="hero-card-flourish"></div>
+    </div>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-value">21</div><div class="stat-label">Feature Modules</div></div>
+  <div class="stat-item"><div class="stat-value">35</div><div class="stat-label">Database Tables</div></div>
+  <div class="stat-item"><div class="stat-value">74</div><div class="stat-label">Design Specs</div></div>
+  <div class="stat-item"><div class="stat-value">6</div><div class="stat-label">Platforms</div></div>
+  <div class="stat-item"><div class="stat-value">13</div><div class="stat-label">Yarn Scripts</div></div>
+</div>
+
+<!-- Life Stages -->
+<section class="section" style="padding-bottom:2rem">
+  <div class="section-header" style="text-align:center">
+    <div class="section-label" style="justify-content:center">Life Stages</div>
+    <h2 class="section-title">One Character, One Lifetime</h2>
+    <p class="section-sub">from birth to legacy — every chapter is yours to write</p>
+  </div>
+  <div class="timeline">
+    <div class="timeline-phase"><div class="timeline-icon">👶</div><h4>Birth</h4><p>Generate a character. Name, stats, family. Every roll is different.</p></div>
+    <div class="timeline-arrow">→</div>
+    <div class="timeline-phase"><div class="timeline-icon">🎓</div><h4>Youth</h4><p>School, skills, first relationships. Shape who they become.</p></div>
+    <div class="timeline-arrow">→</div>
+    <div class="timeline-phase"><div class="timeline-icon">💼</div><h4>Career</h4><p>Climb the ladder, switch paths, get rich — or burn it all down.</p></div>
+    <div class="timeline-arrow">→</div>
+    <div class="timeline-phase"><div class="timeline-icon">🏛️</div><h4>Legacy</h4><p>Children, wills, inheritance. When you go, what survives?</p></div>
+    <div class="timeline-arrow">→</div>
+    <div class="timeline-phase"><div class="timeline-icon">🪦</div><h4>Obituary</h4><p>Every life gets its final chapter. Flavor text generated from choices.</p></div>
+  </div>
+</section>
+
+<!-- Paths -->
+<section class="section" style="padding-top:3rem">
+  <div class="section-header" style="text-align:center">
+    <div class="section-label" style="justify-content:center">What Can You Become?</div>
+    <h2 class="section-title">Every Path Is Playable</h2>
+    <p class="section-sub">no locked lanes — chase a career, start a cult, or become a vampire lord</p>
+  </div>
+  <div class="categories">
+    <div class="cat-chip">💼 Occupation Tracks</div>
+    <div class="cat-chip">💕 Relationships & Family</div>
+    <div class="cat-chip">💰 Wealth & Investing</div>
+    <div class="cat-chip">🏠 Real Estate & Assets</div>
+    <div class="cat-chip">🔫 Crime & Law Enforcement</div>
+    <div class="cat-chip">🏛️ Political Career</div>
+    <div class="cat-chip">👑 Royal Lineage</div>
+    <div class="cat-chip">🧛 Vampire Bloodlines</div>
+    <div class="cat-chip">🪐 Cult Leadership</div>
+    <div class="cat-chip">📱 Social Media Fame</div>
+    <div class="cat-chip">🐾 Pets</div>
+    <div class="cat-chip">🏥 Health & Medical</div>
+    <div class="cat-chip">🌍 World Travel</div>
+    <div class="cat-chip">⚔️ Combat System</div>
+    <div class="cat-chip">🗣️ Yarn Dialogue Trees</div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="section">
+  <div class="section-header" style="text-align:center">
+    <div class="section-label" style="justify-content:center">Systems</div>
+    <h2 class="section-title">Deep Simulation, Not Scripted</h2>
+  </div>
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon">🧬</div>
+      <h3>SVG Avatar System</h3>
+      <p>Modular character rendering: 7 eye styles, 18 hairstyles, 4 facial hair variants, aging wrinkles. Your character visibly ages across decades.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📜</div>
+      <h3>Event-Sourced LifeLog</h3>
+      <p>Every stat change, age-up, purchase, and decision is logged as an immutable event. Stats are projections computed from the trail — no fragile save states.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎭</div>
+      <h3>Yarn Narrative Engine</h3>
+      <p>13 Yarn dialogue scripts power branching storylines. Context-aware narrative layers built from current character state, health, relationships, and recent events.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎵</div>
+      <h3>Dynamic Audio</h3>
+      <p>5 background music tracks transition with game state. UI sounds for interactions, game-over sting. Powered by Audioplayers with background playback support.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✨</div>
+      <h3>Animation-Rich UI</h3>
+      <p>Rive vector animations, Flutter Animate transitions, shimmer loading states, confetti celebrations, animated digits and emoji. Every interaction has weight.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔮</div>
+      <h3>Supernatural & Political Overlays</h3>
+      <p>Optional depth layers that layer onto any life: vampire covens with bloodline tracking, cult devotion mechanics, royal succession, political influence networks.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Tech -->
+<section class="section">
+  <div class="section-header" style="text-align:center">
+    <div class="section-label" style="justify-content:center">Built With</div>
+    <h2 class="section-title">Architecture</h2>
+  </div>
+  <div class="tech-grid">
+    <div class="tech-card">
+      <div style="font-size:1.8rem">🐦</div>
+      <h4>Flutter + Dart</h4>
+      <p>Cross-platform from one codebase. Android, iOS, Web, Windows, macOS, Linux.</p>
+    </div>
+    <div class="tech-card">
+      <div style="font-size:1.8rem">🔄</div>
+      <h4>Riverpod</h4>
+      <p>Four provider patterns — singleton services, async data, real-time streams, parameterized family providers.</p>
+    </div>
+    <div class="tech-card">
+      <div style="font-size:1.8rem">🗄️</div>
+      <h4>Drift + SQLite</h4>
+      <p>35 tables, schema v65. Idempotent migrations. Query-heavy — no wasteful writes.</p>
+    </div>
+    <div class="tech-card">
+      <div style="font-size:1.8rem">🎬</div>
+      <h4>Rive + Flutter Animate</h4>
+      <p>Vector animation runtime paired with declarative animation library. No video assets.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>A Life Worth Living</h2>
+  <p>LifeOS is under active development. The repo isn't public yet — but the page is here so you know what's coming.</p>
+  <a href="/" class="btn btn-primary">Back to Portfolio</a>
+</section>
+
+<footer class="footer">
+  <a href="/">vatteck.com</a> &nbsp;·&nbsp;
+  LifeOS v1.0.2 &nbsp;·&nbsp;
+  Flutter &nbsp;·&nbsp;
+  Cross-Platform
+</footer>
+
+</body>
+</html>
