@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#FF1F1F">
+  <title>Continuity — Flow Puzzle Game for Android</title>
+  <meta name="description" content="A polished connect-the-dots puzzle game for Android. 300 levels, daily challenges, themes, and achievements. Built in Flutter.">
+  <link rel="canonical" href="https://vatteck.com/continuity/">
+  <link rel="stylesheet" href="/shared/project.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-home">
+      <span class="nav-home-arrow">←</span> VATTECK
+    </a>
+    <div class="nav-links">
+      <a href="/atlas/">Atlas</a>
+      <a href="/substrateminer/">HashFactory</a>
+      <a href="/continuity/" style="color:var(--accent)">Continuity</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">
+    <span class="accent-dot"></span> Android &bull; Closed Testing
+  </div>
+  <h1>CONTINUITY<span class="accent">_</span></h1>
+  <p class="hero-tagline">
+    A polished Flow-style puzzle game. Connect the dots, fill the board, build your streak.
+    No gimmicks — just tight execution.
+  </p>
+  <div class="hero-actions">
+    <a href="https://play.google.com/store/apps/details?id=continuity.vatteck" class="btn btn-primary" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Get on Google Play
+    </a>
+    <a href="https://github.com/Vatteck/Continuity" class="btn btn-outline" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      View Source
+    </a>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">// GAMEPLAY</div>
+    <h2 class="section-title">How It Works</h2>
+  </div>
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon">🔗</div>
+      <h3>Connect the Dots</h3>
+      <p>Drag between same-colored endpoints to create a path. Every cell must be filled. Paths cannot cross — plan carefully.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⭐</div>
+      <h3>Perfect Clears</h3>
+      <p>Solve a level in the minimum number of moves to earn a perfect-clear medal. They persist and show in the level select.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧩</div>
+      <h3>300 Hand-Generated Levels</h3>
+      <p>From simple 5×5 warm-ups to brutal 10×10 endgame boards. Every level is solvable and uniquely solvable — verified by the generator test suite.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <h3>Daily Puzzle</h3>
+      <p>A fresh puzzle every day for 2 years. Build your streak, fill the calendar. Works offline — levels ship in the app, no server needed.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎨</div>
+      <h3>Unlockable Themes</h3>
+      <p>Four board themes unlock as you progress: Neon (default), Frost (25 solves), Ember (100), Void (250). Reskins the board only — app chrome stays consistent.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏆</div>
+      <h3>Play Games Achievements</h3>
+      <p>12 achievements via Google Play Games Services. Cloud save backs up your progress. Silent sign-in — no popups unless you want them.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">// MONETIZATION</div>
+    <h2 class="section-title">Fair & Unobtrusive</h2>
+  </div>
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon">💡</div>
+      <h3>Hint System</h3>
+      <p>Stuck? Use a hint to reveal part of the solution path — always behind a confirmation dialog.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎬</div>
+      <h3>Rewarded Ads</h3>
+      <p>Watch a short ad to earn a free hint. Opt-in only. Interstitials fire every 3rd completed level — infrequent enough to not annoy.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛒</div>
+      <h3>One-Time IAPs</h3>
+      <p>Remove ads permanently. Or grab a hint pack. No subscriptions, no battle pass, no nonsense.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">// SPECS</div>
+    <h2 class="section-title">Under the Hood</h2>
+  </div>
+  <div class="specs">
+    <div class="spec-item">
+      <div class="spec-value">300</div>
+      <div class="spec-label">Campaign Levels</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-value">730</div>
+      <div class="spec-label">Daily Puzzles</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-value">12</div>
+      <div class="spec-label">Achievements</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-value">4</div>
+      <div class="spec-label">Board Themes</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-value">102</div>
+      <div class="spec-label">Tests Passing</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">// TECH</div>
+    <h2 class="section-title">Built With</h2>
+  </div>
+  <div class="tag-list">
+    <span class="tag">Flutter</span>
+    <span class="tag">Dart</span>
+    <span class="tag">CustomPainter</span>
+    <span class="tag">Google Play Billing</span>
+    <span class="tag">Play Games Services</span>
+    <span class="tag">Python (Generator)</span>
+    <span class="tag">pytest</span>
+    <span class="tag">AdMob</span>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Ready to play?</h2>
+  <p>Continuity is live in Google Play closed testing. Join the test, connect some dots, and let me know what you think.</p>
+  <a href="https://play.google.com/store/apps/details?id=continuity.vatteck" class="btn btn-primary" target="_blank" rel="noopener">
+    Get on Google Play
+  </a>
+</section>
+
+<footer class="footer">
+  <a href="/">vatteck.com</a> &nbsp;·&nbsp;
+  <a href="https://github.com/Vatteck/Continuity">GitHub</a> &nbsp;·&nbsp;
+  Continuity v1.1.5
+</footer>
+
+</body>
+</html>
