@@ -48,7 +48,6 @@ export default function App() {
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           
           <div className="flex items-center gap-2.5">
-            <a href="/" className="text-[10px] font-mono uppercase tracking-widest text-slate-500 hover:text-atlas-red transition-colors">← Main</a>
             <AtlasLogo size={28} />
             <div className="flex flex-col">
               <span className="font-display font-bold text-white tracking-widest text-[15px] leading-tight select-none">ATLAS</span>
