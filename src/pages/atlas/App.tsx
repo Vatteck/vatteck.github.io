@@ -56,7 +56,7 @@ export default function App() {
             </div>
           </div>
 
-          <div className="hidden sm:flex items-center gap-6 text-xs font-semibold text-slate-300">
+          <div className="hidden lg:flex items-center gap-5 text-xs font-semibold text-slate-300">
             <a href="#simulator" className="hover:text-white transition-colors">Interactive Demo</a>
             <a href="#screenshots" className="hover:text-white transition-colors">Screenshots</a>
             <a href="#features" className="hover:text-white transition-colors">Features</a>
@@ -65,10 +65,6 @@ export default function App() {
               <span>Repository</span>
               <ExternalLink size={11} className="text-slate-500" />
             </a>
-            <span className="text-slate-700">|</span>
-            <a href="/substrateminer/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide">HashFactory</a>
-            <a href="/continuity/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide">Continuity</a>
-            <a href="/lifeos/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide">LifeOS</a>
           </div>
 
           <div className="flex items-center gap-3">
@@ -79,7 +75,7 @@ export default function App() {
               className="bg-[#121622] hover:bg-[#1a2030] text-slate-200 border border-slate-800 text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors font-medium cursor-pointer"
             >
               <Github size={13} />
-              <span>GitHub Star</span>
+              <span className="hidden sm:inline">GitHub Star</span>
             </a>
             
             <a 
@@ -92,6 +88,17 @@ export default function App() {
 
         </div>
       </header>
+
+      {/* --- PROJECT NAV BAR --- */}
+      <div className="sticky top-[57px] z-10 bg-[#0a0c14]/90 backdrop-blur-md border-b border-slate-900/40">
+        <div className="max-w-6xl mx-auto px-4 py-2 flex items-center gap-4 overflow-x-auto">
+          <a href="/" className="text-[10px] font-mono uppercase tracking-widest text-slate-500 hover:text-atlas-red transition-colors whitespace-nowrap shrink-0">← Main</a>
+          <span className="text-slate-700 shrink-0">|</span>
+          <a href="/substrateminer/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide whitespace-nowrap shrink-0">HashFactory</a>
+          <a href="/continuity/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide whitespace-nowrap shrink-0">Continuity</a>
+          <a href="/lifeos/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide whitespace-nowrap shrink-0">LifeOS</a>
+        </div>
+      </div>
 
       {/* --- HERO SECTION --- */}
       <section className="relative z-10 max-w-6xl mx-auto px-4 pt-12 pb-16 text-center space-y-8 select-none">
