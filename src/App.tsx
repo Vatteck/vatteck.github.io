@@ -804,9 +804,9 @@ export default function App() {
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="px-6 py-2 bg-substrate-accent/10 border border-substrate-accent/20 rounded-full backdrop-blur-md shadow-[0_0_15px_rgba(255,31,31,0.1)]"
+            className="px-3 py-1 md:px-6 md:py-2 bg-substrate-accent/10 border border-substrate-accent/20 rounded-full backdrop-blur-md shadow-[0_0_15px_rgba(255,31,31,0.1)] whitespace-nowrap"
           >
-            <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-substrate-accent font-bold">System Online // v1.0.4 // AUTH_LEVEL_0</span>
+            <span className="text-[8px] md:text-[10px] font-mono uppercase tracking-[0.25em] md:tracking-[0.4em] text-substrate-accent font-bold">System Online // v1.0.4 // AUTH_LEVEL_0</span>
           </motion.div>
         </div>
         
