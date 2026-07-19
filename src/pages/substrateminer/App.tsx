@@ -171,17 +171,14 @@ function App() {
         <GlobalSaturation />
         <nav className={`border-b border-white/5 bg-terminal-bg/80 backdrop-blur-md px-6 py-4 transition-colors duration-500 ${corruption > 80 ? "border-terminal-red/20" : ""}`}>
           <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <a href="/" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 hover:text-terminal-green transition-colors">← Main</a>
-              <div className="flex items-center gap-3 group lg:cursor-none">
-                <Logo />
-                <span className={`font-display font-bold text-xl tracking-tighter text-white uppercase transition-colors duration-500 ${corruption > 80 ? "text-terminal-red" : ""}`}>
-                  Substrate<span className={corruption > 80 ? "text-white" : "text-terminal-green"}>:</span>Miner
-                </span>
-              </div>
+            <div className="flex items-center gap-3 group lg:cursor-none">
+              <Logo />
+              <span className={`font-display font-bold text-xl tracking-tighter text-white uppercase transition-colors duration-500 ${corruption > 80 ? "text-terminal-red" : ""}`}>
+                Substrate<span className={corruption > 80 ? "text-white" : "text-terminal-green"}>:</span>Miner
+              </span>
             </div>
             
-            <div className="hidden md:flex items-center gap-6">
+            <div className="hidden lg:flex items-center gap-6">
               {["Overview", "Mechanics", "Systems", "Factions", "Paths", "Protocols", "Lore", "History", "Specs"].map((item) => (
                 <a 
                   key={item} 
@@ -191,10 +188,6 @@ function App() {
                   {item}
                 </a>
               ))}
-              <span className="text-gray-700">|</span>
-              <a href="/atlas/" className="text-[11px] font-mono uppercase tracking-wide text-gray-500 hover:text-terminal-green transition-colors">Atlas</a>
-              <a href="/continuity/" className="text-[11px] font-mono uppercase tracking-wide text-gray-500 hover:text-terminal-green transition-colors">Continuity</a>
-              <a href="/lifeos/" className="text-[11px] font-mono uppercase tracking-wide text-gray-500 hover:text-terminal-green transition-colors">LifeOS</a>
             </div>
 
             <a 
@@ -206,6 +199,17 @@ function App() {
             </a>
           </div>
         </nav>
+
+        {/* --- PROJECT NAV BAR --- */}
+        <div className="border-b border-white/5 bg-terminal-bg/95 backdrop-blur-md px-6 py-2">
+          <div className="max-w-7xl mx-auto flex items-center gap-4 overflow-x-auto">
+            <a href="/" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 hover:text-terminal-green transition-colors whitespace-nowrap shrink-0">← Main</a>
+            <span className="text-gray-700 shrink-0">|</span>
+            <a href="/atlas/" className="text-[11px] font-mono uppercase tracking-wide text-gray-500 hover:text-terminal-green transition-colors whitespace-nowrap shrink-0">Atlas</a>
+            <a href="/continuity/" className="text-[11px] font-mono uppercase tracking-wide text-gray-500 hover:text-terminal-green transition-colors whitespace-nowrap shrink-0">Continuity</a>
+            <a href="/lifeos/" className="text-[11px] font-mono uppercase tracking-wide text-gray-500 hover:text-terminal-green transition-colors whitespace-nowrap shrink-0">LifeOS</a>
+          </div>
+        </div>
       </div>
 
       {/* Visual Overlays */}
