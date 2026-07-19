@@ -48,7 +48,8 @@ export default function App() {
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           
           <div className="flex items-center gap-2.5">
-            <AtlasLogo size={32} />
+            <a href="/" className="text-[10px] font-mono uppercase tracking-widest text-slate-500 hover:text-atlas-red transition-colors">← Main</a>
+            <AtlasLogo size={28} />
             <div className="flex flex-col">
               <span className="font-display font-bold text-white tracking-widest text-[15px] leading-tight select-none">ATLAS</span>
               <span className="text-[9px] font-mono font-semibold text-rose-500/80 leading-tight">GRAPHICAL PACKAGE MANAGER</span>
@@ -64,6 +65,10 @@ export default function App() {
               <span>Repository</span>
               <ExternalLink size={11} className="text-slate-500" />
             </a>
+            <span className="text-slate-700">|</span>
+            <a href="/substrateminer/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide">HashFactory</a>
+            <a href="/continuity/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide">Continuity</a>
+            <a href="/lifeos/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide">LifeOS</a>
           </div>
 
           <div className="flex items-center gap-3">
