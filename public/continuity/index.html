@@ -3,70 +3,162 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#FF1F1F">
-  <title>Continuity — Flow Puzzle Game for Android</title>
-  <meta name="description" content="A polished connect-the-dots puzzle game for Android. 300 levels, daily challenges, themes, and achievements. Built in Flutter.">
+  <meta name="theme-color" content="#0A0E1A">
+  <title>Continuity — connect every trace.</title>
+  <meta name="description" content="A polished Flow-style puzzle game for Android. 300 levels, daily challenges, themes, and achievements. Built in Flutter.">
   <link rel="canonical" href="https://vatteck.com/continuity/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0a0a; --card: #111; --border: #1a1a1a;
-      --accent: #FF1F1F; --accent-glow: rgba(255,31,31,0.15);
-      --text: #e2e8f0; --text-dim: #94a3b8; --text-muted: #64748b;
-      --font-mono: 'JetBrains Mono', monospace;
-      --font-sans: 'Inter', system-ui, sans-serif;
+      --bg: #0A0E1A;
+      --bg-card: #111827;
+      --bg-cell: #161B2C;
+      --border: #1F2937;
+      --accent: #2DD3D6;
+      --accent-glow: rgba(45,211,214,0.18);
+      --text: #F3F4F6;
+      --text-dim: #9CA3AF;
+      --text-muted: #6B7280;
+      --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --radius-pill: 9999px;
+      --radius-card: 20px;
+      --radius-cell: 12px;
+
+      /* trace palette */
+      --trace-teal: #2A6F73;
+      --trace-rust: #A85A2A;
+      --trace-purple: #6B4A8A;
+      --trace-olive: #7A7A2A;
+      --trace-navy: #2A4A7A;
+      --trace-wine: #7A2A4A;
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{background:var(--bg);color:var(--text);font-family:var(--font-sans);scroll-behavior:smooth}
-    body{min-height:100vh;background:radial-gradient(ellipse at 50% 0%,rgba(255,31,31,0.03) 0%,transparent 70%),radial-gradient(ellipse at 80% 100%,rgba(255,31,31,0.02) 0%,transparent 50%),var(--bg);line-height:1.6}
-    .nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem}
+    html{background:var(--bg);color:var(--text);font-family:var(--font-body);scroll-behavior:smooth}
+    body{min-height:100vh;background:radial-gradient(ellipse at 50% 0%,rgba(45,211,214,0.04) 0%,transparent 60%),var(--bg);line-height:1.6;overflow-x:hidden}
+
+    /* ── Circuit background ── */
+    .circuit-bg{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.5}
+    .circuit-node{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+    .circuit-ring{position:absolute;width:14px;height:14px;border-radius:50%;border:1.5px solid var(--accent);opacity:0.4;transform:translate(-4px,-4px)}
+    .circuit-h{position:absolute;height:1px;background:var(--accent);opacity:0.15}
+    .circuit-v{position:absolute;width:1px;background:var(--accent);opacity:0.15}
+
+    /* ── Nav ── */
+    .nav{position:sticky;top:0;z-index:100;background:rgba(10,14,26,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 2rem}
     .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
-    .nav-home{font-family:var(--font-mono);font-size:.75rem;font-weight:700;letter-spacing:.2em;color:var(--accent);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;transition:color .2s}
-    .nav-home:hover{color:#ff4d4d}
-    .nav-home-arrow{font-size:.65rem;opacity:.5}
-    .nav-links{display:flex;gap:1.5rem;font-family:var(--font-mono);font-size:.65rem}
-    .nav-links a{color:var(--text-dim);text-decoration:none;text-transform:uppercase;letter-spacing:.1em;transition:color .2s}
+    .nav-home{font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.18em;color:var(--accent);text-decoration:none;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;transition:color .2s}
+    .nav-home:hover{color:#5EE8EB}
+    .nav-home-arrow{font-size:.6rem;opacity:.5}
+    .nav-links{display:flex;gap:2rem;font-family:var(--font-display);font-size:.65rem;letter-spacing:.12em}
+    .nav-links a{color:var(--text-dim);text-decoration:none;text-transform:uppercase;transition:color .2s}
     .nav-links a:hover{color:var(--accent)}
-    .hero{padding:6rem 2rem 4rem;text-align:center;max-width:800px;margin:0 auto;position:relative}
-    .hero-badge{display:inline-block;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.2em;color:var(--accent);background:var(--accent-glow);border:1px solid rgba(255,31,31,0.3);padding:.35rem 1rem;border-radius:999px;margin-bottom:1.5rem;text-transform:uppercase}
-    .hero h1{font-family:var(--font-mono);font-size:clamp(2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:1rem;color:#fff}
-    .hero h1 .accent{color:var(--accent)}
-    .hero-tagline{font-size:1.15rem;color:var(--text-dim);max-width:550px;margin:0 auto 2rem;font-weight:400}
+
+    /* ── Hero ── */
+    .hero{position:relative;z-index:1;padding:8rem 2rem 4rem;text-align:center;max-width:720px;margin:0 auto}
+    .hero-badge{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-display);font-size:.6rem;letter-spacing:.18em;color:var(--accent);background:var(--accent-glow);border:1px solid rgba(45,211,214,0.25);padding:.35rem 1.1rem;border-radius:var(--radius-pill);margin-bottom:2rem;text-transform:uppercase}
+    .hero-badge-dot{display:inline-block;width:5px;height:5px;background:var(--accent);border-radius:50%;box-shadow:0 0 8px var(--accent)}
+    .hero h1{font-family:var(--font-display);font-size:clamp(2.4rem,6vw,4.2rem);font-weight:800;letter-spacing:.16em;line-height:1;margin-bottom:.75rem;color:#fff;text-transform:uppercase}
+    .hero-accent-line{width:48px;height:2px;background:var(--accent);margin:0 auto 1.25rem;border-radius:1px}
+    .hero-tagline{font-family:var(--font-display);font-size:1rem;color:var(--text-dim);letter-spacing:.1em;text-transform:lowercase;margin-bottom:2.5rem;font-weight:400}
     .hero-actions{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
-    .btn{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-mono);font-size:.75rem;font-weight:600;letter-spacing:.05em;padding:.75rem 1.5rem;border-radius:8px;text-decoration:none;transition:all .2s;cursor:pointer;border:none}
-    .btn-primary{background:var(--accent);color:#fff;box-shadow:0 0 20px rgba(255,31,31,0.2)}
-    .btn-primary:hover{background:#e01c1c;transform:translateY(-1px);box-shadow:0 0 30px rgba(255,31,31,0.35)}
-    .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-display);font-size:.75rem;font-weight:600;letter-spacing:.06em;padding:.85rem 2rem;border-radius:var(--radius-pill);text-decoration:none;transition:all .2s;cursor:pointer;border:none}
+    .btn-primary{background:var(--accent);color:#0A1418;box-shadow:0 0 24px rgba(45,211,214,0.25)}
+    .btn-primary:hover{background:#3BE0E3;transform:translateY(-1px);box-shadow:0 0 36px rgba(45,211,214,0.4)}
+    .btn-outline{background:transparent;color:var(--text-dim);border:1px solid var(--border)}
     .btn-outline:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
-    .section{max-width:1100px;margin:0 auto;padding:5rem 2rem}
-    .section-header{text-align:center;margin-bottom:3rem}
-    .section-label{font-family:var(--font-mono);font-size:.65rem;letter-spacing:.25em;color:var(--accent);text-transform:uppercase;margin-bottom:.75rem}
-    .section-title{font-family:var(--font-mono);font-size:2rem;font-weight:700;color:#fff;letter-spacing:-.02em}
+
+    /* ── Screenshot strip ── */
+    .screenshot-strip{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:2rem 2rem 5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+    .screenshot-frame{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-card);overflow:hidden;transition:border-color .3s,transform .3s;max-width:200px}
+    .screenshot-frame:hover{border-color:rgba(45,211,214,0.3);transform:translateY(-4px)}
+    .screenshot-frame img{width:100%;height:auto;display:block}
+    .screenshot-label{padding:.6rem .75rem;font-family:var(--font-display);font-size:.55rem;letter-spacing:.15em;color:var(--text-muted);text-transform:uppercase;border-top:1px solid var(--border);text-align:center}
+
+    /* ── Sections ── */
+    .section{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:5rem 2rem}
+    .section-header{text-align:center;margin-bottom:3.5rem}
+    .section-label{font-family:var(--font-display);font-size:.6rem;letter-spacing:.22em;color:var(--accent);text-transform:uppercase;margin-bottom:.75rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
+    .section-label::before,.section-label::after{content:'';display:block;width:24px;height:1px;background:var(--accent);opacity:.3}
+    .section-title{font-family:var(--font-display);font-size:2rem;font-weight:700;color:#fff;letter-spacing:.06em;text-transform:uppercase}
+    .section-sub{font-size:.85rem;color:var(--text-dim);letter-spacing:.08em;margin-top:.5rem;font-family:var(--font-display)}
+
+    /* ── Feature Grid ── */
     .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem}
-    .feature-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.75rem;transition:border-color .2s,transform .2s}
-    .feature-card:hover{border-color:rgba(255,31,31,0.3);transform:translateY(-2px)}
-    .feature-icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;background:var(--accent-glow);border:1px solid rgba(255,31,31,0.25);border-radius:10px;margin-bottom:1rem;font-size:1.25rem}
-    .feature-card h3{font-family:var(--font-mono);font-size:.85rem;font-weight:700;color:#fff;margin-bottom:.5rem;letter-spacing:.05em}
-    .feature-card p{font-size:.9rem;color:var(--text-dim);line-height:1.6}
-    .specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
-    .spec-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;text-align:center}
-    .spec-value{font-family:var(--font-mono);font-size:1.5rem;font-weight:800;color:var(--accent);margin-bottom:.25rem}
-    .spec-label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.15em;color:var(--text-muted);text-transform:uppercase}
-    .tag-list{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
-    .tag{font-family:var(--font-mono);font-size:.65rem;padding:.35rem .85rem;border-radius:999px;background:var(--card);border:1px solid var(--border);color:var(--text-dim);letter-spacing:.05em;text-transform:uppercase}
-    .cta{text-align:center;padding:5rem 2rem;background:radial-gradient(ellipse at 50% 50%,rgba(255,31,31,0.04) 0%,transparent 70%);border-top:1px solid var(--border)}
-    .cta h2{font-family:var(--font-mono);font-size:1.75rem;color:#fff;margin-bottom:.75rem}
-    .cta p{color:var(--text-dim);margin-bottom:2rem;max-width:500px;margin-left:auto;margin-right:auto}
-    .footer{border-top:1px solid var(--border);padding:2rem;text-align:center;font-family:var(--font-mono);font-size:.6rem;color:var(--text-muted);letter-spacing:.1em}
+    .feature-card{position:relative;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-card);padding:1.75rem;transition:border-color .2s,transform .2s;overflow:hidden}
+    .feature-card:hover{border-color:rgba(45,211,214,0.28);transform:translateY(-2px)}
+    .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(45,211,214,0.3),transparent);opacity:0;transition:opacity .3s}
+    .feature-card:hover::before{opacity:1}
+    .feature-icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;background:var(--accent-glow);border:1px solid rgba(45,211,214,0.2);border-radius:var(--radius-cell);margin-bottom:1rem;font-size:1.2rem}
+    .feature-card h3{font-family:var(--font-display);font-size:.82rem;font-weight:700;color:#fff;margin-bottom:.5rem;letter-spacing:.06em;text-transform:uppercase}
+    .feature-card p{font-size:.88rem;color:var(--text-dim);line-height:1.65}
+
+    /* ── Stats row ── */
+    .stats{display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:center;padding:2rem 0}
+    .stat-item{text-align:center;min-width:100px}
+    .stat-value{font-family:var(--font-display);font-size:2.2rem;font-weight:800;color:var(--accent);line-height:1;margin-bottom:.2rem}
+    .stat-label{font-family:var(--font-display);font-size:.55rem;letter-spacing:.16em;color:var(--text-muted);text-transform:uppercase}
+
+    /* ── Progress bar motif ── */
+    .progress-track{max-width:300px;margin:0 auto;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+    .progress-fill{height:100%;background:var(--accent);border-radius:2px;box-shadow:0 0 10px rgba(45,211,214,0.4);transition:width 1s ease}
+
+    /* ── Trace gallery ── */
+    .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem}
+    .gallery-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-card);overflow:hidden;transition:border-color .2s}
+    .gallery-item:hover{border-color:rgba(45,211,214,0.25)}
+    .gallery-item img{width:100%;display:block}
+    .gallery-title{padding:.6rem .75rem;font-family:var(--font-display);font-size:.55rem;letter-spacing:.14em;color:var(--text-muted);text-transform:uppercase;text-align:center;border-top:1px solid var(--border)}
+
+    /* ── CTA ── */
+    .cta{position:relative;z-index:1;text-align:center;padding:5rem 2rem;background:radial-gradient(ellipse at 50% 50%,rgba(45,211,214,0.05) 0%,transparent 70%);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .cta h2{font-family:var(--font-display);font-size:1.75rem;color:#fff;margin-bottom:.75rem;letter-spacing:.06em;text-transform:uppercase}
+    .cta p{color:var(--text-dim);margin-bottom:2rem;max-width:480px;margin-left:auto;margin-right:auto;font-size:.9rem}
+
+    /* ── Footer ── */
+    .footer{position:relative;z-index:1;padding:2.5rem 2rem;text-align:center;font-family:var(--font-display);font-size:.55rem;letter-spacing:.16em;color:var(--text-muted);text-transform:uppercase}
     .footer a{color:var(--accent);text-decoration:none}
-    .footer a:hover{text-decoration:underline}
-    .accent-dot{display:inline-block;width:6px;height:6px;background:var(--accent);border-radius:50%;margin-right:.5rem;box-shadow:0 0 8px var(--accent)}
-    @media(max-width:640px){.nav{padding:0 1rem}.nav-links{gap:1rem;font-size:.6rem}.hero{padding:4rem 1.25rem 3rem}.section{padding:3rem 1.25rem}.features{grid-template-columns:1fr}.specs{grid-template-columns:repeat(2,1fr)}}
+    .footer a:hover{color:#5EE8EB}
+
+    /* ── Node decoration ── */
+    .node{display:inline-flex;align-items:center;gap:.4rem}
+    .node-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;box-shadow:0 0 6px var(--accent)}
+    .node-ring{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--accent);opacity:.5}
+
+    @media(max-width:640px){
+      .nav{padding:0 1rem}
+      .nav-links{gap:1rem;font-size:.6rem}
+      .hero{padding:5rem 1.25rem 3rem}
+      .section{padding:3rem 1.25rem}
+      .features{grid-template-columns:1fr}
+      .screenshot-strip{gap:.75rem}
+      .screenshot-frame{max-width:140px}
+      .gallery{grid-template-columns:repeat(2,1fr)}
+    }
   </style>
 </head>
 <body>
+
+<!-- Circuit background decorations -->
+<div class="circuit-bg">
+  <div style="position:absolute;top:8%;left:5%"><span class="circuit-node"></span><span class="circuit-ring"></span></div>
+  <div class="circuit-h" style="top:calc(8% + 3px);left:calc(5% + 14px);width:80px"></div>
+  <div style="position:absolute;top:8%;left:calc(5% + 94px)"><span class="circuit-node"></span><span class="circuit-ring"></span></div>
+  <div class="circuit-v" style="top:calc(8% + 14px);left:calc(5% + 94px + 3px);height:60px"></div>
+
+  <div style="position:absolute;top:22%;right:8%"><span class="circuit-node"></span><span class="circuit-ring"></span></div>
+  <div class="circuit-h" style="top:calc(22% + 3px);right:calc(8% + 14px);width:120px"></div>
+  <div style="position:absolute;top:22%;right:calc(8% + 134px)"><span class="circuit-node"></span><span class="circuit-ring"></span></div>
+  <div class="circuit-v" style="top:calc(22% - 40px);right:calc(8% + 134px + 3px);height:40px"></div>
+
+  <div style="position:absolute;bottom:18%;left:12%"><span class="circuit-node"></span><span class="circuit-ring"></span></div>
+  <div class="circuit-v" style="bottom:calc(18% + 14px);left:calc(12% + 3px);height:50px"></div>
+
+  <div style="position:absolute;bottom:25%;right:6%"><span class="circuit-node"></span><span class="circuit-ring"></span></div>
+  <div class="circuit-h" style="bottom:calc(25% + 3px);right:calc(6% + 14px);width:90px"></div>
+</div>
 
 <nav class="nav">
   <div class="nav-inner">
@@ -83,16 +175,14 @@
 
 <section class="hero">
   <div class="hero-badge">
-    <span class="accent-dot"></span> Android &bull; Closed Testing
+    <span class="hero-badge-dot"></span> Android &bull; Live in Closed Testing
   </div>
-  <h1>CONTINUITY<span class="accent">_</span></h1>
-  <p class="hero-tagline">
-    A polished Flow-style puzzle game. Connect the dots, fill the board, build your streak.
-    No gimmicks — just tight execution.
-  </p>
+  <h1>CONTINUITY</h1>
+  <div class="hero-accent-line"></div>
+  <p class="hero-tagline">connect every trace.</p>
   <div class="hero-actions">
     <a href="https://play.google.com/store/apps/details?id=continuity.vatteck" class="btn btn-primary" target="_blank" rel="noopener">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Get on Google Play
     </a>
     <a href="https://github.com/Vatteck/Continuity" class="btn btn-outline" target="_blank" rel="noopener">
@@ -102,119 +192,124 @@
   </div>
 </section>
 
+<!-- Screenshot showcase -->
+<div class="screenshot-strip">
+  <div class="screenshot-frame"><img src="/continuity/screenshots/00-home.png" alt="Home screen" loading="lazy"><div class="screenshot-label">Home</div></div>
+  <div class="screenshot-frame"><img src="/continuity/screenshots/01-level-select.png" alt="Level select" loading="lazy"><div class="screenshot-label">Levels</div></div>
+  <div class="screenshot-frame"><img src="/continuity/screenshots/03-drawing.png" alt="Drawing a path" loading="lazy"><div class="screenshot-label">Drawing</div></div>
+  <div class="screenshot-frame"><img src="/continuity/screenshots/05-solved.png" alt="Solved puzzle" loading="lazy"><div class="screenshot-label">Solved</div></div>
+  <div class="screenshot-frame"><img src="/continuity/screenshots/06-9x9.png" alt="Advanced 9x9 grid" loading="lazy"><div class="screenshot-label">9×9 Endgame</div></div>
+</div>
+
+<!-- Stats -->
+<section class="section" style="padding-top:0">
+  <div class="stats">
+    <div class="stat-item"><div class="stat-value">300</div><div class="stat-label">Campaign Levels</div></div>
+    <div class="stat-item"><div class="stat-value">730</div><div class="stat-label">Daily Puzzles</div></div>
+    <div class="stat-item"><div class="stat-value">12</div><div class="stat-label">Achievements</div></div>
+    <div class="stat-item"><div class="stat-value">4</div><div class="stat-label">Themes</div></div>
+    <div class="stat-item"><div class="stat-value">102</div><div class="stat-label">Tests</div></div>
+  </div>
+  <div class="progress-track" style="margin-top:1rem"><div class="progress-fill" style="width:100%"></div></div>
+</section>
+
+<!-- Gameplay -->
 <section class="section">
   <div class="section-header">
-    <div class="section-label">// GAMEPLAY</div>
-    <h2 class="section-title">How It Works</h2>
+    <div class="section-label">Gameplay</div>
+    <h2 class="section-title">Connect Every Trace</h2>
+    <p class="section-sub">classic flow rules, better presentation</p>
   </div>
   <div class="features">
     <div class="feature-card">
       <div class="feature-icon">🔗</div>
-      <h3>Connect the Dots</h3>
-      <p>Drag between same-colored endpoints to create a path. Every cell must be filled. Paths cannot cross — plan carefully.</p>
+      <h3>Draw Paths</h3>
+      <p>Drag between same-colored endpoints. Every cell must be filled. Paths cannot cross — the grid is your canvas.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">⭐</div>
       <h3>Perfect Clears</h3>
-      <p>Solve a level in the minimum number of moves to earn a perfect-clear medal. They persist and show in the level select.</p>
+      <p>Solve in the minimum number of moves to earn a medal. They persist forever and show in the level select — chase mastery.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🧩</div>
-      <h3>300 Hand-Generated Levels</h3>
-      <p>From simple 5×5 warm-ups to brutal 10×10 endgame boards. Every level is solvable and uniquely solvable — verified by the generator test suite.</p>
+      <h3>300 Hand-Crafted Levels</h3>
+      <p>From 5×5 warm-ups to brutal 10×10 endgame boards. Every level is procedurally generated and verified solvable by the test suite.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">📅</div>
       <h3>Daily Puzzle</h3>
-      <p>A fresh puzzle every day for 2 years. Build your streak, fill the calendar. Works offline — levels ship in the app, no server needed.</p>
+      <p>A fresh challenge every day for 2 years. Build your streak, fill the calendar. Works fully offline — levels ship in the app.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🎨</div>
       <h3>Unlockable Themes</h3>
-      <p>Four board themes unlock as you progress: Neon (default), Frost (25 solves), Ember (100), Void (250). Reskins the board only — app chrome stays consistent.</p>
+      <p>Four board themes unlock with progress: Neon (default), Frost, Ember, Void. Each reskins trace colors and cell styling.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🏆</div>
-      <h3>Play Games Achievements</h3>
-      <p>12 achievements via Google Play Games Services. Cloud save backs up your progress. Silent sign-in — no popups unless you want them.</p>
+      <h3>Play Games + Cloud Save</h3>
+      <p>12 achievements on Google Play Games. One-tap cloud save. Silent sign-in — no popups. Progress follows your account.</p>
     </div>
   </div>
 </section>
 
+<!-- Monetization -->
 <section class="section">
   <div class="section-header">
-    <div class="section-label">// MONETIZATION</div>
-    <h2 class="section-title">Fair & Unobtrusive</h2>
+    <div class="section-label">Monetization</div>
+    <h2 class="section-title">Fair & Respectful</h2>
   </div>
   <div class="features">
     <div class="feature-card">
       <div class="feature-icon">💡</div>
       <h3>Hint System</h3>
-      <p>Stuck? Use a hint to reveal part of the solution path — always behind a confirmation dialog.</p>
+      <p>Stuck? A hint reveals part of the solution path — always behind a confirmation dialog. No accidental reveals.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🎬</div>
-      <h3>Rewarded Ads</h3>
-      <p>Watch a short ad to earn a free hint. Opt-in only. Interstitials fire every 3rd completed level — infrequent enough to not annoy.</p>
+      <h3>Rewarded Ads Only</h3>
+      <p>Watch a short ad for a free hint. One interstitial every 3rd level. Opt-in only — you're never forced to watch.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🛒</div>
-      <h3>One-Time IAPs</h3>
-      <p>Remove ads permanently. Or grab a hint pack. No subscriptions, no battle pass, no nonsense.</p>
+      <h3>One-Time Purchases</h3>
+      <p>Remove ads permanently. Or grab a hint pack. No subscriptions, no battle pass, no currencies. Buy it once, own it.</p>
     </div>
   </div>
 </section>
 
+<!-- Tech -->
 <section class="section">
   <div class="section-header">
-    <div class="section-label">// SPECS</div>
-    <h2 class="section-title">Under the Hood</h2>
-  </div>
-  <div class="specs">
-    <div class="spec-item">
-      <div class="spec-value">300</div>
-      <div class="spec-label">Campaign Levels</div>
-    </div>
-    <div class="spec-item">
-      <div class="spec-value">730</div>
-      <div class="spec-label">Daily Puzzles</div>
-    </div>
-    <div class="spec-item">
-      <div class="spec-value">12</div>
-      <div class="spec-label">Achievements</div>
-    </div>
-    <div class="spec-item">
-      <div class="spec-value">4</div>
-      <div class="spec-label">Board Themes</div>
-    </div>
-    <div class="spec-item">
-      <div class="spec-value">102</div>
-      <div class="spec-label">Tests Passing</div>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section-header">
-    <div class="section-label">// TECH</div>
+    <div class="section-label">Under the Hood</div>
     <h2 class="section-title">Built With</h2>
   </div>
-  <div class="tag-list">
-    <span class="tag">Flutter</span>
-    <span class="tag">Dart</span>
-    <span class="tag">CustomPainter</span>
-    <span class="tag">Google Play Billing</span>
-    <span class="tag">Play Games Services</span>
-    <span class="tag">Python (Generator)</span>
-    <span class="tag">pytest</span>
-    <span class="tag">AdMob</span>
+  <div class="features" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+    <div class="feature-card" style="text-align:center">
+      <div class="feature-icon" style="margin:0 auto 1rem">⚙️</div>
+      <h3>Flutter + Dart</h3>
+      <p style="font-size:.8rem">CustomPainter rendering. No game engine. 60fps on mid-range hardware.</p>
+    </div>
+    <div class="feature-card" style="text-align:center">
+      <div class="feature-icon" style="margin:0 auto 1rem">🐍</div>
+      <h3>Python Generator</h3>
+      <p style="font-size:.8rem">Offline level generator with pytest suite. 28 tests assert every level is solvable.</p>
+    </div>
+    <div class="feature-card" style="text-align:center">
+      <div class="feature-icon" style="margin:0 auto 1rem">☁️</div>
+      <h3>Google Play Services</h3>
+      <p style="font-size:.8rem">Achievements, cloud save, billing, and AdMob — wired behind clean facades.</p>
+    </div>
   </div>
 </section>
 
+<!-- CTA -->
 <section class="cta">
-  <h2>Ready to play?</h2>
-  <p>Continuity is live in Google Play closed testing. Join the test, connect some dots, and let me know what you think.</p>
+  <h2>Ready to Trace?</h2>
+  <p>Continuity is live in Google Play closed testing. Join the test, solve some puzzles, and tell me what you think.</p>
   <a href="https://play.google.com/store/apps/details?id=continuity.vatteck" class="btn btn-primary" target="_blank" rel="noopener">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     Get on Google Play
   </a>
 </section>
@@ -222,7 +317,8 @@
 <footer class="footer">
   <a href="/">vatteck.com</a> &nbsp;·&nbsp;
   <a href="https://github.com/Vatteck/Continuity">GitHub</a> &nbsp;·&nbsp;
-  Continuity v1.1.5
+  Continuity v1.1.5 &nbsp;·&nbsp;
+  <span class="node"><span class="node-dot"></span> live</span>
 </footer>
 
 </body>
