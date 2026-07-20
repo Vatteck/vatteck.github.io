@@ -70,12 +70,20 @@
     .btn-outline{background:transparent;color:var(--text-dim);border:1px solid var(--border)}
     .btn-outline:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
 
-    /* ── Screenshot strip ── */
-    .screenshot-strip{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:2rem 2rem 5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
-    .screenshot-frame{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-card);overflow:hidden;transition:border-color .3s,transform .3s;max-width:200px}
-    .screenshot-frame:hover{border-color:rgba(45,211,214,0.3);transform:translateY(-4px)}
-    .screenshot-frame img{width:100%;height:auto;display:block}
-    .screenshot-label{padding:.6rem .75rem;font-family:var(--font-display);font-size:.55rem;letter-spacing:.15em;color:var(--text-muted);text-transform:uppercase;border-top:1px solid var(--border);text-align:center}
+    /* ── Screenshot Carousel ── */
+    .carousel{position:relative;z-index:1;max-width:700px;margin:0 auto;padding:0 3rem 3rem}
+    .carousel-track{display:flex;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;border-radius:var(--radius-card);border:1px solid var(--border);background:var(--bg-card)}
+    .carousel-track::-webkit-scrollbar{display:none}
+    .carousel-slide{flex:0 0 100%;scroll-snap-align:center;position:relative}
+    .carousel-slide img{width:100%;height:auto;display:block}
+    .carousel-slide-label{position:absolute;bottom:0;left:0;right:0;padding:.7rem 1rem;background:linear-gradient(transparent,rgba(10,14,26,0.92));font-family:var(--font-display);font-size:.6rem;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;text-align:center}
+    .carousel-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:40px;height:40px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);color:var(--text-dim);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+    .carousel-btn:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-glow)}
+    .carousel-btn:active{transform:translateY(-50%) scale(.93)}
+    .carousel-prev{left:.5rem}.carousel-next{right:.5rem}
+    .carousel-dots{display:flex;gap:.5rem;justify-content:center;padding-top:1rem}
+    .carousel-dot{width:8px;height:8px;border-radius:50%;background:var(--border);border:none;cursor:pointer;transition:all .2s}
+    .carousel-dot.active{background:var(--accent);box-shadow:0 0 8px var(--accent-glow)}
 
     /* ── Sections ── */
     .section{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:5rem 2rem}
@@ -133,8 +141,7 @@
       .hero{padding:5rem 1.25rem 3rem}
       .section{padding:3rem 1.25rem}
       .features{grid-template-columns:1fr}
-      .screenshot-strip{gap:.75rem}
-      .screenshot-frame{max-width:140px}
+      .carousel{padding:0 2.5rem 2rem}
       .gallery{grid-template-columns:repeat(2,1fr)}
     }
   </style>
@@ -193,14 +200,44 @@
   </div>
 </section>
 
-<!-- Screenshot showcase -->
-<div class="screenshot-strip">
-  <div class="screenshot-frame"><img src="/continuity/screenshots/00-home.png" alt="Home screen" loading="lazy"><div class="screenshot-label">Home</div></div>
-  <div class="screenshot-frame"><img src="/continuity/screenshots/01-level-select.png" alt="Level select" loading="lazy"><div class="screenshot-label">Levels</div></div>
-  <div class="screenshot-frame"><img src="/continuity/screenshots/03-drawing.png" alt="Drawing a path" loading="lazy"><div class="screenshot-label">Drawing</div></div>
-  <div class="screenshot-frame"><img src="/continuity/screenshots/05-solved.png" alt="Solved puzzle" loading="lazy"><div class="screenshot-label">Solved</div></div>
-  <div class="screenshot-frame"><img src="/continuity/screenshots/06-9x9.png" alt="Advanced 9x9 grid" loading="lazy"><div class="screenshot-label">9×9 Endgame</div></div>
+<!-- Screenshot Carousel -->
+<div class="carousel" id="screenshot-carousel">
+  <button class="carousel-btn carousel-prev" onclick="scrollCarousel(-1)" aria-label="Previous">‹</button>
+  <button class="carousel-btn carousel-next" onclick="scrollCarousel(1)" aria-label="Next">›</button>
+  <div class="carousel-track" id="carousel-track">
+    <div class="carousel-slide"><img src="/continuity/screenshots/00-home.png" alt="Home screen" loading="lazy"><div class="carousel-slide-label">Home</div></div>
+    <div class="carousel-slide"><img src="/continuity/screenshots/01-level-select.png" alt="Level select" loading="lazy"><div class="carousel-slide-label">Levels</div></div>
+    <div class="carousel-slide"><img src="/continuity/screenshots/03-drawing.png" alt="Drawing a path" loading="lazy"><div class="carousel-slide-label">Drawing</div></div>
+    <div class="carousel-slide"><img src="/continuity/screenshots/05-solved.png" alt="Solved puzzle" loading="lazy"><div class="carousel-slide-label">Solved</div></div>
+    <div class="carousel-slide"><img src="/continuity/screenshots/06-9x9.png" alt="Advanced 9x9 grid" loading="lazy"><div class="carousel-slide-label">9×9 Endgame</div></div>
+  </div>
+  <div class="carousel-dots" id="carousel-dots"></div>
 </div>
+
+<script>
+(function(){
+  const track = document.getElementById('carousel-track');
+  const dots = document.getElementById('carousel-dots');
+  const slides = track.children;
+  for(let i=0;i<slides.length;i++){
+    const d=document.createElement('button');
+    d.className='carousel-dot';
+    d.onclick=()=>{slides[i].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'})};
+    dots.appendChild(d);
+  }
+  function updateDots(){
+    const idx=Math.round(track.scrollLeft/track.clientWidth);
+    [...dots.children].forEach((d,i)=>d.className='carousel-dot'+(i===idx?' active':''));
+  }
+  track.addEventListener('scroll',updateDots);
+  window.scrollCarousel=function(dir){
+    const w=track.clientWidth;
+    const idx=Math.round(track.scrollLeft/w)+dir;
+    if(idx>=0&&idx<slides.length) slides[idx].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  };
+  updateDots();
+})();
+</script>
 
 <!-- Stats -->
 <section class="section" style="padding-top:0">
