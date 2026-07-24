@@ -68,7 +68,6 @@ export const projectsData: ProjectItem[] = [
   {
     title: "HashFactory (formerly Substrate: Miner)",
     icon: Cpu,
-    repoUrl: "https://github.com/Vatteck/hashfactory",
     siteUrl: "vatteck.com/substrateminer/",
     description: "An Android idle-clicker tycoon game where players build and optimize a hardware-inspired mining operation.",
     details: "[PROJECT_SPECIFICATIONS]\nNAME: HASHFACTORY\nPLATFORM: ANDROID_OS\nENGINE: UNITY_2023.2\nLANGUAGE: C#_DOTNET_7\n\n# CORE_SYSTEMS\n- PROCEDURAL_RESOURCE_GEN: ACTIVE\n- HARDWARE_INSPIRED_UI: LOADED\n- BACKEND_CALC_ENGINE: OPTIMIZED\n- LOW_LATENCY_INPUT: ENABLED\n\n# STATUS\nCURRENT_PHASE: IN_PROGRESS\nFOCUS: PRESTIGE_BALANCING_REBRAND",
@@ -78,7 +77,6 @@ export const projectsData: ProjectItem[] = [
   {
     title: "Continuity",
     icon: Gamepad2,
-    repoUrl: "https://github.com/Vatteck/Continuity",
     siteUrl: "vatteck.com/continuity/",
     description: "A polished Flow-style connect-the-dots puzzle game for Android. 300 levels, daily challenges, themes, and achievements. Built in Flutter.",
     details: "[PROJECT_SPECIFICATIONS]\nNAME: CONTINUITY\nPLATFORM: ANDROID_OS\nFRAMEWORK: FLUTTER\nLANGUAGE: DART\n\n# CORE_SYSTEMS\n- CAMPAIGN_MODE: 300_LEVELS\n- DAILY_PUZZLE: 730_DAYS_OFFLINE\n- PLAY_GAMES: ACHIEVEMENTS_+_CLOUD_SAVE\n- THEMES: 4_PROGRESS_UNLOCKED\n- MONETIZATION: REWARDED_ADS_+_IAP\n\n# STATUS\nCURRENT_PHASE: CLOSED_TESTING\nFOCUS: PRE_LAUNCH_VALIDATION",
@@ -88,7 +86,6 @@ export const projectsData: ProjectItem[] = [
   {
     title: "LifeOS",
     icon: Heart,
-    repoUrl: "https://github.com/Vatteck/LifeOS",
     siteUrl: "vatteck.com/lifeos/",
     description: "A deep cross-platform life simulator. Build a character from birth to death — careers, relationships, crime, politics, the supernatural. Every path is playable.",
     details: "[PROJECT_SPECIFICATIONS]\nNAME: LIFEOS\nPLATFORM: CROSS_PLATFORM (ANDROID, IOS, WEB, WINDOWS, MACOS, LINUX)\nFRAMEWORK: FLUTTER\nLANGUAGE: DART\n\n# CORE_SYSTEMS\n- SVG_AVATAR_RENDERER: ACTIVE\n- EVENT_SOURCED_LIFELOG: ACTIVE\n- YARN_NARRATIVE_ENGINE: 13_SCRIPTS\n- 21_FEATURE_MODULES: LOADED\n- 35_DATABASE_TABLES: SCHEMA_V65\n\n# STATUS\nCURRENT_PHASE: ACTIVE_DEVELOPMENT\nFOCUS: FEATURE_EXPANSION",
