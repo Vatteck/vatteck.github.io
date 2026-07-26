@@ -25,6 +25,14 @@ body {
   overflow-x: hidden;
 }
 
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-atlas-red-bright);
+  outline-offset: 3px;
+}
+
 /* Custom scrollbars matching Atlas system view */
 ::-webkit-scrollbar {
   width: 8px;
@@ -50,3 +58,17 @@ body {
   box-shadow: 0 0 35px rgba(239, 68, 68, 0.3);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

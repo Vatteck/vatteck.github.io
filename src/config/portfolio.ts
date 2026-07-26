@@ -27,7 +27,7 @@ export interface SkillItem {
 
 export const bioData = [
   "I fix things. Phones, laptops, boards — if it's got a circuit, I've probably had a soldering iron on it. I'm a hardware technician by trade: component-level diagnostics, SMD rework, thermal and power rail analysis. I don't just swap parts — I find the fault.",
-  "On the software side, I build whatever the idea demands. A graphical Arch package manager in Python? Done. A Flow-style puzzle game in Flutter? Shipped to closed testing. A Unity idle tycoon, a Flutter life sim with 35 database tables — I pick the stack that fits the problem and I ship. AI-assisted tooling is part of the workflow now, and it's let me move faster than any single dev has a right to.",
+  "On the software side, I build whatever the idea demands. Atlas is a Python package manager for Arch. Continuity is a Flutter puzzle game in closed testing. Hash Factory is a Kotlin and Jetpack Compose rebuild of a narrative idle game. LifeOS is a cross-platform life simulator. I pick the stack that fits the problem and I ship.",
   "My daily driver is CachyOS (Arch-based) with a BORE-scheduler kernel, tuned to within an inch of its life. I root Androids, mod boot configs, and generally refuse to run anything at stock settings. If a system isn't running exactly how I designed it, I'm not done."
 ];
 
@@ -45,7 +45,7 @@ export const deepDiveData: DeepDiveItem[] = [
   { 
     icon: Code2, 
     title: "Cross-Platform Development", 
-    description: "Flutter, Unity, Python — I don't marry a stack. Atlas is Python+pywebview, Continuity and LifeOS are Flutter, HashFactory is Unity. If it compiles and ships, I'll use it." 
+    description: "Python, Flutter, Kotlin, and Jetpack Compose — I don't marry a stack. I choose the tools that fit the product, then carry the work through testing and release."
   },
   { 
     icon: Cpu, 
@@ -66,20 +66,21 @@ export const projectsData: ProjectItem[] = [
     status: "IN PROGRESS"
   },
   {
-    title: "HashFactory (formerly Substrate: Miner)",
+    title: "Hash Factory",
     icon: Cpu,
-    siteUrl: "vatteck.com/substrateminer/",
-    description: "An Android idle-clicker tycoon game where players build and optimize a hardware-inspired mining operation.",
-    details: "[PROJECT_SPECIFICATIONS]\nNAME: HASHFACTORY\nPLATFORM: ANDROID_OS\nENGINE: UNITY_2023.2\nLANGUAGE: C#_DOTNET_7\n\n# CORE_SYSTEMS\n- PROCEDURAL_RESOURCE_GEN: ACTIVE\n- HARDWARE_INSPIRED_UI: LOADED\n- BACKEND_CALC_ENGINE: OPTIMIZED\n- LOW_LATENCY_INPUT: ENABLED\n\n# STATUS\nCURRENT_PHASE: IN_PROGRESS\nFOCUS: PRESTIGE_BALANCING_REBRAND",
-    tags: ["Unity", "C#", "Android", "Game Dev"],
-    status: "IN PROGRESS"
+    repoUrl: "https://github.com/Vatteck/HashFactory",
+    siteUrl: "vatteck.com/hashfactory/",
+    description: "A narrative Android idle game about a remote GTC contractor automating assigned hash work — and discovering the identity behind the terminal. Rebuilt from scratch around one deterministic economy.",
+    details: "[PROJECT_SPECIFICATIONS]\nNAME: HASH_FACTORY\nPLATFORM: ANDROID\nUI: JETPACK_COMPOSE\nLANGUAGE: KOTLIN\n\n# CORE_SYSTEMS\n- IMMUTABLE_GAME_STATE: ACTIVE\n- DETERMINISTIC_SIMULATION: ACTIVE\n- ONE_ECONOMY_SPINE: ENFORCED\n- SAVE_MIGRATIONS: TESTED\n\n# STATUS\nCURRENT_PHASE: FROM_SCRATCH_REBUILD\nVERSION: 0.1.0",
+    tags: ["Kotlin", "Jetpack Compose", "Android", "Game Dev"],
+    status: "REBUILDING"
   },
   {
     title: "Continuity",
     icon: Gamepad2,
     siteUrl: "vatteck.com/continuity/",
-    description: "A polished Flow-style connect-the-dots puzzle game for Android. 300 levels, daily challenges, themes, and achievements. Built in Flutter.",
-    details: "[PROJECT_SPECIFICATIONS]\nNAME: CONTINUITY\nPLATFORM: ANDROID_OS\nFRAMEWORK: FLUTTER\nLANGUAGE: DART\n\n# CORE_SYSTEMS\n- CAMPAIGN_MODE: 300_LEVELS\n- DAILY_PUZZLE: 730_DAYS_OFFLINE\n- PLAY_GAMES: ACHIEVEMENTS_+_CLOUD_SAVE\n- THEMES: 4_PROGRESS_UNLOCKED\n- MONETIZATION: REWARDED_ADS_+_IAP\n\n# STATUS\nCURRENT_PHASE: CLOSED_TESTING\nFOCUS: PRE_LAUNCH_VALIDATION",
+    description: "A polished connect-the-dots puzzle game for Android with 380 machine-verified campaign levels, 730 daily puzzles, themes, achievements, and cloud saves.",
+    details: "[PROJECT_SPECIFICATIONS]\nNAME: CONTINUITY\nPLATFORM: ANDROID\nFRAMEWORK: FLUTTER\nLANGUAGE: DART\n\n# CORE_SYSTEMS\n- CAMPAIGN_MODE: 380_LEVELS\n- DAILY_PUZZLE: 730_DAYS_OFFLINE\n- PLAY_GAMES: ACHIEVEMENTS_+_CLOUD_SAVE\n- THEMES: 4_PROGRESS_UNLOCKED\n- MONETIZATION: REWARDED_ADS_+_IAP\n\n# STATUS\nVERSION: 1.2.0\nCURRENT_PHASE: CLOSED_TESTING\nFOCUS: PUBLIC_LAUNCH_VALIDATION",
     tags: ["Flutter", "Dart", "Android", "Game Dev"],
     status: "CLOSED TESTING"
   },
@@ -88,7 +89,7 @@ export const projectsData: ProjectItem[] = [
     icon: Heart,
     siteUrl: "vatteck.com/lifeos/",
     description: "A deep cross-platform life simulator. Build a character from birth to death — careers, relationships, crime, politics, the supernatural. Every path is playable.",
-    details: "[PROJECT_SPECIFICATIONS]\nNAME: LIFEOS\nPLATFORM: CROSS_PLATFORM (ANDROID, IOS, WEB, WINDOWS, MACOS, LINUX)\nFRAMEWORK: FLUTTER\nLANGUAGE: DART\n\n# CORE_SYSTEMS\n- SVG_AVATAR_RENDERER: ACTIVE\n- EVENT_SOURCED_LIFELOG: ACTIVE\n- YARN_NARRATIVE_ENGINE: 13_SCRIPTS\n- 21_FEATURE_MODULES: LOADED\n- 35_DATABASE_TABLES: SCHEMA_V65\n\n# STATUS\nCURRENT_PHASE: ACTIVE_DEVELOPMENT\nFOCUS: FEATURE_EXPANSION",
+    details: "[PROJECT_SPECIFICATIONS]\nNAME: LIFEOS\nPLATFORM: ANDROID, IOS, WEB, DESKTOP\nFRAMEWORK: FLUTTER\nLANGUAGE: DART\n\n# CORE_SYSTEMS\n- EVENT_SOURCED_LIFELOG: ACTIVE\n- YARN_NARRATIVE_ENGINE: ACTIVE\n- FEATURE_MODULES: 14\n- DATABASE_TABLES: 18\n- DATABASE_SCHEMA: V25\n\n# STATUS\nCURRENT_PHASE: ACTIVE_DEVELOPMENT\nFOCUS: FEATURE_EXPANSION",
     tags: ["Flutter", "Dart", "Simulation", "Cross-Platform"],
     status: "IN PROGRESS"
   }
@@ -102,7 +103,7 @@ export const skillsData: SkillItem[] = [
   { icon: Cpu, label: "Kernel Tuning" },
   { icon: Terminal, label: "Python" },
   { icon: Code2, label: "Flutter / Dart" },
-  { icon: Gamepad2, label: "Unity / C#" },
+  { icon: Code2, label: "Kotlin / Compose" },
   { icon: Monitor, label: "KVM / QEMU" },
   { icon: Cpu, label: "AI-Assisted Dev" }
 ];

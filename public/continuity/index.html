@@ -5,8 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0A0E1A">
   <title>Continuity — connect every trace.</title>
-  <meta name="description" content="A polished Flow-style puzzle game for Android. 300 levels, daily challenges, themes, and achievements. Built in Flutter.">
+  <meta name="description" content="A polished connect-the-dots puzzle game for Android with 380 campaign levels, 730 daily puzzles, themes, achievements, and cloud saves.">
   <link rel="canonical" href="https://vatteck.com/continuity/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vatteck.com/continuity/">
+  <meta property="og:title" content="Continuity — Connect Every Trace">
+  <meta property="og:description" content="380 machine-verified campaign levels, 730 daily puzzles, four themes, and no-pressure play.">
+  <meta property="og:image" content="https://vatteck.com/og-vatteck.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Continuity — Connect Every Trace">
+  <meta name="twitter:description" content="A polished connect-the-dots puzzle game for Android.">
+  <meta name="twitter:image" content="https://vatteck.com/og-vatteck.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -38,6 +47,7 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{background:var(--bg);color:var(--text);font-family:var(--font-body);scroll-behavior:smooth}
     body{min-height:100vh;background:radial-gradient(ellipse at 50% 0%,rgba(45,211,214,0.04) 0%,transparent 60%),var(--bg);line-height:1.6;overflow-x:hidden}
+    a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 
     /* ── Circuit background ── */
     .circuit-bg{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.5}
@@ -174,7 +184,7 @@
     </a>
     <div class="nav-links">
       <a href="/atlas/">Atlas</a>
-      <a href="/substrateminer/">HashFactory</a>
+      <a href="/hashfactory/">Hash Factory</a>
       <a href="/continuity/" style="color:var(--accent)">Continuity</a>
       <a href="/lifeos/">LifeOS</a>
     </div>
@@ -243,11 +253,11 @@
 <!-- Stats -->
 <section class="section" style="padding-top:0">
   <div class="stats">
-    <div class="stat-item"><div class="stat-value">300</div><div class="stat-label">Campaign Levels</div></div>
+    <div class="stat-item"><div class="stat-value">380</div><div class="stat-label">Campaign Levels</div></div>
     <div class="stat-item"><div class="stat-value">730</div><div class="stat-label">Daily Puzzles</div></div>
     <div class="stat-item"><div class="stat-value">12</div><div class="stat-label">Achievements</div></div>
     <div class="stat-item"><div class="stat-value">4</div><div class="stat-label">Themes</div></div>
-    <div class="stat-item"><div class="stat-value">102</div><div class="stat-label">Tests</div></div>
+    <div class="stat-item"><div class="stat-value">124</div><div class="stat-label">Tests</div></div>
   </div>
   <div class="progress-track" style="margin-top:1rem"><div class="progress-fill" style="width:100%"></div></div>
 </section>
