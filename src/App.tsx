@@ -40,40 +40,6 @@ const DataStream = () => {
   );
 };
 
-const CustomCursor = () => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
-    };
-
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (['A', 'BUTTON', 'INPUT', 'TEXTAREA'].includes(target.tagName) || target.closest('.cursor-pointer')) {
-        setIsHovering(true);
-      } else {
-        setIsHovering(false);
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseover', handleMouseOver);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseover', handleMouseOver);
-    };
-  }, []);
-
-  return (
-    <div 
-      className={`custom-cursor hidden lg:block ${isHovering ? 'hovering' : ''}`}
-      style={{ left: `${position.x}px`, top: `${position.y}px` }}
-    />
-  );
-};
-
 const MatrixRain = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -724,7 +690,6 @@ export default function App() {
 
   return (
     <div className={`min-h-screen selection:bg-substrate-accent/30 noise-bg overflow-hidden transition-all duration-300 circuit-bg ${isGlitched ? 'invert hue-rotate-90' : ''}`}>
-      <CustomCursor />
       {isMatrixActive && <MatrixRain />}
       <DataStream />
       <TerminalEasterEgg />
@@ -765,10 +730,10 @@ export default function App() {
       </AnimatePresence>
 
       {/* Hero Section */}
-      <header className="relative min-h-[100svh] overflow-hidden px-6">
+      <header className="relative overflow-hidden px-5 sm:px-6">
         <div className="absolute inset-0 grid-bg opacity-30" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-hardware-bg/50 to-hardware-bg" />
-        <nav className="relative z-20 mx-auto flex max-w-6xl items-center justify-between border-b border-white/10 py-5" aria-label="Primary navigation">
+        <nav className="relative z-20 mx-auto flex max-w-5xl items-center justify-between border-b border-white/10 py-4" aria-label="Primary navigation">
           <a href="#" className="font-mono text-xs font-bold uppercase tracking-[0.28em] text-white">
             VATTECK<span className="text-substrate-accent">.</span>
           </a>
@@ -779,7 +744,7 @@ export default function App() {
           </div>
         </nav>
 
-        <div className="relative z-10 mx-auto grid min-h-[calc(100svh-73px)] max-w-6xl items-center gap-14 py-16 lg:grid-cols-[1.08fr_0.92fr] lg:py-20">
+        <div className="relative z-10 mx-auto grid max-w-5xl items-center gap-10 py-12 lg:grid-cols-[1fr_0.9fr] lg:gap-12 lg:py-16 xl:py-20">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -789,24 +754,24 @@ export default function App() {
             <button
               type="button"
               onClick={triggerGlitch}
-              className={`glitch-main uv-glow mb-7 block text-left text-6xl font-bold tracking-tighter text-white sm:text-7xl lg:text-8xl ${isGlitched ? 'is-active' : ''}`}
+              className={`glitch-main uv-glow mb-5 block text-left text-5xl font-bold tracking-tighter text-white sm:text-6xl lg:text-7xl ${isGlitched ? 'is-active' : ''}`}
               data-text="VATTECK"
               aria-label="Activate Vatteck wordmark glitch"
             >
               VATTECK<span className="text-substrate-accent">.</span>
             </button>
 
-            <p className="mb-5 font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-substrate-accent sm:text-xs">
+            <p className="mb-4 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-substrate-accent sm:text-xs">
               Hardware technician · independent developer
             </p>
-            <h1 className="max-w-xl text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl">
+            <h1 className="max-w-xl text-3xl font-bold leading-[1.08] tracking-tight text-white sm:text-4xl">
               I repair hardware and build software that ships.
             </h1>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-400 sm:text-lg">
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-400">
               Component-level diagnostics, tuned Linux and Android systems, and independently built apps and games — from first fault or first commit through release.
             </p>
 
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <motion.a
                 href="#projects"
                 whileHover={{ y: -2 }}
