@@ -206,6 +206,7 @@ function App() {
             <a href="/" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 hover:text-terminal-green transition-colors whitespace-nowrap shrink-0">← Main</a>
             <span className="text-gray-700 shrink-0">|</span>
             <a href="/atlas/" className="text-[11px] font-mono uppercase tracking-wide text-gray-500 hover:text-terminal-green transition-colors whitespace-nowrap shrink-0">Atlas</a>
+            <a href="/hashfactory/" className="text-[11px] font-mono uppercase tracking-wide text-terminal-green whitespace-nowrap shrink-0">Hash Factory</a>
             <a href="/continuity/" className="text-[11px] font-mono uppercase tracking-wide text-gray-500 hover:text-terminal-green transition-colors whitespace-nowrap shrink-0">Continuity</a>
             <a href="/lifeos/" className="text-[11px] font-mono uppercase tracking-wide text-gray-500 hover:text-terminal-green transition-colors whitespace-nowrap shrink-0">LifeOS</a>
           </div>

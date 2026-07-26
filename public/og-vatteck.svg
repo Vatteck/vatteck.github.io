@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#ff1f1f" stroke-opacity=".08"/>
+      <circle cx="0" cy="0" r="2" fill="#ff1f1f" fill-opacity=".2"/>
+    </pattern>
+    <linearGradient id="fade" x1="0" x2="1">
+      <stop offset="0" stop-color="#ff1f1f"/>
+      <stop offset="1" stop-color="#7f55ff"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="#050506"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <path d="M55 112V55h142M1003 55h142v57M55 518v57h142M1003 575h142v-57" fill="none" stroke="#ff1f1f" stroke-width="2" stroke-opacity=".55"/>
+  <path d="M55 315h116l34-34h92M1145 315h-116l-34 34h-92" fill="none" stroke="#ff1f1f" stroke-opacity=".28"/>
+  <circle cx="297" cy="281" r="5" fill="#ff1f1f" filter="url(#glow)"/>
+  <circle cx="903" cy="349" r="5" fill="#7f55ff" filter="url(#glow)"/>
+  <text x="100" y="236" fill="#94a3b8" font-family="monospace" font-size="20" font-weight="700" letter-spacing="6">HARDWARE TECHNICIAN · INDEPENDENT DEVELOPER</text>
+  <text x="92" y="354" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="112" font-weight="800" letter-spacing="-7">VATTECK<tspan fill="#ff1f1f">.</tspan></text>
+  <rect x="100" y="399" width="265" height="4" rx="2" fill="url(#fade)"/>
+  <text x="100" y="464" fill="#cbd5e1" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="500">Repairing hardware. Building software that ships.</text>
+  <text x="100" y="535" fill="#64748b" font-family="monospace" font-size="18" letter-spacing="4">ATLAS · HASH FACTORY · CONTINUITY · LIFEOS</text>
+</svg>

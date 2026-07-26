@@ -1,8 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   
   --color-substrate-accent: #FF1F1F;
@@ -15,8 +16,29 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 2rem;
+  }
+
   body {
-    @apply bg-hardware-bg text-slate-300 font-sans selection:bg-substrate-accent/30 overflow-x-hidden cursor-none;
+    @apply bg-hardware-bg text-slate-300 font-sans selection:bg-substrate-accent/30 overflow-x-hidden;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+
+  a, button, input, textarea, select {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-substrate-accent focus-visible:ring-offset-2 focus-visible:ring-offset-hardware-bg;
+  }
+}
+
+@media (pointer: fine) and (min-width: 1024px) {
+  body,
+  a,
+  button {
+    cursor: none;
   }
 }
 
@@ -41,15 +63,6 @@
   background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 h80 v80 h-80 z' fill='none' stroke='rgba(255,31,31,0.08)' stroke-width='0.5'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='rgba(255,31,31,0.2)'/%3E%3Ccircle cx='90' cy='10' r='1.5' fill='rgba(255,31,31,0.2)'/%3E%3Ccircle cx='90' cy='90' r='1.5' fill='rgba(255,31,31,0.2)'/%3E%3Ccircle cx='10' cy='90' r='1.5' fill='rgba(255,31,31,0.2)'/%3E%3Cpath d='M10 50 h20 M80 50 h10 M50 10 v20 M50 80 v10' stroke='rgba(255,31,31,0.12)' stroke-width='0.5'/%3E%3C/svg%3E");
 }
 
-/* Boot Sequence */
-.boot-screen {
-  @apply fixed inset-0 bg-black z-[10000] flex flex-col items-center justify-center p-8 font-mono text-substrate-accent overflow-hidden;
-}
-
-.boot-log {
-  @apply w-full max-w-2xl h-96 overflow-hidden flex flex-col gap-1 text-[10px] md:text-xs;
-}
-
 /* Matrix Rain Effect */
 .matrix-canvas {
   @apply fixed inset-0 pointer-events-none z-[9998] opacity-20;
@@ -64,43 +77,14 @@
   width: 100%;
   height: 100%;
   background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.05;
+  opacity: 0.035;
   pointer-events: none;
   z-index: 9999;
 }
 
-/* CRT Flicker */
 @keyframes scan {
   0% { top: 0; }
   100% { top: 100%; }
-}
-
-@keyframes flicker {
-  0% { opacity: 0.97; }
-  5% { opacity: 0.95; }
-  10% { opacity: 0.9; }
-  15% { opacity: 0.95; }
-  20% { opacity: 0.98; }
-  25% { opacity: 0.95; }
-  30% { opacity: 0.9; }
-  35% { opacity: 0.95; }
-  40% { opacity: 0.98; }
-  45% { opacity: 0.95; }
-  50% { opacity: 0.9; }
-  55% { opacity: 0.95; }
-  60% { opacity: 0.98; }
-  65% { opacity: 0.95; }
-  70% { opacity: 0.9; }
-  75% { opacity: 0.95; }
-  80% { opacity: 0.98; }
-  85% { opacity: 0.95; }
-  90% { opacity: 0.9; }
-  95% { opacity: 0.95; }
-  100% { opacity: 0.98; }
-}
-
-.crt-flicker {
-  animation: flicker 0.15s infinite;
 }
 
 .grid-bg {
@@ -185,20 +169,31 @@
   width: 100%;
   height: 100%;
   background: var(--color-hardware-bg);
+  opacity: 0;
 }
 
 .glitch-main::before {
   left: 3px;
   text-shadow: -3px 0 var(--color-cyber-purple);
   clip: rect(24px, 550px, 90px, 0);
-  animation: glitch-anim-main 3s infinite linear alternate-reverse;
+  animation: none;
 }
 
 .glitch-main::after {
   left: -3px;
   text-shadow: -3px 0 var(--color-cyber-cyan);
   clip: rect(85px, 550px, 140px, 0);
-  animation: glitch-anim-main-2 2s infinite linear alternate-reverse;
+  animation: none;
+}
+
+.glitch-main.is-active::before {
+  opacity: 1;
+  animation: glitch-anim-main 0.24s steps(2, end) 2 alternate-reverse;
+}
+
+.glitch-main.is-active::after {
+  opacity: 1;
+  animation: glitch-anim-main-2 0.2s steps(2, end) 2 alternate-reverse;
 }
 
 @keyframes glitch-anim-main {
@@ -267,6 +262,15 @@
 .cyber-card {
   @apply relative overflow-hidden transition-all duration-300;
   border: 1px solid var(--color-hardware-border);
+}
+
+.bench-index {
+  @apply overflow-hidden rounded-2xl border border-white/10 bg-hardware-card/85 backdrop-blur-xl;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45), inset 0 1px rgba(255, 255, 255, 0.025);
+}
+
+.bench-index-row {
+  @apply flex items-center justify-between gap-4 border-b border-white/5 px-5 py-5 transition-colors last:border-b-0 hover:bg-substrate-accent/5;
 }
 
 /* Data Stream Animation */
@@ -372,4 +376,34 @@
 
 .cyber-card:hover .cyber-image {
   filter: contrast(1.1) brightness(1) sepia(0);
+}
+
+@media (max-width: 767px) {
+  .data-stream,
+  .data-stream-left {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .glitch::before,
+  .glitch::after,
+  .glitch-main::before,
+  .glitch-main::after,
+  .scanline {
+    display: none;
+  }
 }

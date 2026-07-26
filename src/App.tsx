@@ -74,58 +74,6 @@ const CustomCursor = () => {
   );
 };
 
-const BootScreen = ({ onComplete }: { onComplete: () => void }) => {
-  const [logs, setLogs] = useState<string[]>([]);
-  const [progress, setProgress] = useState(0);
-  const bootLogs = [
-    "VATTECK_OS_LOADER v1.0.4",
-    "CHECKING_HARDWARE_INTEGRITY...",
-    "CPU_CORE_0: OK",
-    "CPU_CORE_1: OK",
-    "MEM_CHECK: 65536MB RAM DETECTED",
-    "UPLINK_STATUS: SECURE",
-    "LOADING_SUBSTRATE_LAYERS...",
-    "DECRYPTING_USER_BIO...",
-    "INITIALIZING_NEURAL_LINK...",
-    "SYSTEM_READY."
-  ];
-
-  useEffect(() => {
-    let i = 0;
-    const interval = setInterval(() => {
-      if (i < bootLogs.length) {
-        setLogs(prev => [...prev, bootLogs[i]]);
-        setProgress(((i + 1) / bootLogs.length) * 100);
-        i++;
-      } else {
-        clearInterval(interval);
-        setTimeout(onComplete, 1000);
-      }
-    }, 200);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="boot-screen">
-      <div className="boot-log">
-        {logs.map((log, idx) => (
-          <div key={idx} className="flex gap-4">
-            <span className="opacity-50">[{new Date().toLocaleTimeString([], { hour12: false })}]</span>
-            <span className="animate-pulse">{log}</span>
-          </div>
-        ))}
-      </div>
-      <div className="mt-8 w-full max-w-md h-1 bg-white/10 rounded-full overflow-hidden">
-        <motion.div 
-          initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
-          className="h-full bg-substrate-accent shadow-[0_0_10px_rgba(255,31,31,0.5)]"
-        />
-      </div>
-    </div>
-  );
-};
-
 const MatrixRain = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -344,6 +292,7 @@ const TerminalEasterEgg = () => {
         onClick={() => setIsOpen(true)}
         className="fixed bottom-8 left-8 z-[60] p-3 bg-hardware-card border border-substrate-accent/30 text-substrate-accent rounded-full hover:bg-substrate-accent hover:text-white transition-all group"
         title="Open Terminal"
+        aria-label="Open terminal easter egg"
       >
         <Terminal size={20} className="group-hover:scale-110 transition-transform" />
       </button>
@@ -355,10 +304,13 @@ const TerminalEasterEgg = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className="fixed bottom-24 left-8 z-[70] w-80 h-96 bg-black/90 border border-substrate-accent/50 rounded-xl overflow-hidden flex flex-col shadow-2xl backdrop-blur-xl"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="terminal-title"
           >
             <div className="bg-substrate-accent/10 p-3 border-b border-substrate-accent/20 flex justify-between items-center">
-              <span className="text-[10px] font-mono text-substrate-accent font-bold tracking-widest">VATTECK_TERMINAL</span>
-              <button onClick={() => setIsOpen(false)} className="text-substrate-accent hover:text-white"><X size={14} /></button>
+              <span id="terminal-title" className="text-[10px] font-mono text-substrate-accent font-bold tracking-widest">VATTECK_TERMINAL</span>
+              <button onClick={() => setIsOpen(false)} className="text-substrate-accent hover:text-white" aria-label="Close terminal"><X size={14} /></button>
             </div>
             <div className="flex-grow p-4 font-mono text-[10px] overflow-y-auto custom-scrollbar space-y-1">
               {history.map((line, i) => (
@@ -451,6 +403,16 @@ const ProjectCard = ({
   key?: React.Key;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const dialogId = `project-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+
+  useEffect(() => {
+    if (!isExpanded) return;
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsExpanded(false);
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isExpanded]);
 
   return (
     <motion.div 
@@ -551,12 +513,15 @@ const ProjectCard = ({
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               className="bg-hardware-card border border-hardware-border max-w-2xl w-full rounded-2xl overflow-hidden shadow-2xl relative"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={dialogId}
             >
               <div className="absolute top-0 left-0 w-full h-1 bg-substrate-accent shadow-[0_0_15px_rgba(127,85,255,0.5)]" />
               <div className="p-8">
                 <div className="flex justify-between items-start mb-6">
                   <div>
-                    <h2 className="text-2xl font-bold text-white mb-2 glitch" data-text={title}>{title}</h2>
+                    <h2 id={dialogId} className="text-2xl font-bold text-white mb-2 glitch" data-text={title}>{title}</h2>
                     <div className="flex flex-wrap gap-2">
                       {tags.map(tag => (
                         <span key={tag} className="text-[10px] font-mono px-2 py-1 bg-substrate-accent/10 border border-substrate-accent/30 text-substrate-accent rounded uppercase">
@@ -568,6 +533,8 @@ const ProjectCard = ({
                   <button 
                     onClick={() => setIsExpanded(false)}
                     className="p-2 hover:bg-white/10 rounded-full transition-colors text-slate-400 hover:text-white"
+                    aria-label={`Close ${title} details`}
+                    autoFocus
                   >
                     <X size={24} />
                   </button>
@@ -632,6 +599,49 @@ const ProjectCard = ({
   );
 };
 
+const projectBenchNotes: Record<string, string> = {
+  "Atlas Package Manager": "v0.16.1 · released",
+  "Hash Factory": "v0.1.0 · rebuilding",
+  "Continuity": "v1.2.0 · closed testing",
+  "LifeOS": "active development"
+};
+
+const ProjectBenchIndex = () => (
+  <div className="bench-index">
+    <div className="flex items-center justify-between gap-4 border-b border-white/10 px-5 py-4">
+      <div>
+        <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-substrate-accent">Workbench index</p>
+        <h2 className="mt-1 text-lg font-semibold text-white">Current builds</h2>
+      </div>
+      <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]" aria-hidden="true" />
+    </div>
+    <div>
+      {projectsData.map((project) => {
+        const href = project.siteUrl?.startsWith('http') ? project.siteUrl : `https://${project.siteUrl}`;
+        return (
+          <a
+            key={project.title}
+            href={href}
+            className="bench-index-row group"
+            aria-label={`Open ${project.title}`}
+          >
+            <span className="flex min-w-0 items-center gap-3">
+              <project.icon size={18} className="shrink-0 text-substrate-accent" aria-hidden="true" />
+              <span className="truncate font-semibold text-slate-100">{project.title}</span>
+            </span>
+            <span className="flex shrink-0 items-center gap-3">
+              <span className="hidden font-mono text-[9px] uppercase tracking-wider text-slate-500 sm:inline">
+                {projectBenchNotes[project.title]}
+              </span>
+              <ChevronRight size={16} className="text-slate-600 transition-transform group-hover:translate-x-1 group-hover:text-substrate-accent" aria-hidden="true" />
+            </span>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+);
+
 export default function App() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -643,12 +653,9 @@ export default function App() {
   });
   const [isTransmitting, setIsTransmitting] = useState(false);
   const [isSent, setIsSent] = useState(false);
-  const [typedText, setTypedText] = useState('');
   const [isGlitched, setIsGlitched] = useState(false);
-  const [isBooting, setIsBooting] = useState(true);
   const [isMatrixActive, setIsMatrixActive] = useState(false);
   const [secretCode, setSecretCode] = useState('');
-  const fullText = "Hardware Technician · Kernel Tinkerer · Builder";
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -674,16 +681,6 @@ export default function App() {
     setIsGlitched(true);
     setTimeout(() => setIsGlitched(false), 500);
   };
-
-  useEffect(() => {
-    let i = 0;
-    const interval = setInterval(() => {
-      setTypedText(fullText.slice(0, i));
-      i++;
-      if (i > fullText.length) clearInterval(interval);
-    }, 50);
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -715,22 +712,18 @@ export default function App() {
     const body = `Identity: ${formData.name}\nReturn Address: ${formData.email}\n\nPayload:\n${formData.message}`;
     const mailtoUrl = `mailto:admin@vatteck.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     
-    // Aesthetic delay for "transmission"
+    // Give the browser a moment to register the button state before opening mail.
     setTimeout(() => {
       window.location.href = mailtoUrl;
       setIsTransmitting(false);
       setIsSent(true);
       setFormData({ name: '', email: '', subject: '', message: '' });
       setTimeout(() => setIsSent(false), 5000);
-    }, 1500);
+    }, 200);
   };
 
   return (
-    <div className={`min-h-screen selection:bg-substrate-accent/30 noise-bg crt-flicker overflow-hidden transition-all duration-300 circuit-bg ${isGlitched ? 'invert hue-rotate-90' : ''}`}>
-      <AnimatePresence>
-        {isBooting && <BootScreen onComplete={() => setIsBooting(false)} />}
-      </AnimatePresence>
-
+    <div className={`min-h-screen selection:bg-substrate-accent/30 noise-bg overflow-hidden transition-all duration-300 circuit-bg ${isGlitched ? 'invert hue-rotate-90' : ''}`}>
       <CustomCursor />
       {isMatrixActive && <MatrixRain />}
       <DataStream />
@@ -764,6 +757,7 @@ export default function App() {
             exit={{ opacity: 0, y: 20 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="fixed bottom-8 right-8 z-[60] p-3 bg-substrate-accent text-white rounded-full shadow-lg shadow-substrate-accent/40 hover:bg-red-700 transition-all"
+            aria-label="Scroll to top"
           >
             <ArrowUp size={20} />
           </motion.button>
@@ -771,115 +765,90 @@ export default function App() {
       </AnimatePresence>
 
       {/* Hero Section */}
-      <header className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
-        <SystemStatus />
+      <header className="relative min-h-[100svh] overflow-hidden px-6">
         <div className="absolute inset-0 grid-bg opacity-30" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-hardware-bg/50 to-hardware-bg" />
-        
-        {/* Cyber Corners */}
-        <div className="absolute top-10 left-10 w-32 h-32 border-t-2 border-l-2 border-substrate-accent/30 pointer-events-none" />
-        <div className="absolute top-10 right-10 w-32 h-32 border-t-2 border-r-2 border-substrate-accent/30 pointer-events-none" />
-        <div className="absolute bottom-10 left-10 w-32 h-32 border-b-2 border-l-2 border-substrate-accent/30 pointer-events-none" />
-        <div className="absolute bottom-10 right-10 w-32 h-32 border-b-2 border-r-2 border-substrate-accent/30 pointer-events-none" />
-
-        {/* Corner Data */}
-        <div className="absolute top-16 left-16 hidden lg:block z-20 bg-black/40 p-4 rounded-lg border border-substrate-accent/20 backdrop-blur-sm shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-          <div className="text-[10px] font-mono text-slate-400 space-y-1">
-            <p className="flex items-center gap-2">
-              <span className="opacity-50">LOC:</span> 
-              <span className="text-white">45.5231° N, 122.6765° W</span>
-            </p>
-            <p className="flex items-center gap-2">
-              <span className="opacity-50">SATELLITE:</span> 
-              <span className="text-white">LINK_ESTABLISHED</span>
-            </p>
-            <p className="flex items-center gap-2">
-              <span className="opacity-50">LATENCY:</span> 
-              <span className="text-white">12ms</span>
-            </p>
+        <nav className="relative z-20 mx-auto flex max-w-6xl items-center justify-between border-b border-white/10 py-5" aria-label="Primary navigation">
+          <a href="#" className="font-mono text-xs font-bold uppercase tracking-[0.28em] text-white">
+            VATTECK<span className="text-substrate-accent">.</span>
+          </a>
+          <div className="flex items-center gap-5 font-mono text-[10px] uppercase tracking-widest text-slate-500 sm:gap-7">
+            <a href="#projects" className="hover:text-white">Work</a>
+            <a href="#about" className="hover:text-white">About</a>
+            <a href="#contact" className="hover:text-white">Contact</a>
           </div>
-        </div>
+        </nav>
 
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 z-20">
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
+        <div className="relative z-10 mx-auto grid min-h-[calc(100svh-73px)] max-w-6xl items-center gap-14 py-16 lg:grid-cols-[1.08fr_0.92fr] lg:py-20">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            className="px-3 py-1 md:px-6 md:py-2 bg-substrate-accent/10 border border-substrate-accent/20 rounded-full backdrop-blur-md shadow-[0_0_15px_rgba(255,31,31,0.1)] whitespace-nowrap"
+            transition={{ duration: 0.6 }}
+            className="max-w-2xl"
           >
-            <span className="text-[8px] md:text-[10px] font-mono uppercase tracking-[0.25em] md:tracking-[0.4em] text-substrate-accent font-bold">System Online // v1.0.4 // AUTH_LEVEL_0</span>
+            <button
+              type="button"
+              onClick={triggerGlitch}
+              className={`glitch-main uv-glow mb-7 block text-left text-6xl font-bold tracking-tighter text-white sm:text-7xl lg:text-8xl ${isGlitched ? 'is-active' : ''}`}
+              data-text="VATTECK"
+              aria-label="Activate Vatteck wordmark glitch"
+            >
+              VATTECK<span className="text-substrate-accent">.</span>
+            </button>
+
+            <p className="mb-5 font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-substrate-accent sm:text-xs">
+              Hardware technician · independent developer
+            </p>
+            <h1 className="max-w-xl text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl">
+              I repair hardware and build software that ships.
+            </h1>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-400 sm:text-lg">
+              Component-level diagnostics, tuned Linux and Android systems, and independently built apps and games — from first fault or first commit through release.
+            </p>
+
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <motion.a
+                href="#projects"
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center justify-center gap-3 rounded-lg bg-substrate-accent px-7 py-4 font-bold text-white shadow-lg shadow-substrate-accent/20 hover:bg-red-700"
+              >
+                VIEW THE WORK
+                <ChevronRight size={19} aria-hidden="true" />
+              </motion.a>
+              <motion.a
+                href="#contact"
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center justify-center gap-3 rounded-lg border border-hardware-border bg-hardware-card px-7 py-4 font-bold text-white hover:border-substrate-accent/50"
+              >
+                START A CONVERSATION
+              </motion.a>
+            </div>
+
+            <a
+              href="https://github.com/Vatteck"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center gap-2 font-mono text-xs text-slate-500 hover:text-white"
+            >
+              <Github size={15} aria-hidden="true" />
+              github.com/Vatteck
+              <ExternalLink size={12} aria-hidden="true" />
+            </a>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.12 }}
+          >
+            <ProjectBenchIndex />
           </motion.div>
         </div>
-        
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 text-center"
-        >
-          <h1 
-            onClick={triggerGlitch}
-            className={`text-7xl md:text-9xl font-bold tracking-tighter mb-6 text-white glitch-main uv-glow cursor-pointer select-none ${isGlitched ? 'animate-pulse' : ''}`} 
-            data-text="VATTECK"
-          >
-            VATTECK<span className="text-substrate-accent">.</span>
-          </h1>
-          
-          <p className="text-lg md:text-xl text-slate-400 font-light tracking-widest mb-10 max-w-4xl mx-auto uppercase min-h-[1.75rem]">
-            <span className="typing-text">{typedText}</span>
-          </p>
-          
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <motion.a
-                href="https://github.com/Vatteck"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Visit VATTECK's GitHub Profile"
-                whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(255, 31, 31, 0.4)' }}
-                whileTap={{ scale: 0.98 }}
-                className="flex items-center gap-3 px-8 py-4 bg-substrate-accent text-white font-bold rounded-lg hover:bg-red-700 transition-all shadow-lg shadow-substrate-accent/20"
-              >
-                <Github size={20} />
-                ACCESS GITHUB
-              </motion.a>
-            
-            <motion.a
-              href="#projects"
-              title="View VATTECK's Hardware and Software Projects"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="flex items-center gap-3 px-8 py-4 bg-hardware-card border border-hardware-border text-white font-bold rounded-lg hover:border-substrate-accent/50 transition-all"
-            >
-              VIEW PROJECTS
-              <ChevronRight size={20} />
-            </motion.a>
-          </div>
-
-          <LiveSystemLog />
-
-          <div className="mt-8 flex justify-center">
-            <motion.button
-              onClick={triggerScan}
-              aria-label="Run Hardware Diagnostics Scan"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="flex items-center gap-3 px-8 py-4 bg-hardware-card border border-substrate-accent/50 text-substrate-accent font-bold rounded-lg hover:bg-substrate-accent/10 transition-all"
-            >
-              <Cpu size={20} className={isScanning ? 'animate-spin' : ''} />
-              RUN DIAGNOSTICS
-            </motion.button>
-          </div>
-        </motion.div>
-
-        <motion.div 
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 text-slate-500"
-        >
-          <div className="w-px h-12 bg-gradient-to-b from-substrate-accent to-transparent mx-auto" />
-        </motion.div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-24 space-y-48 relative">
+      <main className="max-w-6xl mx-auto px-6 py-24 space-y-32 md:space-y-40 relative">
         <CircuitLine className="top-0 left-0 w-full h-24 opacity-50" />
         <CircuitLine className="top-1/4 right-0 w-full h-24 opacity-30 rotate-180" />
         <CircuitLine className="top-2/4 left-0 w-full h-24 opacity-40" />
@@ -921,7 +890,7 @@ export default function App() {
                   className="relative w-full aspect-[4/3] object-cover rounded-xl border border-substrate-accent/30 grayscale hover:grayscale-0 transition-all duration-700 cyber-image z-10"
                   referrerPolicy="no-referrer"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/vatteck/800/600';
+                    (e.target as HTMLImageElement).src = '/vatteck-logo.svg';
                   }}
                 />
               </div>
@@ -1089,8 +1058,9 @@ echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_gover
               <div className="cyber-corner cyber-corner-bl opacity-50" />
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Identity</label>
+                  <label htmlFor="contact-name" className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Name</label>
                   <input 
+                    id="contact-name"
                     type="text" 
                     name="name"
                     value={formData.name}
@@ -1101,8 +1071,9 @@ echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_gover
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Return Address</label>
+                  <label htmlFor="contact-email" className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Email</label>
                   <input 
+                    id="contact-email"
                     type="email" 
                     name="email"
                     value={formData.email}
@@ -1114,8 +1085,9 @@ echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_gover
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Subject</label>
+                <label htmlFor="contact-subject" className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Subject</label>
                 <input 
+                  id="contact-subject"
                   type="text" 
                   name="subject"
                   value={formData.subject}
@@ -1125,8 +1097,9 @@ echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_gover
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Payload</label>
+                <label htmlFor="contact-message" className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Message</label>
                 <textarea 
+                  id="contact-message"
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
@@ -1150,23 +1123,23 @@ echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_gover
                 {isTransmitting ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    TRANSMITTING...
+                    OPENING MAIL APP...
                   </>
                 ) : isSent ? (
                   <>
                     <CheckCircle2 size={18} />
-                    TRANSMISSION SUCCESSFUL
+                    EMAIL DRAFT OPENED
                   </>
                 ) : (
                   <>
                     <Send size={18} />
-                    TRANSMIT MESSAGE
+                    OPEN EMAIL DRAFT
                   </>
                 )}
               </motion.button>
               {isSent && (
-                <p className="text-[10px] font-mono text-green-500 text-center mt-2 animate-pulse">
-                  // MAIL_CLIENT_TRIGGERED // PLEASE_COMPLETE_SEND
+                <p className="text-[10px] font-mono text-green-500 text-center mt-2" aria-live="polite">
+                  // FINISH AND SEND THE MESSAGE IN YOUR MAIL APP
                 </p>
               )}
             </form>
@@ -1193,6 +1166,7 @@ echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_gover
               onClick={copyEmail}
               className="text-slate-400 hover:text-substrate-accent transition-all relative group"
               title="Copy Email"
+              aria-label="Copy admin@vatteck.com"
             >
               {copied ? <CheckCircle2 size={20} className="text-green-500" /> : <Mail size={20} />}
               <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-substrate-accent text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">

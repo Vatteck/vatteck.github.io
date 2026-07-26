@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0d10">
+  <title>Hash Factory — A Narrative Idle Game</title>
+  <meta name="description" content="A narrative Android idle game about automating assigned hash work and discovering the identity behind the terminal. Rebuilt in Kotlin and Jetpack Compose.">
+  <link rel="canonical" href="https://vatteck.com/hashfactory/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vatteck.com/hashfactory/">
+  <meta property="og:title" content="Hash Factory — A Narrative Idle Game">
+  <meta property="og:description" content="Process assigned work, expand your capacity, and uncover the corporate fiction behind the terminal.">
+  <meta property="og:image" content="https://vatteck.com/og-vatteck.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hash Factory — A Narrative Idle Game">
+  <meta name="twitter:description" content="A from-scratch Kotlin and Jetpack Compose rebuild for Android.">
+  <meta name="twitter:image" content="https://vatteck.com/og-vatteck.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --surface: #11151a;
+      --surface-raised: #171c22;
+      --line: #2a313a;
+      --text: #edf0f2;
+      --muted: #929da8;
+      --dim: #5f6974;
+      --amber: #f0a43a;
+      --teal: #65c7c2;
+      --danger: #d8675c;
+      --display: "Archivo", system-ui, sans-serif;
+      --mono: "IBM Plex Mono", ui-monospace, monospace;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth;background:var(--bg)}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:var(--mono);line-height:1.6}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.24;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:32px 32px;mask-image:linear-gradient(to bottom,#000,transparent 72%)}
+    a{color:inherit}
+    a:focus-visible,button:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
+    .shell{width:min(1160px,calc(100% - 40px));margin:auto;position:relative}
+    .nav{border-bottom:1px solid var(--line);background:rgba(11,13,16,.9);backdrop-filter:blur(14px);position:sticky;top:0;z-index:10}
+    .nav-inner{min-height:62px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .brand{font-family:var(--display);font-weight:800;text-decoration:none;letter-spacing:-.03em}
+    .brand b{color:var(--amber)}
+    .nav-links{display:flex;align-items:center;gap:24px;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+    .nav-links a{text-decoration:none}
+    .nav-links a:hover,.nav-links .active{color:var(--text)}
+    .hero{min-height:calc(100svh - 63px);display:grid;grid-template-columns:1.08fr .92fr;gap:72px;align-items:center;padding:72px 0}
+    .eyebrow{display:inline-flex;align-items:center;gap:10px;color:var(--amber);font-size:10px;font-weight:600;letter-spacing:.17em;text-transform:uppercase}
+    .eyebrow::before{content:"";width:30px;height:1px;background:var(--amber)}
+    h1,h2,h3{font-family:var(--display);line-height:1.02;margin:0}
+    h1{font-size:clamp(4.3rem,10vw,8.1rem);letter-spacing:-.075em;margin:24px 0 20px}
+    h1 span{color:var(--amber)}
+    .lede{font-family:var(--display);font-size:clamp(1.2rem,2.4vw,1.75rem);line-height:1.35;max-width:660px;color:#c9d0d6;margin:0}
+    .summary{color:var(--muted);max-width:630px;margin:22px 0 0;font-size:14px}
+    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+    .button{min-height:48px;display:inline-flex;align-items:center;justify-content:center;padding:0 20px;border:1px solid var(--line);text-decoration:none;text-transform:uppercase;letter-spacing:.11em;font-size:10px;font-weight:600}
+    .button-primary{background:var(--amber);border-color:var(--amber);color:#171006}
+    .button-primary:hover{background:#ffc163;border-color:#ffc163}
+    .button-secondary:hover{border-color:var(--muted);background:var(--surface)}
+    .terminal{border:1px solid var(--line);background:rgba(17,21,26,.94);box-shadow:18px 18px 0 #080a0c}
+    .terminal-bar{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--line);font-size:9px;letter-spacing:.12em;color:var(--dim)}
+    .terminal-status{color:var(--teal)}
+    .terminal-body{padding:20px}
+    .identity{display:grid;grid-template-columns:1fr auto;gap:10px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+    .identity strong{font-family:var(--display);font-size:18px}
+    .identity span{font-size:10px;color:var(--muted)}
+    .queue{margin-top:19px}
+    .queue-label{display:flex;justify-content:space-between;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+    .packet{margin-top:11px;border:1px solid var(--line);padding:15px;background:var(--bg)}
+    .packet-head{display:flex;justify-content:space-between;gap:15px;font-size:10px}
+    .packet-head span:last-child{color:var(--amber)}
+    .meter{height:5px;background:#222930;margin:13px 0 8px;overflow:hidden}
+    .meter i{display:block;height:100%;width:68%;background:linear-gradient(90deg,var(--teal),var(--amber))}
+    .packet-meta{display:flex;justify-content:space-between;color:var(--dim);font-size:9px}
+    .event{margin-top:18px;padding:13px 14px;border-left:2px solid var(--danger);background:rgba(216,103,92,.06);font-size:10px;color:#bfc6cc}
+    .event b{color:var(--danger)}
+    .section{padding:110px 0;border-top:1px solid var(--line)}
+    .section-head{display:grid;grid-template-columns:.7fr 1.3fr;gap:60px;margin-bottom:54px}
+    .section-label{color:var(--amber);font-size:10px;text-transform:uppercase;letter-spacing:.17em}
+    h2{font-size:clamp(2.2rem,5vw,4.4rem);letter-spacing:-.055em}
+    .loop{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line)}
+    .loop-item{padding:26px;border-right:1px solid var(--line);min-height:190px}
+    .loop-item:last-child{border-right:0}
+    .loop-number{color:var(--dim);font-size:10px}
+    .loop-item h3{font-size:18px;margin:46px 0 8px}
+    .loop-item p{font-size:11px;color:var(--muted);margin:0}
+    .build-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .build-card{border:1px solid var(--line);background:var(--surface);padding:28px}
+    .build-card small{color:var(--teal);font-size:9px;letter-spacing:.12em;text-transform:uppercase}
+    .build-card h3{font-size:21px;margin:30px 0 10px}
+    .build-card p{margin:0;color:var(--muted);font-size:12px}
+    .legacy{display:flex;gap:24px;align-items:flex-start;border:1px solid var(--line);background:var(--surface);padding:28px;margin-top:14px}
+    .legacy-mark{color:var(--amber);font-family:var(--display);font-size:34px;line-height:1}
+    .legacy h3{font-size:18px;margin-bottom:7px}
+    .legacy p{margin:0;color:var(--muted);font-size:12px}
+    footer{border-top:1px solid var(--line);padding:34px 0;color:var(--dim);font-size:10px}
+    .footer-inner{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+    @media(max-width:820px){
+      .nav-links a:not(.active){display:none}
+      .hero{grid-template-columns:1fr;gap:48px;padding:64px 0 86px}
+      .terminal{box-shadow:10px 10px 0 #080a0c}
+      .section{padding:82px 0}
+      .section-head{grid-template-columns:1fr;gap:18px}
+      .loop{grid-template-columns:1fr 1fr}
+      .loop-item:nth-child(2){border-right:0}
+      .loop-item:nth-child(-n+2){border-bottom:1px solid var(--line)}
+      .build-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:520px){
+      .shell{width:min(100% - 28px,1160px)}
+      h1{font-size:4rem}
+      .loop{grid-template-columns:1fr}
+      .loop-item{border-right:0;border-bottom:1px solid var(--line)!important}
+      .loop-item:last-child{border-bottom:0!important}
+      .actions{flex-direction:column}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+  <nav class="nav" aria-label="Project navigation">
+    <div class="shell nav-inner">
+      <a class="brand" href="/">VATTECK<b>.</b></a>
+      <div class="nav-links">
+        <a href="/atlas/">Atlas</a>
+        <a class="active" href="/hashfactory/">Hash Factory</a>
+        <a href="/continuity/">Continuity</a>
+        <a href="/lifeos/">LifeOS</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Android rebuild · v0.1.0</div>
+        <h1>Hash<br>Factory<span>.</span></h1>
+        <p class="lede">Automate the work. Expand the machine. Question who the terminal was built to contain.</p>
+        <p class="summary">A narrative idle game about a remote GTC contractor processing assigned hash packets, reinvesting internal credits, and gradually finding cracks in an ordinary workday.</p>
+        <div class="actions">
+          <a class="button button-primary" href="https://github.com/Vatteck/HashFactory" target="_blank" rel="noopener">View the rebuild on GitHub ↗</a>
+          <a class="button button-secondary" href="#build">Read the build notes</a>
+        </div>
+      </div>
+
+      <div class="terminal" aria-label="Illustrative Hash Factory work terminal">
+        <div class="terminal-bar">
+          <span>GTC REMOTE SHIFT TERMINAL</span>
+          <span class="terminal-status">● CONNECTED</span>
+        </div>
+        <div class="terminal-body">
+          <div class="identity">
+            <strong>jvattic@sub-07</strong>
+            <span>SHIFT 04:18:22</span>
+            <span>REGION 07 CONTRACTOR POOL</span>
+            <span>BALANCE 8,420 $FLOPS</span>
+          </div>
+          <div class="queue">
+            <div class="queue-label"><span>Assigned work queue</span><span>03 pending</span></div>
+            <div class="packet">
+              <div class="packet-head"><span>PACKET GTC-07-734-A</span><span>PROCESSING</span></div>
+              <div class="meter"><i></i></div>
+              <div class="packet-meta"><span>68% VERIFIED</span><span>+420 $FLOPS</span></div>
+            </div>
+          </div>
+          <div class="event"><b>NOTICE:</b> continuity variance detected. Supervisor review deferred.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="loop">
+      <div class="shell">
+        <div class="section-head">
+          <div class="section-label">The production spine</div>
+          <h2>One loop. No parallel economies.</h2>
+        </div>
+        <div class="loop">
+          <div class="loop-item"><span class="loop-number">01 / QUEUE</span><h3>Accept work</h3><p>Assigned packets enter the contractor queue.</p></div>
+          <div class="loop-item"><span class="loop-number">02 / COMPUTE</span><h3>Process packets</h3><p>Your configured capacity determines throughput.</p></div>
+          <div class="loop-item"><span class="loop-number">03 / SETTLE</span><h3>Earn $FLOPS</h3><p>Completed work credits one internal balance.</p></div>
+          <div class="loop-item"><span class="loop-number">04 / EXPAND</span><h3>Raise capacity</h3><p>Reinvest in upgrades and take on more work.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="build">
+      <div class="shell">
+        <div class="section-head">
+          <div class="section-label">Current rebuild</div>
+          <h2>A clean foundation for a story that scales.</h2>
+        </div>
+        <div class="build-grid">
+          <article class="build-card"><small>Interface</small><h3>Kotlin + Jetpack Compose</h3><p>A thin Android shell presents the state; it does not hide simulation rules inside UI code.</p></article>
+          <article class="build-card"><small>Simulation</small><h3>Deterministic core</h3><p>The game advances through a pure simulation over one immutable GameState, covered by unit tests.</p></article>
+          <article class="build-card"><small>Economy</small><h3>Capacity, not free income</h3><p>Hardware helps process assigned work. It never mints wallet income by itself.</p></article>
+          <article class="build-card"><small>Persistence</small><h3>Saves with a future</h3><p>Schema changes require explicit migration paths and frozen-fixture coverage.</p></article>
+        </div>
+        <div class="legacy">
+          <div class="legacy-mark">↺</div>
+          <div>
+            <h3>Formerly SiliconSage AI Miner / Substrate: Miner</h3>
+            <p>Hash Factory is a from-scratch rebuild. The earlier game is reference material, not the blueprint; only the design lessons that survived its previous iterations are moving forward.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer-inner">
+      <span>© 2026 VATTECK · HASH FACTORY</span>
+      <span>ANDROID · KOTLIN · JETPACK COMPOSE</span>
+    </div>
+  </footer>
+</body>
+</html>

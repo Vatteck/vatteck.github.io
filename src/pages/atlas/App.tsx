@@ -93,7 +93,7 @@ export default function App() {
         <div className="max-w-6xl mx-auto px-4 py-2 flex items-center gap-4 overflow-x-auto">
           <a href="/" className="text-[10px] font-mono uppercase tracking-widest text-slate-500 hover:text-atlas-red transition-colors whitespace-nowrap shrink-0">← Main</a>
           <span className="text-slate-700 shrink-0">|</span>
-          <a href="/substrateminer/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide whitespace-nowrap shrink-0">HashFactory</a>
+          <a href="/hashfactory/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide whitespace-nowrap shrink-0">Hash Factory</a>
           <a href="/continuity/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide whitespace-nowrap shrink-0">Continuity</a>
           <a href="/lifeos/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide whitespace-nowrap shrink-0">LifeOS</a>
         </div>
