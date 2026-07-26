@@ -85,7 +85,7 @@
     .carousel-track{display:flex;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;border-radius:var(--radius-card);border:1px solid var(--border);background:var(--bg-card)}
     .carousel-track::-webkit-scrollbar{display:none}
     .carousel-slide{flex:0 0 100%;scroll-snap-align:center;position:relative}
-    .carousel-slide img{width:100%;height:auto;display:block}
+    .carousel-slide img{width:100%;height:min(72vh,760px);object-fit:contain;display:block;background:#070A12}
     .carousel-slide-label{position:absolute;bottom:0;left:0;right:0;padding:.7rem 1rem;background:linear-gradient(transparent,rgba(10,14,26,0.92));font-family:var(--font-display);font-size:.6rem;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;text-align:center}
     .carousel-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:40px;height:40px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);color:var(--text-dim);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
     .carousel-btn:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-glow)}
@@ -216,11 +216,11 @@
   <button class="carousel-btn carousel-prev" onclick="scrollCarousel(-1)" aria-label="Previous">‹</button>
   <button class="carousel-btn carousel-next" onclick="scrollCarousel(1)" aria-label="Next">›</button>
   <div class="carousel-track" id="carousel-track">
-    <div class="carousel-slide"><img src="/continuity/screenshots/00-home.png" alt="Home screen" loading="lazy"><div class="carousel-slide-label">Home</div></div>
-    <div class="carousel-slide"><img src="/continuity/screenshots/01-level-select.png" alt="Level select" loading="lazy"><div class="carousel-slide-label">Levels</div></div>
-    <div class="carousel-slide"><img src="/continuity/screenshots/03-drawing.png" alt="Drawing a path" loading="lazy"><div class="carousel-slide-label">Drawing</div></div>
-    <div class="carousel-slide"><img src="/continuity/screenshots/05-solved.png" alt="Solved puzzle" loading="lazy"><div class="carousel-slide-label">Solved</div></div>
-    <div class="carousel-slide"><img src="/continuity/screenshots/06-9x9.png" alt="Advanced 9x9 grid" loading="lazy"><div class="carousel-slide-label">9×9 Endgame</div></div>
+    <div class="carousel-slide"><img src="screenshots/00-home.png" alt="Continuity home screen" loading="eager" decoding="async" fetchpriority="high"><div class="carousel-slide-label">Home</div></div>
+    <div class="carousel-slide"><img src="screenshots/01-level-select.png" alt="Continuity level select" loading="eager" decoding="async"><div class="carousel-slide-label">Levels</div></div>
+    <div class="carousel-slide"><img src="screenshots/03-drawing.png" alt="Drawing a trace in Continuity" loading="eager" decoding="async"><div class="carousel-slide-label">Drawing</div></div>
+    <div class="carousel-slide"><img src="screenshots/05-solved.png" alt="Solved Continuity puzzle" loading="eager" decoding="async"><div class="carousel-slide-label">Solved</div></div>
+    <div class="carousel-slide"><img src="screenshots/06-9x9.png" alt="Advanced Continuity 9 by 9 grid" loading="eager" decoding="async"><div class="carousel-slide-label">9×9 Endgame</div></div>
   </div>
   <div class="carousel-dots" id="carousel-dots"></div>
 </div>

@@ -13,11 +13,11 @@ import {
   Info
 } from 'lucide-react';
 
-import dashboardImg from '../assets/screenshots/dashboard.png';
-import detailsImg from '../assets/screenshots/details.png';
-import diskpageImg from '../assets/screenshots/diskpage.png';
-import terminalImg from '../assets/screenshots/terminal.png';
-import apppanelImg from '../assets/screenshots/apppanel.png';
+const dashboardImg = '/atlas/screenshots/dashboard.png';
+const detailsImg = '/atlas/screenshots/details.png';
+const diskpageImg = '/atlas/screenshots/diskpage.png';
+const terminalImg = '/atlas/screenshots/terminal.png';
+const apppanelImg = '/atlas/screenshots/apppanel.png';
 
 interface ScreenshotTab {
   id: string;
@@ -238,11 +238,13 @@ export function ScreenshotShowcase() {
                     key={activeTab.id}
                     src={activeTab.image}
                     alt={activeTab.label}
+                    loading="eager"
+                    decoding="async"
                     initial={{ opacity: 0, filter: 'blur(5px)' }}
                     animate={{ opacity: 1, filter: 'blur(0px)' }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.25 }}
-                    className="w-full h-full object-cover select-none pointer-events-none group-hover:scale-[1.01] transition-transform duration-500"
+                    className="w-full h-full object-contain select-none pointer-events-none group-hover:scale-[1.01] transition-transform duration-500"
                   />
                 </AnimatePresence>
 
@@ -325,6 +327,8 @@ export function ScreenshotShowcase() {
                   key={activeTab.id}
                   src={activeTab.image}
                   alt={activeTab.label}
+                  loading="eager"
+                  decoding="async"
                   initial={{ scale: 0.95, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.95, opacity: 0 }}

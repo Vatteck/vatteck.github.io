@@ -18,9 +18,8 @@ export const AtlasLogo: React.FC<AtlasLogoProps> = ({ className = '', size = 120
       )}
 
       <img
-        src="https://raw.githubusercontent.com/Vatteck/Atlas/refs/heads/master/atlas/view/resources/img/logo.svg"
+        src="/atlas/logo.svg"
         alt="Atlas Brand Logo"
-        referrerPolicy="no-referrer"
         className="w-full h-full object-contain rounded-[22%] drop-shadow-xl select-none"
         style={{ width: size, height: size }}
       />
