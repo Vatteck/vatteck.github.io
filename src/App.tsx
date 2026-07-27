@@ -850,10 +850,11 @@ export default function App() {
               <div className="mb-8 relative group cyber-image-container">
                 <div className="absolute inset-0 bg-substrate-accent/20 blur-xl group-hover:bg-substrate-accent/40 transition-all duration-500 rounded-xl z-0" />
                 <img 
-                  src="input_file_1.png" 
-                  alt="VATTECK - Substrate Architect and Hardware Systems Engineer Profile" 
-                  className="relative w-full aspect-[4/3] object-cover rounded-xl border border-substrate-accent/30 grayscale hover:grayscale-0 transition-all duration-700 cyber-image z-10"
-                  referrerPolicy="no-referrer"
+                  src="/vatteck-profile.jpg"
+                  alt="Portrait illustration of Vatteck"
+                  className="relative z-10 aspect-[4/3] w-full rounded-xl border border-substrate-accent/30 bg-black/60 object-contain object-center grayscale transition-all duration-700 hover:grayscale-0 cyber-image"
+                  width="460"
+                  height="460"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/vatteck-logo.svg';
                   }}
