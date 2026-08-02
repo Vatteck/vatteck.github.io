@@ -17,7 +17,6 @@ export default defineConfig(() => {
         input: {
           main: resolve(__dirname, 'index.html'),
           'atlas/index': resolve(__dirname, 'atlas/index.html'),
-          'substrateminer/index': resolve(__dirname, 'substrateminer/index.html'),
         },
       },
     },
