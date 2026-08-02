@@ -1,18 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Github, 
-  Cpu, 
-  Terminal, 
-  Gamepad2, 
-  Smartphone, 
-  Mail, 
-  ExternalLink, 
-  Code2, 
-  Wrench, 
-  Layers,
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import {
+  Github,
+  Terminal,
+  Mail,
+  ExternalLink,
+  Gamepad2,
   ChevronRight,
-  Monitor,
-  Info,
+  ImageOff,
   X,
   ArrowUp,
   CheckCircle2,
@@ -20,570 +14,387 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { bioData, deepDiveData, projectsData, skillsData } from './config/portfolio';
+import {
+  bioData,
+  deepDiveData,
+  projectsData,
+  skillsData,
+  benchSpecs,
+  statusLabel,
+  type ProjectItem,
+  type ProjectMedia,
+  type ProjectStatus
+} from './config/portfolio';
 
-const DataStream = () => {
-  const hexChars = "0123456789ABCDEF";
-  const generateStream = (length: number) => {
-    return Array.from({ length }, () => hexChars[Math.floor(Math.random() * hexChars.length)]).join("");
-  };
+const EMAIL = 'admin@vatteck.com';
 
-  return (
-    <>
-      <div className="data-stream">
-        {Array.from({ length: 20 }, () => generateStream(50)).join(" ")}
-      </div>
-      <div className="data-stream-left">
-        {Array.from({ length: 20 }, () => generateStream(50)).join(" ")}
-      </div>
-    </>
-  );
+const SECTIONS = [
+  { id: 'work', label: 'Work' },
+  { id: 'capabilities', label: 'Capabilities' },
+  { id: 'about', label: 'About' },
+  { id: 'contact', label: 'Contact' }
+];
+
+const statusColor: Record<ProjectStatus, string> = {
+  released: 'bg-state-released',
+  testing: 'bg-state-testing',
+  building: 'bg-state-building'
 };
 
-const MatrixRain = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const characters = "0123456789ABCDEF";
-    const fontSize = 14;
-    const columns = canvas.width / fontSize;
-    const drops: number[] = [];
-
-    for (let i = 0; i < columns; i++) {
-      drops[i] = 1;
-    }
-
-    const draw = () => {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.fillStyle = "#FF1F1F";
-      ctx.font = `${fontSize}px monospace`;
-
-      for (let i = 0; i < drops.length; i++) {
-        const text = characters.charAt(Math.floor(Math.random() * characters.length));
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
-        drops[i]++;
-      }
-    };
-
-    const interval = setInterval(draw, 33);
-    return () => clearInterval(interval);
-  }, []);
-
-  return <canvas ref={canvasRef} className="matrix-canvas" />;
+const statusText: Record<ProjectStatus, string> = {
+  released: 'text-state-released',
+  testing: 'text-state-testing',
+  building: 'text-state-building'
 };
 
-const SystemStatus = () => {
-  const [time, setTime] = useState(new Date().toLocaleTimeString());
-  const [cpuLoad, setCpuLoad] = useState(45);
-  const [memAvail, setMemAvail] = useState(64.2);
+/* -------------------------------------------------------------------------- */
+/* Primitives                                                                  */
+/* -------------------------------------------------------------------------- */
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTime(new Date().toLocaleTimeString());
-      setCpuLoad(Math.floor(Math.random() * 15) + 8);
-      setMemAvail(prev => +(prev + (Math.random() * 0.1 - 0.05)).toFixed(1));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <div className="absolute top-16 right-16 z-20 hidden lg:flex flex-col gap-2 font-mono text-[10px] text-slate-400 text-right bg-black/40 p-4 rounded-lg border border-substrate-accent/20 backdrop-blur-md shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-      <div className="flex items-center justify-end gap-2">
-        <span className="opacity-50">SYSTEM_TIME:</span>
-        <span className="text-white">{time}</span>
-      </div>
-      <div className="flex items-center justify-end gap-2">
-        <span className="opacity-50">CPU_LOAD:</span>
-        <div className="w-20 h-1 bg-white/10 rounded-full overflow-hidden">
-          <motion.div 
-            animate={{ width: `${cpuLoad}%` }}
-            className="h-full bg-substrate-accent"
-          />
-        </div>
-        <span className="text-white w-6">{cpuLoad}%</span>
-      </div>
-      <div className="flex items-center justify-end gap-2">
-        <span className="opacity-50">MEM_AVAIL:</span>
-        <span className="text-white">{memAvail}GB</span>
-      </div>
-      <div className="flex items-center justify-end gap-2">
-        <span className="opacity-50">STATUS:</span>
-        <span className="text-emerald-500 animate-pulse">OPTIMAL</span>
-      </div>
-    </div>
-  );
-};
-
-const LiveSystemLog = () => {
-  const [logs, setLogs] = useState<{ time: string; msg: string; type: 'info' | 'warn' | 'error' | 'success' }[]>([]);
-  const messages = [
-    { msg: "INITIALIZING_SUBSTRATE_LAYERS...", type: 'info' },
-    { msg: "KERNEL_MODULE_LOADED: VATTECK_CORE", type: 'success' },
-    { msg: "SCANNING_HARDWARE_INTERFACES...", type: 'info' },
-    { msg: "UPLINK_ESTABLISHED: PORT_8080", type: 'success' },
-    { msg: "ENCRYPTING_DATA_STREAM: AES-256", type: 'warn' },
-    { msg: "OPTIMIZING_THERMAL_PROFILES...", type: 'info' },
-    { msg: "NEURAL_LINK_SYNC_READY", type: 'success' },
-    { msg: "SILICON_DIAGNOSTICS_OPTIMAL", type: 'success' },
-    { msg: "ARCH_LINUX_CACHYOS_DETECTED", type: 'info' },
-    { msg: "ROOT_ACCESS_LEVEL_0_CONFIRMED", type: 'error' }
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLogs(prev => {
-        const rawMsg = messages[Math.floor(Math.random() * messages.length)];
-        const next = [...prev, { 
-          time: new Date().toLocaleTimeString([], { hour12: false }), 
-          ...rawMsg 
-        }];
-        if (next.length > 4) return next.slice(1);
-        return next;
-      });
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'success': return 'text-emerald-400';
-      case 'warn': return 'text-amber-400';
-      case 'error': return 'text-substrate-accent';
-      default: return 'text-sky-400';
-    }
-  };
-
-  return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="mt-16 w-full max-w-md mx-auto bg-black/40 border border-substrate-accent/20 rounded-lg p-4 font-mono text-[10px] overflow-hidden relative"
-    >
-      <div className="absolute top-0 left-0 w-full h-px bg-substrate-accent/30" />
-      <div className="flex flex-col gap-1.5 min-h-[80px]">
-        {logs.map((log, i) => (
-          <motion.div 
-            key={i}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-3"
-          >
-            <span className="text-slate-600">[{log.time}]</span>
-            <span className={getTypeColor(log.type)}>{log.msg}</span>
-          </motion.div>
-        ))}
-        {logs.length === 0 && <div className="text-slate-600 animate-pulse">ESTABLISHING_DATA_LINK...</div>}
-      </div>
-      <div className="mt-3 pt-2 border-t border-white/5 flex justify-between items-center text-[8px] text-slate-500">
-        <span>UPLINK_STATUS: ACTIVE</span>
-        <span className="animate-pulse">● LIVE</span>
-      </div>
-    </motion.div>
-  );
-};
-
-const CodeBlock = ({ code, language = 'bash' }: { code: string; language?: string }) => {
-  return (
-    <div className="bg-[#0d1117] rounded-xl border border-hardware-border overflow-hidden font-mono text-xs my-6 shadow-2xl group relative">
-      <div className="bg-[#161b22] px-4 py-2 border-b border-hardware-border flex justify-between items-center">
-        <div className="flex gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
-          <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
-          <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
-        </div>
-        <span className="text-[10px] text-slate-500 uppercase tracking-widest">{language}</span>
-      </div>
-      <div className="p-4 overflow-x-auto custom-scrollbar">
-        <pre className="text-slate-300">
-          {code.split('\n').map((line, i) => {
-            const highlighted = line
-              .replace(/(sudo|pacman|yay|git|cd|mkdir|rm|cp|mv|ls|cat|grep|sed|awk|chmod|chown|systemctl|journalctl|echo|export|alias)/g, '<span class="text-[#ff7b72]">$1</span>')
-              .replace(/(-S|-Sy|-Syu|-R|-U|-Q|-F|-G|-h|--help|--version|--noconfirm)/g, '<span class="text-[#79c0ff]">$1</span>')
-              .replace(/(".*?"|'.*?')/g, '<span class="text-[#a5d6ff]">$1</span>')
-              .replace(/(#.*)/g, '<span class="text-[#8b949e]">$1</span>')
-              .replace(/(https?:\/\/[^\s]+)/g, '<span class="text-[#a5d6ff] underline">$1</span>');
-            
-            return (
-              <div key={i} className="flex gap-4">
-                <span className="text-slate-600 w-4 text-right select-none">{i + 1}</span>
-                <span dangerouslySetInnerHTML={{ __html: highlighted }} />
-              </div>
-            );
-          })}
-        </pre>
-      </div>
-    </div>
-  );
-};
-
-const TerminalEasterEgg = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [input, setInput] = useState('');
-  const [history, setHistory] = useState<string[]>(['VATTECK OS v1.0.4', 'Type "help" for commands...']);
-
-  const handleCommand = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cmd = input.toLowerCase().trim();
-    let response = '';
-
-    if (cmd === 'help') response = 'Commands: help, about, clear, whoami, root';
-    else if (cmd === 'about') response = 'Substrate Architect. Hardware Soul. Software Mind.';
-    else if (cmd === 'clear') { setHistory([]); setInput(''); return; }
-    else if (cmd === 'whoami') response = 'User: Vatteck@Guest_Terminal';
-    else if (cmd === 'root') response = 'Access Denied. Insufficient Privileges.';
-    else if (cmd === '') return;
-    else response = `Command not found: ${cmd}`;
-
-    setHistory([...history, `> ${input}`, response]);
-    setInput('');
-  };
-
-  return (
-    <>
-      <button 
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-8 left-8 z-[60] p-3 bg-hardware-card border border-substrate-accent/30 text-substrate-accent rounded-full hover:bg-substrate-accent hover:text-white transition-all group"
-        title="Open Terminal"
-        aria-label="Open terminal easter egg"
-      >
-        <Terminal size={20} className="group-hover:scale-110 transition-transform" />
-      </button>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed bottom-24 left-8 z-[70] w-80 h-96 bg-black/90 border border-substrate-accent/50 rounded-xl overflow-hidden flex flex-col shadow-2xl backdrop-blur-xl"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="terminal-title"
-          >
-            <div className="bg-substrate-accent/10 p-3 border-b border-substrate-accent/20 flex justify-between items-center">
-              <span id="terminal-title" className="text-[10px] font-mono text-substrate-accent font-bold tracking-widest">VATTECK_TERMINAL</span>
-              <button onClick={() => setIsOpen(false)} className="text-substrate-accent hover:text-white" aria-label="Close terminal"><X size={14} /></button>
-            </div>
-            <div className="flex-grow p-4 font-mono text-[10px] overflow-y-auto custom-scrollbar space-y-1">
-              {history.map((line, i) => (
-                <p key={i} className={line.startsWith('>') ? 'text-substrate-accent' : 'text-slate-300'}>{line}</p>
-              ))}
-            </div>
-            <form onSubmit={handleCommand} className="p-3 bg-black/50 border-t border-substrate-accent/10 flex gap-2">
-              <span className="text-substrate-accent font-mono text-[10px]">{'>'}</span>
-              <input 
-                autoFocus
-                type="text" 
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                className="bg-transparent border-none outline-none text-[10px] font-mono text-white w-full"
-              />
-            </form>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
-};
-
-const SectionHeader = ({ title, subtitle, glitch }: { title: string; subtitle?: string; glitch?: boolean }) => (
-  <div className="mb-12 relative">
-    <div className="absolute -left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-substrate-accent via-substrate-accent/50 to-transparent" />
-    <motion.div 
-      initial={{ opacity: 0, x: -20 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true }}
-      className="space-y-2"
-    >
-      <div className="flex items-center gap-4 mb-2">
-        <div className="h-px w-8 bg-substrate-accent" />
-        <h2 className="text-sm font-mono uppercase tracking-[0.3em] text-substrate-accent">{title}</h2>
-        <div className="h-px flex-grow bg-gradient-to-r from-substrate-accent/30 to-transparent" />
-      </div>
-      {subtitle && (
-        <h3 className={`text-4xl md:text-5xl font-bold tracking-tighter uppercase ${glitch ? 'glitch' : ''}`} data-text={subtitle}>
-          {subtitle}<span className="text-substrate-accent">_</span>
-        </h3>
-      )}
-    </motion.div>
-  </div>
-);
-
-const CircuitLine = ({ className }: { className?: string }) => (
-  <div className={`absolute pointer-events-none ${className}`}>
-    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-      <path 
-        d="M0 50 L40 50 L50 40 L60 50 L100 50" 
-        fill="none" 
-        stroke="currentColor" 
-        strokeWidth="0.5"
-        className="text-substrate-accent/20"
-      />
-      <circle cx="50" cy="40" r="1.5" className="fill-substrate-accent/40 animate-pulse" />
-    </svg>
-  </div>
-);
-
-const SkillPill = ({ icon: Icon, label }: { icon: any; label: string; key?: React.Key }) => (
-  <motion.div 
-    whileHover={{ scale: 1.05, backgroundColor: 'rgba(255, 31, 31, 0.1)' }}
-    className="flex items-center gap-3 px-4 py-3 bg-hardware-card border border-hardware-border rounded-lg transition-colors"
+const SectionHeader = ({
+  kicker,
+  title,
+  lead,
+  size = 'md'
+}: {
+  kicker: string;
+  title: string;
+  lead?: string;
+  size?: 'md' | 'lg';
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 12 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: '-80px' }}
+    transition={{ duration: 0.45 }}
+    className="mb-10"
   >
-    <Icon size={18} className="text-substrate-accent" />
-    <span className="text-sm font-medium">{label}</span>
+    <div className="mb-3 flex items-center gap-3">
+      <span className="h-px w-6 bg-substrate-accent" />
+      <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-substrate-accent">
+        {kicker}
+      </span>
+      <span className="rule-fade h-px flex-grow" />
+    </div>
+    <h2
+      className={`font-bold tracking-tight text-slate-50 ${
+        size === 'lg' ? 'text-3xl sm:text-4xl' : 'text-2xl sm:text-3xl'
+      }`}
+    >
+      {title}
+    </h2>
+    {lead && <p className="mt-3 max-w-2xl leading-relaxed text-slate-400">{lead}</p>}
   </motion.div>
 );
 
-const ProjectCard = ({ 
-  title, 
-  description, 
-  details,
-  tags, 
-  status,
-  icon: Icon = Layers,
-  repoUrl,
-  siteUrl
-}: { 
-  title: string; 
-  description: string; 
-  details: string; 
-  tags: string[]; 
-  status?: string;
-  icon?: any;
-  repoUrl?: string;
-  siteUrl?: string;
-  key?: React.Key;
-}) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const dialogId = `project-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+const StatusMark = ({ status, version }: { status: ProjectStatus; version?: string }) => (
+  <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider">
+    <span className={`status-dot ${statusColor[status]}`} aria-hidden="true" />
+    <span className={statusText[status]}>{statusLabel[status]}</span>
+    {version && <span className="text-slate-600">{version}</span>}
+  </span>
+);
 
-  useEffect(() => {
-    if (!isExpanded) return;
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsExpanded(false);
-    };
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [isExpanded]);
+const MediaFrame = ({ media, title }: { media?: ProjectMedia; title: string }) => {
+  // A capture that 404s falls back to the same panel as no capture at all, so a
+  // missing file degrades quietly instead of showing a broken image.
+  const [failed, setFailed] = useState(false);
+
+  if (!media || failed) {
+    return (
+      <div className="project-media project-media-empty" data-kind="wide">
+        <ImageOff size={22} className="text-slate-700" aria-hidden="true" />
+        <span className="font-mono text-[10px] uppercase tracking-widest text-slate-600">
+          No build capture yet
+        </span>
+        <span className="sr-only">{title} has no screenshot available.</span>
+      </div>
+    );
+  }
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="group relative bg-hardware-card rounded-xl overflow-hidden flex flex-col cyber-card p-6"
+    <div className="project-media" data-kind={media.kind}>
+      <img
+        src={media.src}
+        alt={media.alt}
+        loading="lazy"
+        decoding="async"
+        onError={() => setFailed(true)}
+      />
+    </div>
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/* Project card + detail dialog                                                */
+/* -------------------------------------------------------------------------- */
+
+const ProjectDialog = ({
+  project,
+  onClose
+}: {
+  project: ProjectItem;
+  onClose: () => void;
+}) => {
+  const dialogId = `project-${project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+  const href = project.siteUrl?.startsWith('http')
+    ? project.siteUrl
+    : `https://${project.siteUrl}`;
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+      className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-black/85 p-4 backdrop-blur-md sm:p-6"
     >
-      <div className="cyber-corner cyber-corner-tl" />
-      <div className="cyber-corner cyber-corner-tr" />
-      <div className="cyber-corner cyber-corner-bl" />
-      <div className="cyber-corner cyber-corner-br" />
-      <div className="cyber-border-accent" />
-      
-      <div className="flex items-start justify-between mb-6">
-        <div className="cyber-icon-box">
-          <Icon size={32} className="text-substrate-accent relative z-10" />
-        </div>
-        <div className="flex flex-col items-end gap-2">
-          {status && (
-            <div className={`cyber-badge ${status === 'PLANNED' ? 'cyber-badge-planned' : ''}`}>
-              {status}
-            </div>
-          )}
-          {siteUrl && (
-            <div className="text-[8px] font-mono text-substrate-accent animate-pulse">
-              LIVE_DEPLOYMENT_ACTIVE
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="flex-grow flex flex-col">
-        <h4 className="text-xl font-bold mb-2 group-hover:text-substrate-accent transition-colors group-hover:uv-glow">{title}</h4>
-        <p className="text-slate-400 text-sm leading-relaxed mb-6">
-          {description}
-        </p>
-        
-        <div className="mt-auto">
-          <div className="flex flex-wrap gap-2 mb-6">
-            {tags.map(tag => (
-              <span key={tag} className="text-[10px] font-mono px-2 py-1 bg-slate-800 rounded border border-slate-700 text-slate-300 uppercase tracking-tighter">
-                {tag}
-              </span>
-            ))}
+      <motion.div
+        initial={{ scale: 0.97, opacity: 0, y: 8 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.97, opacity: 0, y: 8 }}
+        transition={{ duration: 0.2 }}
+        onClick={(e) => e.stopPropagation()}
+        className="my-auto w-full max-w-3xl overflow-hidden rounded-2xl border border-hardware-border bg-hardware-card shadow-2xl"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={dialogId}
+      >
+        <div className="flex items-start justify-between gap-6 border-b border-hardware-border p-6 sm:p-8">
+          <div className="min-w-0">
+            <StatusMark status={project.status} version={project.version} />
+            <h2 id={dialogId} className="mt-2 text-2xl font-bold text-slate-50">
+              {project.title}
+            </h2>
+            <p className="mt-3 max-w-xl leading-relaxed text-slate-400">
+              {project.description}
+            </p>
           </div>
-          
-          <div className="flex items-center justify-between border-t border-hardware-border pt-4">
-            <div className="flex items-center gap-4">
-              <button 
-                onClick={() => setIsExpanded(true)}
-                className="flex items-center gap-2 text-xs font-mono text-substrate-accent hover:text-white transition-colors group/btn"
-              >
-                <Info size={14} />
-                DETAILS
-              </button>
+          <button
+            onClick={onClose}
+            className="shrink-0 rounded-full p-2 text-slate-500 transition-colors hover:bg-white/10 hover:text-white"
+            aria-label={`Close ${project.title} details`}
+            autoFocus
+          >
+            <X size={20} />
+          </button>
+        </div>
 
-              {siteUrl && (
-                <a 
-                  href={siteUrl.startsWith('http') ? siteUrl : `https://${siteUrl}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={`View Live Deployment of ${title}`}
-                  className="flex items-center gap-2 text-xs font-mono text-substrate-accent hover:text-white transition-colors"
-                >
-                  <ExternalLink size={14} />
-                  LIVE
-                </a>
-              )}
+        <div className="custom-scrollbar max-h-[55vh] overflow-y-auto p-6 sm:p-8">
+          <div className="grid gap-8 md:grid-cols-2">
+            <div>
+              <h3 className="mb-3 font-mono text-[10px] uppercase tracking-[0.24em] text-substrate-accent">
+                Specification
+              </h3>
+              <dl>
+                {project.specs.map((spec) => (
+                  <div key={spec.label} className="spec-row">
+                    <dt className="shrink-0 text-xs uppercase tracking-wide text-slate-500">
+                      {spec.label}
+                    </dt>
+                    <dd className="text-right font-mono text-xs text-slate-200">
+                      {spec.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </div>
 
-            {repoUrl && (
-              <a 
-                href={repoUrl}
+            <div>
+              <h3 className="mb-3 font-mono text-[10px] uppercase tracking-[0.24em] text-substrate-accent">
+                What's in it
+              </h3>
+              <ul className="space-y-2.5">
+                {project.highlights.map((point) => (
+                  <li key={point} className="flex gap-3 text-sm leading-relaxed text-slate-400">
+                    <ChevronRight
+                      size={14}
+                      className="mt-1 shrink-0 text-substrate-accent"
+                      aria-hidden="true"
+                    />
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {project.gallery && project.gallery.length > 0 && (
+            <div className="mt-8">
+              <h3 className="mb-3 font-mono text-[10px] uppercase tracking-[0.24em] text-substrate-accent">
+                Screens
+              </h3>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {project.gallery.map((shot) => (
+                  <div
+                    key={shot.src}
+                    className="overflow-hidden rounded-lg border border-hardware-border bg-hardware-raised"
+                  >
+                    <img
+                      src={shot.src}
+                      alt={shot.alt}
+                      loading="lazy"
+                      decoding="async"
+                      // Phone captures keep a tall frame; cropping them to 4:3
+                      // from the top would show only the status bar.
+                      className={`w-full object-cover object-top ${
+                        shot.kind === 'phone' ? 'aspect-[9/16]' : 'aspect-[4/3]'
+                      }`}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            {project.siteUrl && (
+              <a
+                href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                title={`View Source Code for ${title} on GitHub`}
-                className="flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-white transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg bg-substrate-accent px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-substrate-accent/85"
               >
-                <Github size={14} />
-                REPO
+                <ExternalLink size={16} aria-hidden="true" />
+                Visit project
+              </a>
+            )}
+            {project.repoUrl && (
+              <a
+                href={project.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg border border-hardware-border bg-hardware-raised px-5 py-3 text-sm font-semibold text-slate-200 transition-colors hover:border-substrate-accent/50"
+              >
+                <Github size={16} aria-hidden="true" />
+                Source
               </a>
             )}
           </div>
         </div>
-      </div>
-
-      <AnimatePresence>
-        {isExpanded && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md"
-          >
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-hardware-card border border-hardware-border max-w-2xl w-full rounded-2xl overflow-hidden shadow-2xl relative"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby={dialogId}
-            >
-              <div className="absolute top-0 left-0 w-full h-1 bg-substrate-accent shadow-[0_0_15px_rgba(127,85,255,0.5)]" />
-              <div className="p-8">
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <h2 id={dialogId} className="text-2xl font-bold text-white mb-2 glitch" data-text={title}>{title}</h2>
-                    <div className="flex flex-wrap gap-2">
-                      {tags.map(tag => (
-                        <span key={tag} className="text-[10px] font-mono px-2 py-1 bg-substrate-accent/10 border border-substrate-accent/30 text-substrate-accent rounded uppercase">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <button 
-                    onClick={() => setIsExpanded(false)}
-                    className="p-2 hover:bg-white/10 rounded-full transition-colors text-slate-400 hover:text-white"
-                    aria-label={`Close ${title} details`}
-                    autoFocus
-                  >
-                    <X size={24} />
-                  </button>
-                </div>
-                
-                <div className="prose prose-invert max-w-none text-slate-400 leading-relaxed max-h-[60vh] overflow-y-auto pr-4 custom-scrollbar">
-                  <div className="bg-black/40 p-4 rounded-lg border border-hardware-border mb-6 font-mono text-xs">
-                    <div className="flex items-center gap-2 text-substrate-accent mb-2">
-                      <Terminal size={12} />
-                      <span>SYSTEM_LOG // {title.toUpperCase().replace(/\s+/g, '_')}</span>
-                    </div>
-                    <p className="text-slate-300 leading-relaxed">{description}</p>
-                  </div>
-                  
-                  <div className="space-y-6">
-                    <div>
-                      <h5 className="text-substrate-accent font-mono text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
-                        <Code2 size={14} />
-                        Technical Breakdown
-                      </h5>
-                      <CodeBlock code={details} language="technical_specs" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-8 flex flex-wrap justify-end gap-4">
-                  {siteUrl && (
-                    <a 
-                      href={siteUrl.startsWith('http') ? siteUrl : `https://${siteUrl}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-6 py-3 bg-substrate-accent text-white font-bold rounded-lg hover:bg-red-700 transition-all flex items-center gap-2 shadow-lg shadow-substrate-accent/20"
-                    >
-                      <ExternalLink size={18} />
-                      VISIT SITE
-                    </a>
-                  )}
-                  {repoUrl && (
-                    <a 
-                      href={repoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-6 py-3 bg-hardware-card border border-hardware-border text-white font-bold rounded-lg hover:border-substrate-accent/50 transition-all flex items-center gap-2"
-                    >
-                      <Github size={18} />
-                      REPOSITORY
-                    </a>
-                  )}
-                  <button 
-                    onClick={() => setIsExpanded(false)}
-                    className="px-8 py-3 bg-slate-800 text-white font-bold rounded-lg hover:bg-slate-700 transition-all"
-                  >
-                    CLOSE
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </motion.div>
     </motion.div>
   );
 };
 
-const projectBenchNotes: Record<string, string> = {
-  "Atlas Package Manager": "v0.16.1 · released",
-  "Hash Factory": "v0.1.0 · rebuilding",
-  "Continuity": "v1.2.0 · closed testing",
-  "LifeOS": "active development"
+const ProjectCard = ({
+  project,
+  index
+}: {
+  project: ProjectItem;
+  index: number;
+  key?: React.Key;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const href = project.siteUrl?.startsWith('http')
+    ? project.siteUrl
+    : `https://${project.siteUrl}`;
+
+  return (
+    <>
+      <motion.article
+        initial={{ opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.45, delay: Math.min(index, 3) * 0.06 }}
+        className="project-card"
+      >
+        <MediaFrame media={project.media} title={project.title} />
+
+        <div className="flex flex-grow flex-col p-6">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <project.icon size={18} className="text-substrate-accent" aria-hidden="true" />
+            <StatusMark status={project.status} version={project.version} />
+          </div>
+
+          <h3 className="text-lg font-bold text-slate-50">{project.title}</h3>
+          <p className="mt-1.5 text-sm leading-relaxed text-slate-400">{project.summary}</p>
+
+          <div className="mt-4 flex flex-wrap gap-1.5">
+            {project.tags.map((tag) => (
+              <span key={tag} className="tag">
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-6 flex items-center gap-4 border-t border-hardware-line pt-4">
+            <button
+              onClick={() => setIsOpen(true)}
+              className="text-xs font-semibold text-slate-300 transition-colors hover:text-white"
+            >
+              Details
+            </button>
+            <span className="h-3 w-px bg-hardware-border" aria-hidden="true" />
+            {project.siteUrl && (
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-substrate-accent transition-colors hover:text-substrate-soft"
+              >
+                Visit
+                <ExternalLink size={12} aria-hidden="true" />
+              </a>
+            )}
+            {project.repoUrl && (
+              <a
+                href={project.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-auto inline-flex items-center gap-1.5 text-xs text-slate-500 transition-colors hover:text-white"
+              >
+                <Github size={13} aria-hidden="true" />
+                Source
+              </a>
+            )}
+          </div>
+        </div>
+      </motion.article>
+
+      <AnimatePresence>
+        {isOpen && <ProjectDialog project={project} onClose={() => setIsOpen(false)} />}
+      </AnimatePresence>
+    </>
+  );
 };
+
+/* -------------------------------------------------------------------------- */
+/* Hero bench index                                                            */
+/* -------------------------------------------------------------------------- */
 
 const ProjectBenchIndex = () => (
   <div className="bench-index">
-    <div className="flex items-center justify-between gap-4 border-b border-white/10 px-5 py-4">
+    <div className="flex items-center justify-between gap-4 border-b border-hardware-border px-5 py-4">
       <div>
-        <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-substrate-accent">Workbench index</p>
-        <h2 className="mt-1 text-lg font-semibold text-white">Current builds</h2>
+        <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-substrate-accent">
+          Workbench index
+        </p>
+        <h2 className="mt-1 text-lg font-semibold text-slate-50">Current builds</h2>
       </div>
-      <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]" aria-hidden="true" />
+      <span
+        className="h-2 w-2 rounded-full bg-state-released shadow-[0_0_12px_rgba(52,211,153,0.8)]"
+        aria-hidden="true"
+      />
     </div>
     <div>
       {projectsData.map((project) => {
-        const href = project.siteUrl?.startsWith('http') ? project.siteUrl : `https://${project.siteUrl}`;
+        const href = project.siteUrl?.startsWith('http')
+          ? project.siteUrl
+          : `https://${project.siteUrl}`;
         return (
           <a
             key={project.title}
@@ -592,14 +403,24 @@ const ProjectBenchIndex = () => (
             aria-label={`Open ${project.title}`}
           >
             <span className="flex min-w-0 items-center gap-3">
-              <project.icon size={18} className="shrink-0 text-substrate-accent" aria-hidden="true" />
-              <span className="truncate font-semibold text-slate-100">{project.title}</span>
+              <project.icon
+                size={16}
+                className="shrink-0 text-substrate-accent"
+                aria-hidden="true"
+              />
+              <span className="truncate text-sm font-medium text-slate-100">
+                {project.title}
+              </span>
             </span>
             <span className="flex shrink-0 items-center gap-3">
-              <span className="hidden font-mono text-[9px] uppercase tracking-wider text-slate-500 sm:inline">
-                {projectBenchNotes[project.title]}
+              <span className="hidden sm:inline">
+                <StatusMark status={project.status} version={project.version} />
               </span>
-              <ChevronRight size={16} className="text-slate-600 transition-transform group-hover:translate-x-1 group-hover:text-substrate-accent" aria-hidden="true" />
+              <ChevronRight
+                size={15}
+                className="text-slate-600 transition-transform group-hover:translate-x-1 group-hover:text-substrate-accent"
+                aria-hidden="true"
+              />
             </span>
           </a>
         );
@@ -608,203 +429,290 @@ const ProjectBenchIndex = () => (
   </div>
 );
 
+/* -------------------------------------------------------------------------- */
+/* Terminal easter egg                                                         */
+/* -------------------------------------------------------------------------- */
+
+const TerminalEasterEgg = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [input, setInput] = useState('');
+  const [history, setHistory] = useState<string[]>([
+    'VATTECK OS v1.0.4',
+    'Type "help" for commands...'
+  ]);
+  const logRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    logRef.current?.scrollTo({ top: logRef.current.scrollHeight });
+  }, [history]);
+
+  const handleCommand = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cmd = input.toLowerCase().trim();
+    if (cmd === '') return;
+    if (cmd === 'clear') {
+      setHistory([]);
+      setInput('');
+      return;
+    }
+
+    const responses: Record<string, string> = {
+      help: 'Commands: help, about, clear, whoami, uname, root',
+      about: 'Hardware technician. Independent developer. Ships things.',
+      whoami: 'guest@vatteck — read-only',
+      uname: 'CachyOS x86_64 · linux-cachyos-bore',
+      root: 'Access denied. Insufficient privileges.'
+    };
+
+    setHistory((prev) => [
+      ...prev,
+      `> ${input}`,
+      responses[cmd] ?? `Command not found: ${cmd}`
+    ]);
+    setInput('');
+  };
+
+  return (
+    <>
+      <button
+        onClick={() => setIsOpen((v) => !v)}
+        className="fixed bottom-6 left-6 z-[60] rounded-full border border-hardware-border bg-hardware-card p-2.5 text-slate-500 transition-colors hover:border-substrate-accent/40 hover:text-substrate-accent"
+        title="Open terminal"
+        aria-label="Open terminal easter egg"
+        aria-expanded={isOpen}
+      >
+        <Terminal size={16} />
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 12 }}
+            transition={{ duration: 0.18 }}
+            className="fixed bottom-20 left-6 z-[70] flex h-80 w-[min(20rem,calc(100vw-3rem))] flex-col overflow-hidden rounded-xl border border-hardware-border bg-black/95 shadow-2xl backdrop-blur-xl"
+            role="dialog"
+            aria-label="Terminal"
+          >
+            <div className="flex items-center justify-between border-b border-hardware-border px-3 py-2">
+              <span className="font-mono text-[10px] font-semibold tracking-widest text-substrate-accent">
+                VATTECK_TERMINAL
+              </span>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-slate-500 hover:text-white"
+                aria-label="Close terminal"
+              >
+                <X size={13} />
+              </button>
+            </div>
+            <div
+              ref={logRef}
+              className="custom-scrollbar flex-grow space-y-1 overflow-y-auto p-3 font-mono text-[11px]"
+            >
+              {history.map((line, i) => (
+                <p
+                  key={i}
+                  className={line.startsWith('>') ? 'text-substrate-accent' : 'text-slate-400'}
+                >
+                  {line}
+                </p>
+              ))}
+            </div>
+            <form
+              onSubmit={handleCommand}
+              className="flex items-center gap-2 border-t border-hardware-border p-3"
+            >
+              <span className="font-mono text-[11px] text-substrate-accent">{'>'}</span>
+              <input
+                autoFocus
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                aria-label="Terminal command"
+                className="w-full border-none bg-transparent font-mono text-[11px] text-white outline-none"
+              />
+            </form>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/* Page                                                                        */
+/* -------------------------------------------------------------------------- */
+
 export default function App() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-  const [isTransmitting, setIsTransmitting] = useState(false);
-  const [isSent, setIsSent] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
   const [isGlitched, setIsGlitched] = useState(false);
-  const [isMatrixActive, setIsMatrixActive] = useState(false);
-  const [secretCode, setSecretCode] = useState('');
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+  const [isSent, setIsSent] = useState(false);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const newCode = (secretCode + e.key).slice(-4);
-      setSecretCode(newCode);
-      if (newCode === 'root') {
-        setIsMatrixActive(prev => !prev);
-        triggerGlitch();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [secretCode]);
-
-  const [isScanning, setIsScanning] = useState(false);
-
-  const triggerScan = () => {
-    setIsScanning(true);
-    setTimeout(() => setIsScanning(false), 3000);
-  };
-
-  const triggerGlitch = () => {
+  const triggerGlitch = useCallback(() => {
     setIsGlitched(true);
-    setTimeout(() => setIsGlitched(false), 500);
-  };
+    setTimeout(() => setIsGlitched(false), 480);
+  }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setShowScrollTop(window.scrollY > 600);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Highlight the nav item for whichever section is currently in view.
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (visible) setActiveSection(visible.target.id);
+      },
+      { rootMargin: '-25% 0px -65% 0px' }
+    );
+    SECTIONS.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
   }, []);
 
   const copyEmail = () => {
-    navigator.clipboard.writeText('admin@vatteck.com');
+    navigator.clipboard.writeText(EMAIL);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
 
-    setIsTransmitting(true);
-    
-    // Construct mailto link
-    const subject = `[CONTACT] ${formData.subject || 'New Message'}`;
-    const body = `Identity: ${formData.name}\nReturn Address: ${formData.email}\n\nPayload:\n${formData.message}`;
-    const mailtoUrl = `mailto:admin@vatteck.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    
-    // Give the browser a moment to register the button state before opening mail.
-    setTimeout(() => {
-      window.location.href = mailtoUrl;
-      setIsTransmitting(false);
-      setIsSent(true);
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setTimeout(() => setIsSent(false), 5000);
-    }, 200);
+    const subject = `[Contact] ${formData.subject || 'New message'}`;
+    const body = `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`;
+    window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+
+    setIsSent(true);
+    setFormData({ name: '', email: '', subject: '', message: '' });
+    setTimeout(() => setIsSent(false), 6000);
   };
 
   return (
-    <div className={`min-h-screen selection:bg-substrate-accent/30 noise-bg overflow-hidden transition-all duration-300 circuit-bg ${isGlitched ? 'invert hue-rotate-90' : ''}`}>
-      {isMatrixActive && <MatrixRain />}
-      <DataStream />
+    <div className="noise-bg min-h-screen selection:bg-substrate-accent/30">
       <TerminalEasterEgg />
-      {/* Scanline Effect */}
-      <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
-        <div className="scanline" />
-      </div>
 
-      {/* Hardware Scan Overlay */}
-      <AnimatePresence>
-        {isScanning && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[80] pointer-events-none flex flex-col items-center justify-center bg-substrate-accent/5"
-          >
-            <div className="w-full h-1 bg-substrate-accent/50 absolute top-0 animate-[scan_2s_ease-in-out_infinite]" />
-            <div className="text-substrate-accent font-mono text-xl animate-pulse">HARDWARE_SCAN_IN_PROGRESS...</div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Scroll to Top */}
       <AnimatePresence>
         {showScrollTop && (
           <motion.button
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
+            exit={{ opacity: 0, y: 12 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-8 right-8 z-[60] p-3 bg-substrate-accent text-white rounded-full shadow-lg shadow-substrate-accent/40 hover:bg-red-700 transition-all"
+            className="fixed bottom-6 right-6 z-[60] rounded-full border border-hardware-border bg-hardware-card p-2.5 text-slate-400 transition-colors hover:border-substrate-accent/40 hover:text-substrate-accent"
             aria-label="Scroll to top"
           >
-            <ArrowUp size={20} />
+            <ArrowUp size={16} />
           </motion.button>
         )}
       </AnimatePresence>
 
-      {/* Hero Section */}
-      <header className="relative overflow-hidden px-5 sm:px-6">
-        <div className="absolute inset-0 grid-bg opacity-30" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-hardware-bg/50 to-hardware-bg" />
-        <nav className="relative z-20 mx-auto flex max-w-5xl items-center justify-between border-b border-white/10 py-4" aria-label="Primary navigation">
-          <a href="#" className="font-mono text-xs font-bold uppercase tracking-[0.28em] text-white">
+      {/* Nav */}
+      <nav
+        className="sticky top-0 z-50 border-b border-hardware-border bg-hardware-bg/80 backdrop-blur-lg"
+        aria-label="Primary"
+      >
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
+          <button
+            type="button"
+            onClick={triggerGlitch}
+            className={`glitch-main shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white sm:text-xs sm:tracking-[0.28em] ${
+              isGlitched ? 'is-active' : ''
+            }`}
+            data-text="VATTECK"
+            aria-label="Vatteck — activate wordmark glitch"
+          >
             VATTECK<span className="text-substrate-accent">.</span>
-          </a>
-          <div className="flex items-center gap-5 font-mono text-[10px] uppercase tracking-widest text-slate-500 sm:gap-7">
-            <a href="#projects" className="hover:text-white">Work</a>
-            <a href="#about" className="hover:text-white">About</a>
-            <a href="#contact" className="hover:text-white">Contact</a>
+          </button>
+          <div className="flex items-center gap-3 font-mono text-[9px] uppercase tracking-wide sm:gap-7 sm:text-[10px] sm:tracking-widest">
+            {SECTIONS.map(({ id, label }) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                className={`transition-colors hover:text-white ${
+                  activeSection === id ? 'text-substrate-accent' : 'text-slate-500'
+                }`}
+              >
+                {label}
+              </a>
+            ))}
           </div>
-        </nav>
+        </div>
+      </nav>
 
-        <div className="relative z-10 mx-auto grid max-w-5xl items-center gap-10 py-12 lg:grid-cols-[1fr_0.9fr] lg:gap-12 lg:py-16 xl:py-20">
+      {/* Hero */}
+      <header className="relative overflow-hidden border-b border-hardware-border px-5 sm:px-8">
+        <div className="pointer-events-none absolute inset-0 grid-bg" aria-hidden="true" />
+        <div className="relative mx-auto grid max-w-6xl items-center gap-12 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-2xl"
           >
-            <button
-              type="button"
-              onClick={triggerGlitch}
-              className={`glitch-main uv-glow mb-5 block text-left text-5xl font-bold tracking-tighter text-white sm:text-6xl lg:text-7xl ${isGlitched ? 'is-active' : ''}`}
-              data-text="VATTECK"
-              aria-label="Activate Vatteck wordmark glitch"
-            >
-              VATTECK<span className="text-substrate-accent">.</span>
-            </button>
-
-            <p className="mb-4 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-substrate-accent sm:text-xs">
+            <p className="mb-5 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-substrate-accent sm:text-xs">
               Hardware technician · independent developer
             </p>
-            <h1 className="max-w-xl text-3xl font-bold leading-[1.08] tracking-tight text-white sm:text-4xl">
+            <h1 className="max-w-2xl text-4xl font-bold leading-[1.05] tracking-tight text-slate-50 sm:text-5xl lg:text-[3.4rem]">
               I repair hardware and build software that ships.
             </h1>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-400">
-              Component-level diagnostics, tuned Linux and Android systems, and independently built apps and games — from first fault or first commit through release.
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-400">
+              Component-level diagnostics, tuned Linux and Android systems, and
+              independently built apps and games — from first fault or first commit
+              through release.
             </p>
 
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <motion.a
-                href="#projects"
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center justify-center gap-3 rounded-lg bg-substrate-accent px-7 py-4 font-bold text-white shadow-lg shadow-substrate-accent/20 hover:bg-red-700"
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#work"
+                className="inline-flex items-center justify-center gap-2.5 rounded-lg bg-substrate-accent px-6 py-3.5 font-semibold text-white transition-colors hover:bg-substrate-accent/85"
               >
-                VIEW THE WORK
-                <ChevronRight size={19} aria-hidden="true" />
-              </motion.a>
-              <motion.a
+                View the work
+                <ChevronRight size={18} aria-hidden="true" />
+              </a>
+              <a
                 href="#contact"
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center justify-center gap-3 rounded-lg border border-hardware-border bg-hardware-card px-7 py-4 font-bold text-white hover:border-substrate-accent/50"
+                className="inline-flex items-center justify-center gap-2.5 rounded-lg border border-hardware-border bg-hardware-card px-6 py-3.5 font-semibold text-slate-100 transition-colors hover:border-substrate-accent/50"
               >
-                START A CONVERSATION
-              </motion.a>
+                Start a conversation
+              </a>
             </div>
 
             <a
               href="https://github.com/Vatteck"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-2 font-mono text-xs text-slate-500 hover:text-white"
+              className="mt-7 inline-flex items-center gap-2 font-mono text-xs text-slate-500 transition-colors hover:text-white"
             >
-              <Github size={15} aria-hidden="true" />
+              <Github size={14} aria-hidden="true" />
               github.com/Vatteck
-              <ExternalLink size={12} aria-hidden="true" />
+              <ExternalLink size={11} aria-hidden="true" />
             </a>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 24 }}
+            initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.12 }}
           >
@@ -813,344 +721,317 @@ export default function App() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-24 space-y-32 md:space-y-40 relative">
-        <CircuitLine className="top-0 left-0 w-full h-24 opacity-50" />
-        <CircuitLine className="top-1/4 right-0 w-full h-24 opacity-30 rotate-180" />
-        <CircuitLine className="top-2/4 left-0 w-full h-24 opacity-40" />
-        <CircuitLine className="top-3/4 right-0 w-full h-24 opacity-30 rotate-180" />
-        
-        {/* About Section */}
-        <section id="about" className="grid md:grid-cols-2 gap-16 items-center">
-          <div className="space-y-6">
-            <SectionHeader title="Bio" subtitle="Hardware Soul, Software Mind" glitch />
-            <div className="bg-hardware-card border border-hardware-border p-6 rounded-2xl relative overflow-hidden group">
-              <div className="cyber-corner cyber-corner-tl opacity-50" />
-              <div className="cyber-corner cyber-corner-br opacity-50" />
-              <div className="absolute top-0 left-0 w-full h-1 bg-substrate-accent/30" />
-              <div className="flex items-center gap-2 mb-4 text-substrate-accent font-mono text-xs">
-                <Terminal size={14} />
-                <span>USER_BIO_DECRYPTED // ACCESS_GRANTED</span>
-              </div>
-              <div className="space-y-4 text-slate-400 leading-relaxed">
-                {bioData.map((paragraph, idx) => (
-                  <p key={idx}>{paragraph}</p>
-                ))}
-              </div>
+      {/* Work — first, because it is the point of the page */}
+      <section id="work" className="border-b border-hardware-border px-5 py-20 sm:px-8 lg:py-24">
+        <div className="mx-auto max-w-6xl">
+          <SectionHeader
+            kicker="Work"
+            title="Four things I'm building"
+            size="lg"
+            lead="A package manager, two games, and a simulator — all shipped or shipping solo. Open any one for the specification."
+          />
+          <div className="grid gap-6 md:grid-cols-2">
+            {projectsData.map((project, i) => (
+              <ProjectCard key={project.title} project={project} index={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Capabilities */}
+      <section
+        id="capabilities"
+        className="border-b border-hardware-border px-5 py-20 sm:px-8 lg:py-24"
+      >
+        <div className="mx-auto max-w-6xl">
+          <SectionHeader kicker="Capabilities" title="What I'm hired for" />
+          <div className="grid gap-5 md:grid-cols-2">
+            {deepDiveData.map((item, idx) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.4, delay: Math.min(idx, 3) * 0.06 }}
+                className="panel p-6 transition-colors hover:border-substrate-accent/30"
+              >
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg border border-substrate-accent/20 bg-substrate-accent/10 text-substrate-accent">
+                  <item.icon size={19} />
+                </div>
+                <h3 className="mb-2 text-base font-bold text-slate-50">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-slate-400">{item.description}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="mt-10">
+            <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.24em] text-slate-500">
+              Toolkit
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {skillsData.map((skill) => (
+                <span
+                  key={skill.label}
+                  className="inline-flex items-center gap-2 rounded-lg border border-hardware-border bg-hardware-card px-3.5 py-2 text-sm text-slate-300 transition-colors hover:border-substrate-accent/30"
+                >
+                  <skill.icon size={14} className="text-substrate-accent" aria-hidden="true" />
+                  {skill.label}
+                </span>
+              ))}
             </div>
           </div>
-          
-          <div className="relative">
-            <div className="absolute -inset-4 bg-substrate-accent/10 blur-3xl rounded-full opacity-30" />
-            <div className="relative bg-hardware-card border border-hardware-border p-8 rounded-2xl overflow-hidden">
-              <div className="cyber-corner cyber-corner-tr opacity-50" />
-              <div className="cyber-corner cyber-corner-bl opacity-50" />
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-substrate-accent to-transparent" />
-              
-              {/* Profile Picture Integration */}
-              <div className="mb-8 relative group cyber-image-container">
-                <div className="absolute inset-0 bg-substrate-accent/20 blur-xl group-hover:bg-substrate-accent/40 transition-all duration-500 rounded-xl z-0" />
-                <img 
+        </div>
+      </section>
+
+      {/* About */}
+      <section id="about" className="border-b border-hardware-border px-5 py-20 sm:px-8 lg:py-24">
+        <div className="mx-auto max-w-6xl">
+          <SectionHeader kicker="About" title="Hardware soul, software mind" />
+          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="space-y-5 text-[15px] leading-relaxed text-slate-400">
+              {bioData.map((paragraph, idx) => (
+                <p key={idx}>{paragraph}</p>
+              ))}
+            </div>
+
+            <div className="space-y-5">
+              <div className="overflow-hidden rounded-2xl border border-hardware-border bg-hardware-card">
+                <img
                   src="/vatteck-profile.jpg"
                   alt="Portrait illustration of Vatteck"
-                  className="relative z-10 aspect-[4/3] w-full rounded-xl border border-substrate-accent/30 bg-black/60 object-contain object-center grayscale transition-all duration-700 hover:grayscale-0 cyber-image"
                   width="460"
                   height="460"
+                  className="aspect-square w-full bg-hardware-raised object-cover grayscale transition-all duration-500 hover:grayscale-0"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/vatteck-logo.svg';
                   }}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-slate-900/50 rounded-xl border border-hardware-border">
-                  <div className="text-substrate-accent mb-2"><Monitor size={24} /></div>
-                  <div className="text-xs font-mono text-slate-500 uppercase mb-1">OS Preference</div>
-                  <div className="text-sm font-bold">Arch / CachyOS</div>
-                </div>
-                <div className="p-4 bg-slate-900/50 rounded-xl border border-hardware-border">
-                  <div className="text-substrate-accent mb-2"><Smartphone size={24} /></div>
-                  <div className="text-xs font-mono text-slate-500 uppercase mb-1">Android</div>
-                  <div className="text-sm font-bold">Root & Kernel Mod</div>
-                </div>
-                <div className="p-4 bg-slate-900/50 rounded-xl border border-hardware-border">
-                  <div className="text-substrate-accent mb-2"><Gamepad2 size={24} /></div>
-                  <div className="text-xs font-mono text-slate-500 uppercase mb-1">Gaming</div>
-                  <div className="text-sm font-bold">Modding & Dev</div>
-                </div>
-                <div className="p-4 bg-slate-900/50 rounded-xl border border-hardware-border">
-                  <div className="text-substrate-accent mb-2"><Wrench size={24} /></div>
-                  <div className="text-xs font-mono text-slate-500 uppercase mb-1">Hardware</div>
-                  <div className="text-sm font-bold">Expert Repair</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Technical Deep Dive Section */}
-        <section id="experience" className="space-y-12">
-          <SectionHeader title="Deep Dive" subtitle="Technical Operations" />
-          <div className="grid md:grid-cols-2 gap-6">
-            {deepDiveData.map((item, idx) => {
-              const Icon = item.icon;
-              return (
-                <div key={idx} className="p-8 bg-hardware-card border border-hardware-border rounded-2xl space-y-4 hover:border-substrate-accent/30 transition-all relative group overflow-hidden">
-                  <div className="cyber-corner cyber-corner-tr opacity-30" />
-                  <div className="w-12 h-12 bg-substrate-accent/10 rounded-lg flex items-center justify-center text-substrate-accent">
-                    <Icon size={24} />
-                  </div>
-                  <h4 className="text-lg font-bold">{item.title}</h4>
-                  <p className="text-sm text-slate-400 leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* System Configuration Section */}
-        <section id="config" className="space-y-12">
-          <SectionHeader title="System Config" subtitle="Kernel & Environment" glitch />
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
-            <div className="space-y-6">
-              <p className="text-slate-400 leading-relaxed">
-                My primary workstation runs a heavily modified <span className="text-substrate-accent">CachyOS</span> (Arch-based) environment. 
-                Below are some of the core optimizations I apply to ensure maximum throughput and minimal latency.
-              </p>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-hardware-card border border-hardware-border rounded-xl">
-                  <div className="text-xs text-slate-500 uppercase mb-1">Kernel</div>
-                  <div className="text-sm font-mono text-substrate-accent">linux-cachyos-bore</div>
-                </div>
-                <div className="p-4 bg-hardware-card border border-hardware-border rounded-xl">
-                  <div className="text-xs text-slate-500 uppercase mb-1">Scheduler</div>
-                  <div className="text-sm font-mono text-substrate-accent">BORE / EEVDF</div>
-                </div>
-              </div>
-            </div>
-            <CodeBlock 
-              language="bash"
-              code={`# Update system and optimize mirrors
-sudo pacman -Syu --noconfirm
-yay -S linux-cachyos-bore cachyos-settings
-
-# Optimize CPU governor for performance
-echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-
-# Configure BTRFS mount options for SSD
-# /etc/fstab: compress=zstd:3,discard=async,noatime`}
-            />
-          </div>
-        </section>
-
-        {/* Projects Section */}
-        <section id="projects">
-          <SectionHeader title="Projects" subtitle="Featured Creations" glitch />
-          <div className="grid md:grid-cols-2 gap-8">
-            {projectsData.map((project, idx) => (
-              <ProjectCard 
-                key={idx}
-                title={project.title}
-                icon={project.icon}
-                repoUrl={project.repoUrl}
-                siteUrl={project.siteUrl}
-                description={project.description}
-                details={project.details}
-                tags={project.tags}
-                status={project.status}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* Skills Section */}
-        <section id="skills">
-          <SectionHeader title="Arsenal" subtitle="Technical Proficiency" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {skillsData.map((skill, idx) => (
-              <SkillPill key={idx} icon={skill.icon} label={skill.label} />
-            ))}
-          </div>
-        </section>
-
-        {/* Contact Section */}
-        <section id="contact" className="pb-24">
-          <SectionHeader title="Contact" subtitle="Establish Connection" glitch />
-          <div className="grid lg:grid-cols-2 gap-12">
-            <div className="space-y-8">
-              <div className="bg-hardware-card border border-hardware-border p-8 rounded-2xl relative overflow-hidden">
-                <div className="cyber-corner cyber-corner-tl opacity-50" />
-                <div className="cyber-corner cyber-corner-br opacity-50" />
-                <div className="absolute top-0 left-0 w-full h-1 bg-substrate-accent/30" />
-                <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
-                  <MessageSquare className="text-substrate-accent" />
-                  Direct Uplink
-                </h3>
-                <p className="text-slate-400 leading-relaxed mb-6">
-                  Got a board that needs fixing, a kernel that needs tuning, or an idea that needs building? I take on hardware diagnostics, custom Android configurations, and software commissions. If it's technical and interesting, I want to hear about it.
+              <div className="panel p-5">
+                <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.24em] text-substrate-accent">
+                  Daily driver
                 </p>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4 text-sm font-mono text-slate-300">
-                    <div className="w-10 h-10 bg-substrate-accent/10 rounded-lg flex items-center justify-center text-substrate-accent border border-substrate-accent/20">
-                      <Mail size={18} />
+                <dl>
+                  {benchSpecs.map((spec) => (
+                    <div key={spec.label} className="spec-row">
+                      <dt className="text-xs uppercase tracking-wide text-slate-500">
+                        {spec.label}
+                      </dt>
+                      <dd className="font-mono text-xs text-slate-200">{spec.value}</dd>
                     </div>
-                    <div>
-                      <p className="text-[10px] text-slate-500 uppercase tracking-widest">Primary Email</p>
-                      <p>admin@vatteck.com</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 text-sm font-mono text-slate-300">
-                    <div className="w-10 h-10 bg-substrate-accent/10 rounded-lg flex items-center justify-center text-substrate-accent border border-substrate-accent/20">
-                      <Github size={18} />
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-slate-500 uppercase tracking-widest">GitHub Handle</p>
-                      <p>@Vatteck</p>
-                    </div>
-                  </div>
-                </div>
+                  ))}
+                </dl>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-              <div className="p-6 bg-substrate-accent/5 border border-substrate-accent/20 rounded-xl font-mono text-[10px] text-substrate-accent/60 space-y-2">
-                <p>// ENCRYPTION: AES-256-GCM</p>
-                <p>// STATUS: SECURE_CHANNEL_READY</p>
-                <p>// ORIGIN: {typeof window !== 'undefined' ? window.location.hostname : 'LOCAL_HOST'}</p>
+      {/* Contact */}
+      <section id="contact" className="px-5 py-20 sm:px-8 lg:py-24">
+        <div className="mx-auto max-w-6xl">
+          <SectionHeader
+            kicker="Contact"
+            title="Start a conversation"
+            lead="Got a board that needs fixing, a kernel that needs tuning, or an idea that needs building? If it's technical and interesting, I want to hear about it."
+          />
+
+          <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+            <div className="space-y-4">
+              <a
+                href={`mailto:${EMAIL}`}
+                className="panel flex items-center gap-4 p-5 transition-colors hover:border-substrate-accent/40"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-substrate-accent/20 bg-substrate-accent/10 text-substrate-accent">
+                  <Mail size={17} />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[10px] uppercase tracking-widest text-slate-500">
+                    Email
+                  </span>
+                  <span className="block truncate font-mono text-sm text-slate-200">
+                    {EMAIL}
+                  </span>
+                </span>
+              </a>
+
+              <a
+                href="https://github.com/Vatteck"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="panel flex items-center gap-4 p-5 transition-colors hover:border-substrate-accent/40"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-substrate-accent/20 bg-substrate-accent/10 text-substrate-accent">
+                  <Github size={17} />
+                </span>
+                <span>
+                  <span className="block text-[10px] uppercase tracking-widest text-slate-500">
+                    GitHub
+                  </span>
+                  <span className="block font-mono text-sm text-slate-200">@Vatteck</span>
+                </span>
+              </a>
+
+              <div className="panel p-5">
+                <p className="mb-2 flex items-center gap-2 text-[10px] uppercase tracking-widest text-slate-500">
+                  <MessageSquare size={12} aria-hidden="true" />
+                  What I take on
+                </p>
+                <p className="text-sm leading-relaxed text-slate-400">
+                  Component-level repair and diagnostics, custom Android and kernel
+                  configuration, and software commissions in Python, Flutter or Kotlin.
+                </p>
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4 bg-hardware-card border border-hardware-border p-8 rounded-2xl relative">
-              <div className="cyber-corner cyber-corner-tr opacity-50" />
-              <div className="cyber-corner cyber-corner-bl opacity-50" />
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label htmlFor="contact-name" className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Name</label>
-                  <input 
+            <form onSubmit={handleSubmit} className="panel space-y-4 p-6 sm:p-7">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="contact-name"
+                    className="mb-1.5 block text-[10px] font-medium uppercase tracking-widest text-slate-500"
+                  >
+                    Name
+                  </label>
+                  <input
                     id="contact-name"
-                    type="text" 
+                    type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
                     required
-                    placeholder="NAME / ALIAS"
-                    className="w-full bg-black/40 border border-hardware-border rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-600 focus:border-substrate-accent/50 focus:outline-none transition-all"
+                    autoComplete="name"
+                    className="field"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label htmlFor="contact-email" className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Email</label>
-                  <input 
+                <div>
+                  <label
+                    htmlFor="contact-email"
+                    className="mb-1.5 block text-[10px] font-medium uppercase tracking-widest text-slate-500"
+                  >
+                    Email
+                  </label>
+                  <input
                     id="contact-email"
-                    type="email" 
+                    type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    placeholder="EMAIL@DOMAIN.COM"
-                    className="w-full bg-black/40 border border-hardware-border rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-600 focus:border-substrate-accent/50 focus:outline-none transition-all"
+                    autoComplete="email"
+                    className="field"
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <label htmlFor="contact-subject" className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Subject</label>
-                <input 
+
+              <div>
+                <label
+                  htmlFor="contact-subject"
+                  className="mb-1.5 block text-[10px] font-medium uppercase tracking-widest text-slate-500"
+                >
+                  Subject <span className="text-slate-700">(optional)</span>
+                </label>
+                <input
                   id="contact-subject"
-                  type="text" 
+                  type="text"
                   name="subject"
                   value={formData.subject}
                   onChange={handleInputChange}
-                  placeholder="ENQUIRY_TYPE"
-                  className="w-full bg-black/40 border border-hardware-border rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-600 focus:border-substrate-accent/50 focus:outline-none transition-all"
+                  className="field"
                 />
               </div>
-              <div className="space-y-2">
-                <label htmlFor="contact-message" className="text-[10px] font-mono text-substrate-accent uppercase tracking-widest ml-1">Message</label>
-                <textarea 
+
+              <div>
+                <label
+                  htmlFor="contact-message"
+                  className="mb-1.5 block text-[10px] font-medium uppercase tracking-widest text-slate-500"
+                >
+                  Message
+                </label>
+                <textarea
                   id="contact-message"
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
                   required
-                  rows={5}
-                  placeholder="ENTER_MESSAGE_DATA..."
-                  className="w-full bg-black/40 border border-hardware-border rounded-lg px-4 py-4 text-sm text-white placeholder:text-slate-600 focus:border-substrate-accent/50 focus:outline-none transition-all resize-none"
-                ></textarea>
+                  rows={6}
+                  className="field resize-none"
+                />
               </div>
-              <motion.button
+
+              <button
                 type="submit"
-                disabled={isTransmitting}
-                whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(255, 31, 31, 0.3)' }}
-                whileTap={{ scale: 0.98 }}
-                className={`w-full py-4 font-bold rounded-lg flex items-center justify-center gap-3 transition-all ${
-                  isSent 
-                    ? 'bg-green-600 text-white' 
-                    : 'bg-substrate-accent text-white hover:bg-red-700 shadow-lg shadow-substrate-accent/20'
-                } ${isTransmitting ? 'opacity-70 cursor-wait' : ''}`}
+                className={`flex w-full items-center justify-center gap-2.5 rounded-lg py-3.5 font-semibold transition-colors ${
+                  isSent
+                    ? 'bg-state-released text-black'
+                    : 'bg-substrate-accent text-white hover:bg-substrate-accent/85'
+                }`}
               >
-                {isTransmitting ? (
+                {isSent ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    OPENING MAIL APP...
-                  </>
-                ) : isSent ? (
-                  <>
-                    <CheckCircle2 size={18} />
-                    EMAIL DRAFT OPENED
+                    <CheckCircle2 size={17} aria-hidden="true" />
+                    Draft opened in your mail app
                   </>
                 ) : (
                   <>
-                    <Send size={18} />
-                    OPEN EMAIL DRAFT
+                    <Send size={16} aria-hidden="true" />
+                    Open email draft
                   </>
                 )}
-              </motion.button>
-              {isSent && (
-                <p className="text-[10px] font-mono text-green-500 text-center mt-2" aria-live="polite">
-                  // FINISH AND SEND THE MESSAGE IN YOUR MAIL APP
-                </p>
-              )}
+              </button>
+              <p className="text-center text-[11px] text-slate-600" aria-live="polite">
+                {isSent
+                  ? 'Finish and send the message from your mail app.'
+                  : `This composes a message to ${EMAIL} in your own mail app.`}
+              </p>
             </form>
           </div>
-        </section>
-
-      </main>
+        </div>
+      </section>
 
       {/* Footer */}
-      <footer className="border-t border-hardware-border bg-hardware-card/50 py-12 px-6 relative overflow-hidden">
-        <div className="absolute inset-0 grid-bg opacity-10" />
-        <div className="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex flex-col items-center md:items-start gap-2">
-            <div className="text-xl font-bold tracking-tighter glitch" data-text="VATTECK">
+      <footer className="border-t border-hardware-border px-5 py-10 sm:px-8">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 sm:flex-row">
+          <div className="text-center sm:text-left">
+            <div className="font-mono text-xs font-bold uppercase tracking-[0.28em] text-white">
               VATTECK<span className="text-substrate-accent">.</span>
             </div>
-            <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">
-              &copy; {new Date().getFullYear()} // All Rights Reserved // AUTH_SIG_VALID
+            <p className="mt-1.5 text-[11px] text-slate-600">
+              © {new Date().getFullYear()} Vatteck. Built with React and Tailwind.
             </p>
           </div>
-          
-          <div className="flex items-center gap-6">
-            <button 
+
+          <div className="flex items-center gap-5">
+            <button
               onClick={copyEmail}
-              className="text-slate-400 hover:text-substrate-accent transition-all relative group"
-              title="Copy Email"
-              aria-label="Copy admin@vatteck.com"
+              className="text-slate-500 transition-colors hover:text-substrate-accent"
+              aria-label={`Copy ${EMAIL}`}
             >
-              {copied ? <CheckCircle2 size={20} className="text-green-500" /> : <Mail size={20} />}
-              <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-substrate-accent text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                {copied ? 'COPIED!' : 'COPY EMAIL'}
-              </span>
+              {copied ? (
+                <CheckCircle2 size={17} className="text-state-released" />
+              ) : (
+                <Mail size={17} />
+              )}
             </button>
-            <a href="https://github.com/Vatteck" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-substrate-accent transition-colors" title="GitHub Profile">
-              <Github size={20} />
+            <a
+              href="https://github.com/Vatteck"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-500 transition-colors hover:text-substrate-accent"
+              aria-label="GitHub profile"
+            >
+              <Github size={17} />
             </a>
-            <a href="https://steamcommunity.com/id/vatteck" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-substrate-accent transition-colors" title="Steam Profile">
-              <Gamepad2 size={20} />
+            <a
+              href="https://steamcommunity.com/id/vatteck"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-500 transition-colors hover:text-substrate-accent"
+              aria-label="Steam profile"
+            >
+              <Gamepad2 size={17} />
             </a>
-          </div>
-          
-          <div className="text-[10px] font-mono text-slate-500 uppercase text-center md:text-right leading-relaxed">
-            Built with React & Tailwind<br />
-            Optimized for Substrate Architect<br />
-            <span className="text-substrate-accent/40">LAST_UPDATE: {new Date().toLocaleDateString()}</span>
           </div>
         </div>
       </footer>

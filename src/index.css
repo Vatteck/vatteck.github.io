@@ -1,136 +1,83 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  
-  --color-substrate-accent: #FF1F1F;
-  --color-substrate-uv-glow: #FF5F5F;
-  --color-hardware-bg: #050506;
-  --color-hardware-card: #0F0F12;
-  --color-hardware-border: #1F1F23;
-  --color-cyber-purple: #7F55FF;
-  --color-cyber-cyan: #00FFF9;
+
+  /* Accent — reserved for emphasis, not for every border on the page. */
+  --color-substrate-accent: #FF2A26;
+  --color-substrate-soft: #FF6B5A;
+
+  /* Surfaces, in ascending elevation. */
+  --color-hardware-bg: #08080A;
+  --color-hardware-card: #0E0E12;
+  --color-hardware-raised: #15151A;
+  --color-hardware-border: #222229;
+  --color-hardware-line: #17171C;
+
+  /* Build-state colours. */
+  --color-state-released: #34D399;
+  --color-state-testing: #FBBF24;
+  --color-state-building: #94A3B8;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 2rem;
+    scroll-padding-top: 5rem;
   }
 
   body {
-    @apply bg-hardware-bg text-slate-300 font-sans selection:bg-substrate-accent/30 overflow-x-hidden;
+    @apply bg-hardware-bg font-sans text-slate-300 antialiased selection:bg-substrate-accent/30;
   }
 
   h1, h2, h3, h4 {
     @apply font-display;
   }
 
+  /* Three text tiers, so emphasis actually means something. */
+  .t-primary { @apply text-slate-50; }
+  .t-body    { @apply text-slate-300; }
+  .t-muted   { @apply text-slate-500; }
+
   a, button, input, textarea, select {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-substrate-accent focus-visible:ring-offset-2 focus-visible:ring-offset-hardware-bg;
   }
+
+  img { @apply max-w-full; }
 }
 
-/* Circuit Background */
-.circuit-bg {
-  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 h80 v80 h-80 z' fill='none' stroke='rgba(255,31,31,0.08)' stroke-width='0.5'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='rgba(255,31,31,0.2)'/%3E%3Ccircle cx='90' cy='10' r='1.5' fill='rgba(255,31,31,0.2)'/%3E%3Ccircle cx='90' cy='90' r='1.5' fill='rgba(255,31,31,0.2)'/%3E%3Ccircle cx='10' cy='90' r='1.5' fill='rgba(255,31,31,0.2)'/%3E%3Cpath d='M10 50 h20 M80 50 h10 M50 10 v20 M50 80 v10' stroke='rgba(255,31,31,0.12)' stroke-width='0.5'/%3E%3C/svg%3E");
-}
+/* ---------------------------------------------------------------------------
+   Atmosphere — one grain layer and one hero grid. Everything else was noise.
+   --------------------------------------------------------------------------- */
 
-/* Matrix Rain Effect */
-.matrix-canvas {
-  @apply fixed inset-0 pointer-events-none z-[9998] opacity-20;
-}
-
-/* Noise Overlay */
 .noise-bg::before {
   content: "";
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.035;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.03;
   pointer-events: none;
-  z-index: 9999;
-}
-
-@keyframes scan {
-  0% { top: 0; }
-  100% { top: 100%; }
+  z-index: 100;
 }
 
 .grid-bg {
-  background-image: radial-gradient(circle at 1px 1px, rgba(255, 31, 31, 0.1) 1px, transparent 0);
-  background-size: 40px 40px;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255, 42, 38, 0.11) 1px, transparent 0);
+  background-size: 38px 38px;
+  mask-image: radial-gradient(ellipse 80% 60% at 30% 0%, #000 25%, transparent 75%);
 }
 
-.scanline {
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(to right, transparent, rgba(255, 31, 31, 0.3), transparent);
-  opacity: 0.75;
-  position: absolute;
-  bottom: 100%;
-  animation: scanline 8s linear infinite;
+/* Hairline rule that fades out — used to close section headers. */
+.rule-fade {
+  background: linear-gradient(to right, var(--color-hardware-border), transparent);
 }
 
-@keyframes scanline {
-  0% { bottom: 100%; }
-  100% { bottom: 0%; }
-}
+/* ---------------------------------------------------------------------------
+   Glitch — one hero moment only, on deliberate activation.
+   --------------------------------------------------------------------------- */
 
-/* Glitch Effect */
-.glitch {
-  position: relative;
-}
-
-.glitch::before,
-.glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.8;
-}
-
-.glitch::before {
-  left: 2px;
-  text-shadow: -2px 0 var(--color-cyber-purple);
-  clip: rect(44px, 450px, 56px, 0);
-  animation: glitch-anim 5s infinite linear alternate-reverse;
-}
-
-.glitch::after {
-  left: -2px;
-  text-shadow: -2px 0 var(--color-cyber-cyan), 2px 2px var(--color-substrate-accent);
-  animation: glitch-anim2 1s infinite linear alternate-reverse;
-}
-
-@keyframes glitch-anim {
-  0% { clip: rect(31px, 9999px, 94px, 0); }
-  20% { clip: rect(62px, 9999px, 42px, 0); }
-  40% { clip: rect(16px, 9999px, 78px, 0); }
-  60% { clip: rect(87px, 9999px, 11px, 0); }
-  80% { clip: rect(54px, 9999px, 63px, 0); }
-  100% { clip: rect(29px, 9999px, 85px, 0); }
-}
-
-@keyframes glitch-anim2 {
-  0% { clip: rect(12px, 9999px, 56px, 0); }
-  20% { clip: rect(89px, 9999px, 12px, 0); }
-  40% { clip: rect(45px, 9999px, 78px, 0); }
-  60% { clip: rect(23px, 9999px, 45px, 0); }
-  80% { clip: rect(67px, 9999px, 23px, 0); }
-  100% { clip: rect(11px, 9999px, 89px, 0); }
-}
-
-/* Refined Glitch Effect for Main Heading */
 .glitch-main {
   position: relative;
   display: inline-block;
@@ -143,243 +90,140 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
   background: var(--color-hardware-bg);
   opacity: 0;
-}
-
-.glitch-main::before {
-  left: 3px;
-  text-shadow: -3px 0 var(--color-cyber-purple);
-  clip: rect(24px, 550px, 90px, 0);
-  animation: none;
-}
-
-.glitch-main::after {
-  left: -3px;
-  text-shadow: -3px 0 var(--color-cyber-cyan);
-  clip: rect(85px, 550px, 140px, 0);
-  animation: none;
+  pointer-events: none;
 }
 
 .glitch-main.is-active::before {
+  left: 3px;
   opacity: 1;
-  animation: glitch-anim-main 0.24s steps(2, end) 2 alternate-reverse;
+  text-shadow: -3px 0 var(--color-substrate-soft);
+  animation: glitch-main-a 0.22s steps(2, end) 2 alternate-reverse;
 }
 
 .glitch-main.is-active::after {
+  left: -3px;
   opacity: 1;
-  animation: glitch-anim-main-2 0.2s steps(2, end) 2 alternate-reverse;
+  text-shadow: -3px 0 #00E5FF;
+  animation: glitch-main-b 0.18s steps(2, end) 2 alternate-reverse;
 }
 
-@keyframes glitch-anim-main {
-  0% { clip: rect(10px, 9999px, 40px, 0); transform: skew(0.5deg); }
-  20% { clip: rect(50px, 9999px, 20px, 0); transform: skew(-0.5deg); }
-  40% { clip: rect(30px, 9999px, 80px, 0); transform: skew(0.8deg); }
-  60% { clip: rect(70px, 9999px, 10px, 0); transform: skew(-0.8deg); }
-  80% { clip: rect(20px, 9999px, 60px, 0); transform: skew(0.3deg); }
-  100% { clip: rect(90px, 9999px, 30px, 0); transform: skew(-0.3deg); }
+@keyframes glitch-main-a {
+  0%   { clip-path: inset(10% 0 60% 0); transform: translateX(0); }
+  50%  { clip-path: inset(45% 0 25% 0); transform: translateX(-2px); }
+  100% { clip-path: inset(70% 0 10% 0); transform: translateX(2px); }
 }
 
-@keyframes glitch-anim-main-2 {
-  0% { clip: rect(80px, 9999px, 100px, 0); transform: skew(-0.5deg); }
-  20% { clip: rect(20px, 9999px, 50px, 0); transform: skew(0.5deg); }
-  40% { clip: rect(60px, 9999px, 10px, 0); transform: skew(-0.8deg); }
-  60% { clip: rect(10px, 9999px, 90px, 0); transform: skew(0.8deg); }
-  80% { clip: rect(40px, 9999px, 30px, 0); transform: skew(-0.3deg); }
-  100% { clip: rect(70px, 9999px, 80px, 0); transform: skew(0.3deg); }
+@keyframes glitch-main-b {
+  0%   { clip-path: inset(70% 0 15% 0); transform: translateX(0); }
+  50%  { clip-path: inset(20% 0 55% 0); transform: translateX(2px); }
+  100% { clip-path: inset(35% 0 45% 0); transform: translateX(-2px); }
 }
 
-.cyber-icon-box {
-  @apply relative flex items-center justify-center w-16 h-16 bg-hardware-bg border border-substrate-accent/30 rounded-lg overflow-hidden;
-  box-shadow: inset 0 0 10px rgba(255, 31, 31, 0.2);
-}
-
-.cyber-icon-box::before {
-  content: "";
-  @apply absolute inset-0 opacity-20;
-  background-image: linear-gradient(45deg, var(--color-substrate-accent) 25%, transparent 25%, transparent 50%, var(--color-substrate-accent) 50%, var(--color-substrate-accent) 75%, transparent 75%, transparent);
-  background-size: 4px 4px;
-}
-
-.cyber-border-accent {
-  @apply absolute top-0 left-0 w-full h-full pointer-events-none;
-  border: 1px solid transparent;
-  background: linear-gradient(90deg, var(--color-substrate-accent) 2px, transparent 2px) 0 0,
-              linear-gradient(90deg, var(--color-substrate-accent) 2px, transparent 2px) 100% 100%,
-              linear-gradient(0deg, var(--color-substrate-accent) 2px, transparent 2px) 0 0,
-              linear-gradient(0deg, var(--color-substrate-accent) 2px, transparent 2px) 100% 100%;
-  background-repeat: no-repeat;
-  background-size: 10px 10px;
-}
-
-.uv-glow {
-  text-shadow: 0 0 10px rgba(255, 31, 31, 0.5), 0 0 20px rgba(255, 31, 31, 0.3);
-}
-
-.image-uv-glow {
-  box-shadow: inset 0 0 50px rgba(255, 31, 31, 0.2), 0 0 20px rgba(255, 31, 31, 0.1);
-  border: 1px solid rgba(255, 31, 31, 0.2);
-}
-
-.cyber-badge {
-  @apply relative px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest;
-  background: rgba(255, 31, 31, 0.9);
-  color: white;
-  clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0% 30%);
-  box-shadow: 0 0 15px rgba(255, 31, 31, 0.5);
-}
-
-.cyber-badge-planned {
-  background: rgba(127, 85, 255, 0.9);
-  box-shadow: 0 0 15px rgba(127, 85, 255, 0.5);
-}
-
-.cyber-card {
-  @apply relative overflow-hidden transition-all duration-300;
-  border: 1px solid var(--color-hardware-border);
-}
+/* ---------------------------------------------------------------------------
+   Bench index — the hero list. Quiet, dense, informative.
+   --------------------------------------------------------------------------- */
 
 .bench-index {
-  @apply overflow-hidden rounded-2xl border border-white/10 bg-hardware-card/85 backdrop-blur-xl;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45), inset 0 1px rgba(255, 255, 255, 0.025);
+  @apply overflow-hidden rounded-2xl border border-hardware-border bg-hardware-card/85 backdrop-blur-xl;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5), inset 0 1px rgba(255, 255, 255, 0.03);
 }
 
 .bench-index-row {
-  @apply flex items-center justify-between gap-4 border-b border-white/5 px-5 py-4 transition-colors last:border-b-0 hover:bg-substrate-accent/5;
+  @apply flex items-center justify-between gap-4 border-b border-hardware-line px-5 py-4 transition-colors last:border-b-0 hover:bg-white/[0.03];
 }
 
-/* Data Stream Animation */
-@keyframes data-stream {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-50%); }
+/* ---------------------------------------------------------------------------
+   Cards
+   --------------------------------------------------------------------------- */
+
+.panel {
+  @apply rounded-2xl border border-hardware-border bg-hardware-card;
 }
 
-.data-stream {
-  @apply fixed top-0 right-4 h-[200vh] w-8 pointer-events-none opacity-10 z-0;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  animation: data-stream 20s linear infinite;
-  color: var(--color-substrate-accent);
+.project-card {
+  @apply relative flex flex-col overflow-hidden rounded-2xl border border-hardware-border bg-hardware-card transition-all duration-300;
 }
 
-.data-stream-left {
-  @apply fixed top-0 left-4 h-[200vh] w-8 pointer-events-none opacity-10 z-0;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  animation: data-stream 25s linear infinite reverse;
-  color: var(--color-cyber-purple);
+.project-card:hover {
+  border-color: rgba(255, 42, 38, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 18px 44px -12px rgba(0, 0, 0, 0.8);
 }
 
-/* Corner Accents */
-.cyber-corner {
-  @apply absolute w-4 h-4 pointer-events-none;
+/* Media frame: wide captures fill it, phone captures sit centred on a gradient. */
+.project-media {
+  @apply relative aspect-[16/10] overflow-hidden border-b border-hardware-border bg-hardware-raised;
 }
 
-.cyber-corner-tl {
-  @apply top-0 left-0 border-t-2 border-l-2 border-substrate-accent;
+.project-media img {
+  @apply h-full w-full transition-transform duration-500;
 }
 
-.cyber-corner-tr {
-  @apply top-0 right-0 border-t-2 border-r-2 border-substrate-accent;
+.project-media[data-kind="wide"] img {
+  @apply object-cover object-top;
 }
 
-.cyber-corner-bl {
-  @apply bottom-0 left-0 border-b-2 border-l-2 border-substrate-accent;
+.project-media[data-kind="phone"] {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 42, 38, 0.10), transparent 65%),
+    var(--color-hardware-raised);
 }
 
-.cyber-corner-br {
-  @apply bottom-0 right-0 border-b-2 border-r-2 border-substrate-accent;
+.project-media[data-kind="phone"] img {
+  @apply object-contain p-4;
 }
 
-/* Enhanced Glitch for Images */
-.cyber-image-container {
-  @apply relative overflow-hidden rounded-xl;
+.project-card:hover .project-media img {
+  transform: scale(1.03);
 }
 
-.cyber-image-container::before {
-  content: "";
-  @apply absolute inset-0 z-10 opacity-0 transition-opacity duration-300 pointer-events-none;
-  background: linear-gradient(rgba(255, 31, 31, 0.2) 50%, transparent 50%);
-  background-size: 100% 4px;
+/* Fallback panel for a project with no capture yet — honest, not invented. */
+.project-media-empty {
+  @apply flex flex-col items-center justify-center gap-3;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 22px 22px;
 }
 
-.cyber-image-container:hover::before {
-  @apply opacity-100;
+.status-dot {
+  @apply inline-block h-1.5 w-1.5 shrink-0 rounded-full;
 }
 
-.cyber-image-container:hover .cyber-image {
-  transform: scale(1.05);
-  filter: contrast(1.2) brightness(1.1) saturate(1.2);
+.tag {
+  @apply rounded border border-hardware-border bg-hardware-raised px-2 py-1 font-mono text-[10px] uppercase tracking-wide text-slate-400;
 }
 
-/* Terminal Text Typing */
-.typing-text::after {
-  content: "|";
-  animation: blink 1s step-end infinite;
+.spec-row {
+  @apply flex items-baseline justify-between gap-4 border-b border-hardware-line py-2.5 last:border-b-0;
 }
 
-@keyframes blink {
-  from, to { opacity: 1; }
-  50% { opacity: 0; }
+.field {
+  @apply w-full rounded-lg border border-hardware-border bg-black/40 px-4 py-3 text-sm text-slate-100 transition-colors placeholder:text-slate-600 focus:border-substrate-accent/50 focus:outline-none;
 }
 
-.cyber-card:hover {
-  border-color: var(--color-substrate-accent);
-  box-shadow: 0 0 20px rgba(255, 31, 31, 0.15), inset 0 0 10px rgba(255, 31, 31, 0.05);
+.custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-hardware-border);
+  border-radius: 4px;
 }
-
-.cyber-card::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 20px;
-  height: 20px;
-  background: var(--color-substrate-accent);
-  clip-path: polygon(100% 0, 0 0, 100% 100%);
-  opacity: 0.3;
-}
-
-.cyber-image {
-  filter: contrast(1.2) brightness(0.8) sepia(0.3) hue-rotate(240deg);
-  transition: all 0.5s ease;
-}
-
-.cyber-card:hover .cyber-image {
-  filter: contrast(1.1) brightness(1) sepia(0);
-}
-
-@media (max-width: 767px) {
-  .data-stream,
-  .data-stream-left {
-    display: none;
-  }
-}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #33333d; }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+  html { scroll-behavior: auto; }
 
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 
-  .glitch::before,
-  .glitch::after,
   .glitch-main::before,
-  .glitch-main::after,
-  .scanline {
-    display: none;
-  }
+  .glitch-main::after { display: none; }
+
+  .project-card:hover { transform: none; }
 }
