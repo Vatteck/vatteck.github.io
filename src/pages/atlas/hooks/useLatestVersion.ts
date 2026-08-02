@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 
-const FALLBACK = 'v0.14.0';
+// Only used before the fetch resolves, or if the GitHub API is unreachable.
+// Keep it in step with the newest published release.
+const FALLBACK = 'v0.16.1';
 const GITHUB_API = 'https://api.github.com/repos/Vatteck/atlas/releases/latest';
 
 interface CachedVersion {
