@@ -934,7 +934,7 @@ export const AppSimulator: React.FC<{ version?: string }> = ({ version }) => {
               <HelpCircle size={14} />
             </button>
           </div>
-          <span className="font-mono text-[9px] text-slate-600">{version ?? 'v0.14.0'}</span>
+          <span className="font-mono text-[9px] text-slate-600">{version ?? 'v0.16.1'}</span>
         </div>
       </div>
 
