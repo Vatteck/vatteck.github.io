@@ -49,7 +49,7 @@ export interface SkillItem {
 
 export const bioData = [
   "I fix things. Phones, laptops, boards — if it's got a circuit, I've probably had a soldering iron on it. I'm a hardware technician by trade: component-level diagnostics, SMD rework, thermal and power rail analysis. I don't just swap parts — I find the fault.",
-  "On the software side, I build whatever the idea demands. Atlas is a Python package manager for Arch. Continuity is a Flutter puzzle game in closed testing. Hash Factory is a Kotlin and Jetpack Compose rebuild of a narrative idle game. LifeOS is a cross-platform life simulator. I pick the stack that fits the problem and I ship.",
+  "On the software side, I build whatever the idea demands. Atlas is a Python package manager for Arch. Continuity is a Flutter puzzle game, live on Google Play. Hash Factory is a Kotlin and Jetpack Compose rebuild of a narrative idle game. LifeOS is a cross-platform life simulator. I pick the stack that fits the problem and I ship.",
   "My daily driver is CachyOS (Arch-based) with a BORE-scheduler kernel, tuned to within an inch of its life. I root Androids, mod boot configs, and generally refuse to run anything at stock settings. If a system isn't running exactly how I designed it, I'm not done."
 ];
 
@@ -114,8 +114,8 @@ export const projectsData: ProjectItem[] = [
     title: "Continuity",
     icon: Gamepad2,
     siteUrl: "vatteck.com/continuity/",
-    status: "testing",
-    version: "v1.4.0",
+    status: "released",
+    version: "v1.4.1",
     summary: "380 machine-verified levels and a year of offline dailies.",
     description: "A polished connect-the-dots puzzle game for Android with 380 machine-verified campaign levels, 730 daily puzzles, themes, achievements, and cloud saves.",
     tags: ["Flutter", "Dart", "Android", "Game Dev"],
