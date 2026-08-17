@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,500;0,600;0,700;0,800;1,600;1,700;1,800&family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -6,9 +6,13 @@
   --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  /* Accent — reserved for emphasis, not for every border on the page. */
+  /* Accent — reserved for emphasis and action, never for every border. */
   --color-substrate-accent: #FF2A26;
   --color-substrate-soft: #FF6B5A;
+
+  /* Copper — instrument detail: trace highlights, designators, pads. */
+  --color-copper: #E7A15E;
+  --color-copper-dim: #8A6A4B;
 
   /* Surfaces, in ascending elevation. */
   --color-hardware-bg: #08080A;
@@ -50,23 +54,140 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Atmosphere — one grain layer and one hero grid. Everything else was noise.
+   Status LED — the only "live" indicator on the page. Pulse reserved for
+   genuinely-live markers (nav, bench readout), never for static badges.
    --------------------------------------------------------------------------- */
 
-.noise-bg::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.03;
-  pointer-events: none;
-  z-index: 100;
+.status-led {
+  @apply inline-block h-1.5 w-1.5 shrink-0 rounded-full;
 }
 
-.grid-bg {
-  background-image: radial-gradient(circle at 1px 1px, rgba(255, 42, 38, 0.11) 1px, transparent 0);
-  background-size: 38px 38px;
-  mask-image: radial-gradient(ellipse 80% 60% at 30% 0%, #000 25%, transparent 75%);
+.status-led.pulse {
+  animation: led-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes led-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.45); }
+  55% { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+}
+
+/* Blinking cursor — live readout marker. */
+.blink {
+  animation: blink 1.1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ---------------------------------------------------------------------------
+   PCB hardware — pads, vias, designators, silkscreen. The structural
+   vocabulary of the board. Pads mark "connection points" (section starts,
+   panel corners), vias are inline routing dots, designators label
+   components like a schematic.
+   --------------------------------------------------------------------------- */
+
+.pad {
+  @apply relative inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full;
+  border: 1px solid rgba(231, 161, 94, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(231, 161, 94, 0.15);
+}
+
+.pad::after {
+  content: '';
+  width: 3px;
+  height: 3px;
+  border-radius: 9999px;
+  background: var(--color-hardware-bg);
+  box-shadow: 0 0 0 1px rgba(231, 161, 94, 0.4);
+}
+
+.via {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: rgba(231, 161, 94, 0.35);
+  box-shadow: 0 0 0 1px rgba(231, 161, 94, 0.15);
+}
+
+.designator {
+  @apply font-mono text-[9px] font-medium uppercase tracking-[0.22em] text-copper/70;
+}
+
+/* Designator chip — schematic component label with a body. */
+.designator-chip {
+  @apply inline-flex items-center gap-1.5 rounded border border-copper/25 bg-copper/10 px-2 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-copper;
+}
+
+/* IC pin rail — component legs on the left edge of capability panels. */
+.ic-pins {
+  @apply pointer-events-none absolute inset-y-0 left-0 hidden flex-col items-center justify-evenly py-4 md:flex;
+  width: 14px;
+}
+
+/* Right-column ICs carry their legs on the outboard edge. */
+.ic-pins--right {
+  left: auto;
+  right: 0;
+}
+
+.ic-pin {
+  position: relative;
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 1px;
+  background: rgba(231, 161, 94, 0.45);
+  border: 1px solid rgba(231, 161, 94, 0.8);
+}
+
+/* Short trace stub into the component body — pins land somewhere. */
+.ic-pin::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 3px;
+  width: 14px;
+  height: 1px;
+  background: rgba(231, 161, 94, 0.6);
+}
+
+.ic-pins--right .ic-pin::after {
+  left: auto;
+  right: 6px;
+}
+
+/* Ghost section numeral — the big index behind each section header. */
+.ghost-num {
+  @apply pointer-events-none absolute -top-4 right-0 select-none font-display text-[7rem] font-extrabold leading-none tracking-tighter text-white/[0.035] sm:text-[10rem] lg:-top-8;
+}
+
+/* ---------------------------------------------------------------------------
+   Signal trace — the section divider. One red pulse per run, like a fault on
+   the line. The draw is animated in JSX (motion pathLength); copper pads sit
+   on both ends.
+   --------------------------------------------------------------------------- */
+
+.trace-strip {
+  @apply border-b border-hardware-border;
+}
+
+.trace {
+  display: block;
+  width: 100%;
+  height: 30px;
+}
+
+.trace path {
+  stroke: #26262E;
+  fill: none;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.trace .fault {
+  stroke: rgba(255, 42, 38, 0.5);
 }
 
 /* Hairline rule that fades out — used to close section headers. */
@@ -75,81 +196,159 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Glitch — one hero moment only, on deliberate activation.
+   Bench panel — the hero scope. Framed like a scope viewport with a live
+   oscilloscope sweep across the top of the readout.
    --------------------------------------------------------------------------- */
 
-.glitch-main {
-  position: relative;
-  display: inline-block;
+.bench-panel {
+  @apply relative overflow-hidden rounded-2xl border border-hardware-border bg-hardware-card/85 backdrop-blur-xl;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.6), inset 0 1px rgba(255, 255, 255, 0.04);
 }
 
-.glitch-main::before,
-.glitch-main::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: var(--color-hardware-bg);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.glitch-main.is-active::before {
-  left: 3px;
-  opacity: 1;
-  text-shadow: -3px 0 var(--color-substrate-soft);
-  animation: glitch-main-a 0.22s steps(2, end) 2 alternate-reverse;
-}
-
-.glitch-main.is-active::after {
-  left: -3px;
-  opacity: 1;
-  text-shadow: -3px 0 #00E5FF;
-  animation: glitch-main-b 0.18s steps(2, end) 2 alternate-reverse;
-}
-
-@keyframes glitch-main-a {
-  0%   { clip-path: inset(10% 0 60% 0); transform: translateX(0); }
-  50%  { clip-path: inset(45% 0 25% 0); transform: translateX(-2px); }
-  100% { clip-path: inset(70% 0 10% 0); transform: translateX(2px); }
-}
-
-@keyframes glitch-main-b {
-  0%   { clip-path: inset(70% 0 15% 0); transform: translateX(0); }
-  50%  { clip-path: inset(20% 0 55% 0); transform: translateX(2px); }
-  100% { clip-path: inset(35% 0 45% 0); transform: translateX(-2px); }
-}
-
-/* ---------------------------------------------------------------------------
-   Bench index — the hero list. Quiet, dense, informative.
-   --------------------------------------------------------------------------- */
-
-.bench-index {
-  @apply overflow-hidden rounded-2xl border border-hardware-border bg-hardware-card/85 backdrop-blur-xl;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5), inset 0 1px rgba(255, 255, 255, 0.03);
-}
-
-.bench-index-row {
+.bench-row {
   @apply flex items-center justify-between gap-4 border-b border-hardware-line px-5 py-4 transition-colors last:border-b-0 hover:bg-white/[0.03];
 }
 
-/* ---------------------------------------------------------------------------
-   Cards
-   --------------------------------------------------------------------------- */
-
-.panel {
-  @apply rounded-2xl border border-hardware-border bg-hardware-card;
+/* Oscilloscope screen — graticule + live phosphor trace. */
+.scope-screen {
+  position: relative;
+  display: block;
+  height: 168px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 70% 20%, rgba(231, 161, 94, 0.045), transparent 60%),
+    var(--color-hardware-raised);
+  border-bottom: 1px solid var(--color-hardware-line);
 }
 
-.project-card {
+.scope-screen svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.scope-graticule-minor {
+  stroke: rgba(255, 255, 255, 0.035);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.scope-graticule-major {
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.scope-centerline {
+  stroke: rgba(231, 161, 94, 0.22);
+  stroke-width: 1;
+  stroke-dasharray: 5 7;
+  vector-effect: non-scaling-stroke;
+}
+
+.scope-trace-glow {
+  stroke: rgba(231, 161, 94, 0.12);
+  stroke-width: 7;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.scope-trace {
+  stroke: rgba(240, 178, 110, 0.95);
+  stroke-width: 1.6;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.scope-sweep-cursor {
+  stroke: rgba(240, 178, 110, 0.55);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.scope-cursor-mark {
+  fill: rgba(240, 178, 110, 0.8);
+}
+
+.scope-label {
+  @apply pointer-events-none absolute font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400;
+}
+
+.scope-label b {
+  @apply font-semibold text-slate-300;
+}
+
+/* Instrument corner ticks — scope viewport framing. */
+.corner-tick {
+  @apply pointer-events-none absolute h-3.5 w-3.5 border-slate-600/70;
+}
+
+.corner-tick.tl { @apply left-2 top-2 border-l border-t; }
+.corner-tick.tr { @apply right-2 top-2 border-r border-t; }
+.corner-tick.bl { @apply bottom-2 left-2 border-b border-l; }
+.corner-tick.br { @apply bottom-2 right-2 border-b border-r; }
+
+/* Scroll progress — a 2px position readout along the top edge. */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 80;
+  transform-origin: 0 50%;
+  background: linear-gradient(to right, var(--color-substrate-accent), var(--color-substrate-soft));
+}
+
+/* ---------------------------------------------------------------------------
+   Telemetry strip — the hero's live readout bar (status, bench load, uptime).
+   --------------------------------------------------------------------------- */
+
+.telemetry {
+  @apply inline-flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border border-hardware-border bg-hardware-card/60 px-4 py-3 font-mono text-[11px] uppercase tracking-wider;
+}
+
+.telemetry .sep {
+  @apply hidden h-3 w-px bg-hardware-border sm:block;
+}
+
+/* ---------------------------------------------------------------------------
+   Record cards — each project is a test record with a file header.
+   --------------------------------------------------------------------------- */
+
+.record-card {
   @apply relative flex flex-col overflow-hidden rounded-2xl border border-hardware-border bg-hardware-card transition-all duration-300;
 }
 
-.project-card:hover {
+.record-card:hover {
   border-color: rgba(255, 42, 38, 0.35);
   transform: translateY(-3px);
   box-shadow: 0 18px 44px -12px rgba(0, 0, 0, 0.8);
+}
+
+/* Featured record — the lead project spans the grid and splits media/content. */
+.record-card.featured {
+  @apply lg:grid lg:grid-cols-[1.15fr_0.85fr];
+}
+
+.record-card.featured .record-header {
+  @apply lg:col-span-2;
+}
+
+.record-card.featured:hover {
+  border-color: rgba(231, 161, 94, 0.45);
+}
+
+.record-header {
+  @apply flex items-center justify-between gap-3 border-b border-hardware-border bg-hardware-raised px-5 py-2.5 font-mono text-[9px] uppercase tracking-widest text-slate-400;
+}
+
+.panel {
+  @apply rounded-2xl border border-hardware-border bg-hardware-card;
 }
 
 /* Media frame: wide captures fill it, phone captures sit centred on a gradient. */
@@ -166,16 +365,50 @@
 }
 
 .project-media[data-kind="phone"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background:
     radial-gradient(ellipse at 50% 0%, rgba(255, 42, 38, 0.10), transparent 65%),
     var(--color-hardware-raised);
 }
 
+/* Phone captures sit in a bezel — a device on the bench, not a floating image. */
 .project-media[data-kind="phone"] img {
-  @apply object-contain p-4;
+  position: relative;
+  width: auto;
+  height: 86%;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(0, 0, 0, 0.6);
 }
 
-.project-card:hover .project-media img {
+/* Filling variant — used by the featured record so media matches content height. */
+.project-media.fill {
+  aspect-ratio: 16 / 10;
+}
+
+.project-media.fill[data-kind="wide"] img {
+  object-fit: cover;
+}
+
+@media (min-width: 1024px) {
+  .project-media.fill {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 340px;
+  }
+
+  .record-card.featured .project-media {
+    border-bottom: none;
+    border-right: 1px solid var(--color-hardware-border);
+  }
+}
+
+.record-card:hover .project-media img {
   transform: scale(1.03);
 }
 
@@ -186,10 +419,6 @@
     linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
   background-size: 22px 22px;
-}
-
-.status-dot {
-  @apply inline-block h-1.5 w-1.5 shrink-0 rounded-full;
 }
 
 .tag {
@@ -212,6 +441,15 @@
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #33333d; }
 
+/* Footer end-rail — the record terminates with vias and a file marker. */
+.end-rail {
+  @apply flex items-center gap-4;
+}
+
+.end-rail .line {
+  @apply h-px flex-grow bg-hardware-border;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 
@@ -222,8 +460,13 @@
     scroll-behavior: auto !important;
   }
 
-  .glitch-main::before,
-  .glitch-main::after { display: none; }
+  .record-card:hover { transform: none; }
 
-  .project-card:hover { transform: none; }
+  .scroll-progress { display: none; }
+
+  .scope-trace-glow,
+  .scope-trace,
+  .scope-sweep-cursor {
+    animation: none;
+  }
 }

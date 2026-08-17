@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#FF1F1F" />
+    <meta name="theme-color" content="#08080A" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     
     <!-- SEO Meta Tags -->
@@ -24,11 +24,14 @@
     <meta property="og:image:alt" content="VATTECK — Hardware Technician and Independent Developer" />
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://vatteck.com" />
-    <meta property="twitter:title" content="VATTECK — Hardware Technician & Independent Developer" />
-    <meta property="twitter:description" content="Repairing hardware and building software that ships." />
-    <meta property="twitter:image" content="https://vatteck.com/og-vatteck.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://vatteck.com" />
+    <meta name="twitter:title" content="VATTECK — Hardware Technician & Independent Developer" />
+    <meta name="twitter:description" content="Repairing hardware and building software that ships." />
+    <meta name="twitter:image" content="https://vatteck.com/og-vatteck.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -42,13 +45,9 @@
         "knowsAbout": [
           "Hardware Engineering",
           "Systems Development",
-          "Silicon Optimization",
           "Arch Linux",
           "Android Modding",
-          "Hardware Forensics",
-          "Embedded Systems",
           "Kernel Optimization",
-          "PCB Design",
           "SMD Soldering"
         ],
         "sameAs": [
@@ -63,6 +62,59 @@
         "name": "VATTECK Portfolio",
         "url": "https://vatteck.com",
         "description": "The portfolio of VATTECK, hardware technician and independent developer."
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Projects by VATTECK",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "Atlas Package Manager",
+              "url": "https://vatteck.com/atlas/",
+              "operatingSystem": "Linux",
+              "applicationCategory": "UtilitiesApplication"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item": {
+              "@type": "MobileApplication",
+              "name": "Continuity",
+              "url": "https://vatteck.com/continuity/",
+              "operatingSystem": "Android",
+              "applicationCategory": "GameApplication"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item": {
+              "@type": "MobileApplication",
+              "name": "Hash Factory",
+              "url": "https://vatteck.com/hashfactory/",
+              "operatingSystem": "Android",
+              "applicationCategory": "GameApplication"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "LifeOS",
+              "url": "https://vatteck.com/lifeos/",
+              "operatingSystem": "Cross-Platform",
+              "applicationCategory": "GameApplication"
+            }
+          }
+        ]
       }
     </script>
     <script type="module" src="/src/main.tsx"></script>

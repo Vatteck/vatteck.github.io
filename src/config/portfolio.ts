@@ -7,6 +7,8 @@ export interface DeepDiveItem {
   icon: LucideIcon;
   title: string;
   description: string;
+  /** Short schematic function code shown beside the U-designator. */
+  code: string;
 }
 
 /** One vocabulary for build state, used by both the bench index and the project cards. */
@@ -50,28 +52,32 @@ export interface SkillItem {
 export const bioData = [
   "I fix things. Phones, laptops, boards — if it's got a circuit, I've probably had a soldering iron on it. I'm a hardware technician by trade: component-level diagnostics, SMD rework, thermal and power rail analysis. I don't just swap parts — I find the fault.",
   "On the software side, I build whatever the idea demands. Atlas is a Python package manager for Arch. Continuity is a Flutter puzzle game, live on Google Play. Hash Factory is a Kotlin and Jetpack Compose rebuild of a narrative idle game. LifeOS is a cross-platform life simulator. I pick the stack that fits the problem and I ship.",
-  "My daily driver is CachyOS (Arch-based) with a BORE-scheduler kernel, tuned to within an inch of its life. I root Androids, mod boot configs, and generally refuse to run anything at stock settings. If a system isn't running exactly how I designed it, I'm not done."
+  "My daily driver is CachyOS (Arch-based), tuned to within an inch of its life. I root Androids, mod boot configs, and generally refuse to run anything at stock settings. If a system isn't running exactly how I designed it, I'm not done."
 ];
 
 export const deepDiveData: DeepDiveItem[] = [
   {
     icon: Wrench,
     title: "Hardware Engineering",
+    code: "HW",
     description: "Component-level diagnostics and repair. SMD soldering, thermal imaging, power rail analysis. I trace faults from symptom to root cause — no board is a mystery, just a puzzle I haven't finished."
   },
   {
     icon: Smartphone,
     title: "Mobile & Kernel Modding",
+    code: "KERNEL",
     description: "Bootloader unlocks, custom recovery deployment, kernel parameter tuning. I don't run stock — every Android I touch gets optimized for what it actually needs to do, not what the OEM shipped."
   },
   {
     icon: Code2,
     title: "Cross-Platform Development",
+    code: "BUILD",
     description: "Python, Flutter, Kotlin, and Jetpack Compose — I don't marry a stack. I choose the tools that fit the product, then carry the work through testing and release."
   },
   {
     icon: Cpu,
     title: "AI-Assisted Engineering",
+    code: "AI",
     description: "AI tooling isn't a crutch — it's a force multiplier. I use it to accelerate boilerplate, explore architecture decisions, and iterate faster than solo devs typically can. The ideas are mine; the typing speed is augmented."
   }
 ];
@@ -116,7 +122,7 @@ export const projectsData: ProjectItem[] = [
     siteUrl: "vatteck.com/continuity/",
     status: "released",
     version: "v1.4.1",
-    summary: "380 machine-verified levels and a year of offline dailies.",
+    summary: "380 machine-verified levels and two years of offline dailies.",
     description: "A polished connect-the-dots puzzle game for Android with 380 machine-verified campaign levels, 730 daily puzzles, themes, achievements, and cloud saves.",
     tags: ["Flutter", "Dart", "Android", "Game Dev"],
     media: {
@@ -262,7 +268,7 @@ export const skillsData: SkillItem[] = [
 /** Workstation facts, surfaced as a compact spec list rather than a whole section. */
 export const benchSpecs: { label: string; value: string }[] = [
   { label: "Distro", value: "CachyOS (Arch)" },
-  { label: "Kernel", value: "linux-cachyos-bore" },
-  { label: "Scheduler", value: "BORE / EEVDF" },
+  { label: "Kernel", value: "linux-cachyos" },
+  { label: "Scheduler", value: "CachyOS Default" },
   { label: "Filesystem", value: "BTRFS · zstd:3" }
 ];
