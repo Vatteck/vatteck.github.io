@@ -1043,11 +1043,11 @@ export default function App() {
               <span className="text-slate-600">·</span>
               <span>Hardware technician · independent developer</span>
             </p>
-            <h1 className="max-w-3xl font-display text-[2.6rem] font-extrabold leading-[1.05] tracking-[-0.03em] text-slate-50 sm:text-6xl lg:text-[4.4rem] xl:text-[5rem]">
+            <div className="max-w-3xl font-display text-[2.6rem] font-extrabold leading-[1.05] tracking-[-0.03em] text-slate-50 sm:text-6xl lg:text-[4.4rem] xl:text-[5rem]">
               I repair hardware and build software that{' '}
               <em className="italic">ships</em>
               <span className="text-substrate-accent">.</span>
-            </h1>
+            </div>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-300">
               Component-level diagnostics, tuned Linux and Android systems, and
               independently built apps and games — from first fault or first commit
@@ -1472,7 +1472,10 @@ export default function App() {
                 VATTECK<span className="text-substrate-accent">-01</span>
               </div>
               <p className="mt-1.5 text-[11px] text-slate-600">
-                © {new Date().getFullYear()} Vatteck. Built with React and Tailwind.
+                © {new Date().getFullYear()} Vatteck. Built with React and Tailwind.{' '}
+                <a href="/privacy/" className="text-slate-500 transition-colors hover:text-substrate-accent">
+                  Privacy Policy
+                </a>
               </p>
             </div>
 

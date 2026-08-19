@@ -120,6 +120,20 @@
     <script type="module" src="/src/main.tsx"></script>
   </head>
   <body>
+    <!-- Crawler- and screen-reader-visible H1: the React app renders the same title client-side. -->
+    <h1 class="sr-only" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0">VATTECK — Hardware Technician &amp; Independent Developer</h1>
+    <noscript>
+      <div style="max-width:640px;margin:2.5rem auto;padding:0 1rem;font-family:system-ui,-apple-system,sans-serif;line-height:1.6;color:#e2e8f0">
+        <p>VATTECK — component-level hardware diagnostics, tuned Linux and Android systems, and independently built software including Atlas, Hash Factory, Continuity, and LifeOS.</p>
+        <ul>
+          <li><a href="/atlas/">Atlas — Safer Package Management for Arch Linux</a></li>
+          <li><a href="/continuity/">Continuity — Flow Puzzle Game for Android</a></li>
+          <li><a href="/hashfactory/">Hash Factory — Android Idle Mining Game</a></li>
+          <li><a href="/lifeos/">LifeOS — Life Simulation Game</a></li>
+          <li><a href="/privacy/">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </noscript>
     <div id="root"></div>
   </body>
 </html>

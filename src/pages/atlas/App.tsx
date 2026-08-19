@@ -88,14 +88,16 @@ export default function App() {
         </div>
       </header>
 
-      {/* --- PROJECT NAV BAR --- */}
-      <div className="sticky top-[57px] z-10 bg-[#0a0c14]/90 backdrop-blur-md border-b border-slate-900/40">
-        <div className="max-w-6xl mx-auto px-4 py-2 flex items-center gap-4 overflow-x-auto">
-          <a href="/" className="text-[10px] font-mono uppercase tracking-widest text-slate-500 hover:text-atlas-red transition-colors whitespace-nowrap shrink-0">← Main</a>
-          <span className="text-slate-700 shrink-0">|</span>
-          <a href="/hashfactory/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide whitespace-nowrap shrink-0">Hash Factory</a>
-          <a href="/continuity/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide whitespace-nowrap shrink-0">Continuity</a>
-          <a href="/lifeos/" className="text-[11px] font-mono text-slate-400 hover:text-white transition-colors uppercase tracking-wide whitespace-nowrap shrink-0">LifeOS</a>
+      {/* --- PROJECT SWITCHER BAR --- */}
+      <div className="sticky top-[57px] z-10 bg-[#08080a]/90 backdrop-blur-md border-b border-slate-900/60">
+        <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between overflow-x-auto font-mono text-[10px] uppercase tracking-widest text-slate-400">
+          <a href="/" className="hover:text-white transition-colors shrink-0 font-bold text-slate-200">VATTECK</a>
+          <div className="flex items-center gap-4 sm:gap-6 shrink-0">
+            <span className="text-atlas-red font-semibold">Atlas</span>
+            <a href="/continuity/" className="hover:text-white transition-colors">Continuity</a>
+            <a href="/hashfactory/" className="hover:text-white transition-colors">Hash Factory</a>
+            <a href="/lifeos/" className="hover:text-white transition-colors">LifeOS</a>
+          </div>
         </div>
       </div>
 
@@ -114,14 +116,14 @@ export default function App() {
 
         {/* Dynamic Display Slogan Heading */}
         <div className="space-y-4 max-w-3xl mx-auto">
-          <motion.h1 
+          <motion.div 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-[1.1]"
           >
             The AUR Isn't as Safe as It Used to Be.<br />Atlas <span className="text-transparent bg-clip-text bg-gradient-to-r from-atlas-red-bright via-pink-500 to-rose-400">Makes It Legible</span>
-          </motion.h1>
+          </motion.div>
           
           <motion.p 
             initial={{ opacity: 0, y: 15 }}
@@ -401,6 +403,8 @@ export default function App() {
             <a href="https://github.com/Vatteck/atlas/blob/master/LICENSE" target="_blank" rel="noreferrer" className="hover:text-slate-400 transition-colors">License</a>
             <span>•</span>
             <a href="https://github.com/Vatteck/atlas/issues" target="_blank" rel="noreferrer" className="hover:text-slate-400 transition-colors">Issues</a>
+            <span>•</span>
+            <a href="/privacy/" className="hover:text-slate-400 transition-colors">Privacy</a>
           </div>
 
         </div>

@@ -85,7 +85,7 @@ export const TransactionPreview: React.FC<TransactionPreviewProps> = ({
         {/* Header */}
         <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/20">
           <div>
-            <h1 className="text-xs font-bold text-slate-500 uppercase tracking-widest font-display">Install Action</h1>
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest font-display">Install Action</h3>
             <p className="text-[11px] text-slate-400 mt-1">Review the transaction plan before modifying root filesystems.</p>
           </div>
           <button

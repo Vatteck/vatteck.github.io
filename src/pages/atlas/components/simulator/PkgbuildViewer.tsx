@@ -158,7 +158,7 @@ package() {
           <div className="flex items-center space-x-3">
             <FileCode className="w-5 h-5 text-amber-500" />
             <div>
-              <h1 className="text-xs font-bold text-slate-500 uppercase tracking-widest font-display">PKGBUILD Inspection</h1>
+              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest font-display">PKGBUILD Inspection</h3>
               <p className="text-[11px] text-slate-400 mt-0.5">reviewing script source: <span className="font-mono text-slate-300 font-semibold">{pkgName}</span></p>
             </div>
           </div>

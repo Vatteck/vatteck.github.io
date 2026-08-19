@@ -19,6 +19,27 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "LifeOS",
+      "url": "https://vatteck.com/lifeos/",
+      "operatingSystem": "Cross-Platform",
+      "applicationCategory": "GameApplication",
+      "description": "A deep cross-platform life simulator. Build a character from birth to death — careers, relationships, wealth, health, and narrative events.",
+      "author": {
+        "@type": "Person",
+        "name": "VATTECK",
+        "url": "https://vatteck.com"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+  </script>
   <style>
     :root {
       --bg: #0F1117;
@@ -143,16 +164,16 @@
 </head>
 <body>
 
-<nav class="nav">
+<nav class="nav" aria-label="Project navigation">
   <div class="nav-inner">
     <a href="/" class="nav-home">
       <span class="nav-home-arrow">←</span> VATTECK
     </a>
     <div class="nav-links">
       <a href="/atlas/">Atlas</a>
-      <a href="/hashfactory/">Hash Factory</a>
       <a href="/continuity/">Continuity</a>
-      <a href="/lifeos/" style="color:var(--accent)">LifeOS</a>
+      <a href="/hashfactory/">Hash Factory</a>
+      <span style="color:var(--accent)">LifeOS</span>
     </div>
   </div>
 </nav>
@@ -314,6 +335,7 @@
 
 <footer class="footer">
   <a href="/">vatteck.com</a> &nbsp;·&nbsp;
+  <a href="/privacy/">Privacy Policy</a> &nbsp;·&nbsp;
   LifeOS v1.0.2 &nbsp;·&nbsp;
   Flutter &nbsp;·&nbsp;
   Cross-Platform

@@ -18,6 +18,13 @@ export default defineConfig(() => {
           main: resolve(__dirname, 'index.html'),
           'atlas/index': resolve(__dirname, 'atlas/index.html'),
         },
+        output: {
+          manualChunks: {
+            'vendor-react': ['react', 'react-dom'],
+            'vendor-motion': ['motion'],
+            'vendor-icons': ['lucide-react'],
+          },
+        },
       },
     },
     server: {

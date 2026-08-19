@@ -16,9 +16,49 @@
     <meta name="twitter:title" content="Atlas — Safer Package Management for Arch Linux" />
     <meta name="twitter:description" content="A graphical Arch package manager that makes AUR risk legible." />
     <meta name="twitter:image" content="https://vatteck.com/og-vatteck.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <title>Atlas — Safer Package Management for Arch Linux</title>
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Atlas Package Manager",
+        "url": "https://vatteck.com/atlas/",
+        "operatingSystem": "Linux (Arch Linux, CachyOS, Manjaro)",
+        "applicationCategory": "UtilitiesApplication",
+        "description": "An Arch-focused graphical package manager for Linux unifying official Arch repos, AUR, Flatpak, and AppImage.",
+        "softwareVersion": "v0.16.1",
+        "author": {
+          "@type": "Person",
+          "name": "VATTECK",
+          "url": "https://vatteck.com"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
   </head>
   <body>
+    <!-- Crawler- and screen-reader-visible H1: the React app renders the same title client-side. -->
+    <h1 class="sr-only" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0">Atlas — Safer Package Management for Arch Linux</h1>
+    <noscript>
+      <div style="max-width:640px;margin:2.5rem auto;padding:0 1rem;font-family:system-ui,-apple-system,sans-serif;line-height:1.6;color:#e2e8f0">
+        <p>Atlas is a graphical package manager for Arch Linux that unifies pacman, AUR, Flatpak, and AppImage — surfacing AUR risk and PKGBUILD changes before installation.</p>
+        <ul>
+          <li><a href="/">Back to VATTECK</a></li>
+          <li><a href="/continuity/">Continuity</a></li>
+          <li><a href="/hashfactory/">Hash Factory</a></li>
+          <li><a href="/lifeos/">LifeOS</a></li>
+          <li><a href="/privacy/">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/pages/atlas/main.tsx"></script>
   </body>

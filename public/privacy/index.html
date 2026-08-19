@@ -4,27 +4,116 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Policy - Continuity</title>
+  <link rel="canonical" href="https://vatteck.com/privacy/">
+  <meta name="description" content="Privacy policy for Continuity, the Android flow puzzle game published by VATTECK — local data storage, Google Play Games sync, ads, purchases, and your controls.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vatteck.com/privacy/">
+  <meta property="og:title" content="Privacy Policy — Continuity by VATTECK">
+  <meta property="og:description" content="How Continuity handles your data: local storage, Play Games sync, ads, purchases, and your controls.">
+  <meta property="og:image" content="https://vatteck.com/og-vatteck.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Privacy Policy — Continuity by VATTECK">
+  <meta name="twitter:description" content="How Continuity handles your data: local storage, Play Games sync, ads, purchases, and your controls.">
+  <meta name="twitter:image" content="https://vatteck.com/og-vatteck.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Privacy Policy — Continuity",
+    "url": "https://vatteck.com/privacy/",
+    "description": "Privacy policy for the Continuity Android app published by VATTECK.",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "VATTECK",
+      "url": "https://vatteck.com"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "VATTECK",
+      "url": "https://vatteck.com"
+    }
+  }
+  </script>
   <style>
+    :root {
+      --bg: #0d0d0d;
+      --border: #222;
+      --accent: #6af;
+      --dim: #999;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
     body {
-      max-width: 720px;
-      margin: 2rem auto;
-      padding: 0 1.5rem;
+      margin: 0;
+      padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       font-size: 16px;
       line-height: 1.7;
       color: #e0e0e0;
-      background: #0d0d0d;
+      background: var(--bg);
     }
-    h1 { font-size: 1.8rem; margin-top: 2rem; color: #fff; }
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 13, 13, 0.9);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
+    }
+    .nav-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .nav-home {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: #fff;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 10px;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+    .nav-links a { color: var(--dim); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: #fff; }
+    .container {
+      max-width: 720px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    h1 { font-size: 1.8rem; margin-top: 1rem; color: #fff; }
     h2 { font-size: 1.2rem; margin-top: 2rem; color: #aaa; }
-    a { color: #6af; }
+    a { color: var(--accent); }
     p { margin: 0.8rem 0; }
     ul { margin: 0.5rem 0; }
     .footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #222; font-size: 0.85rem; color: #666; }
   </style>
 </head>
 <body>
-  <h1>Privacy Policy</h1>
+  <nav class="nav" aria-label="Project navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-home">VATTECK</a>
+      <div class="nav-links">
+        <a href="/atlas/">Atlas</a>
+        <a href="/continuity/">Continuity</a>
+        <a href="/hashfactory/">Hash Factory</a>
+        <a href="/lifeos/">LifeOS</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container">
+    <h1>Privacy Policy</h1>
+  <p>This policy explains how <strong>Continuity</strong>, the flow puzzle game published by VATTECK on Google Play, handles your data — what stays on your device, what touches Google services, and the controls you have. It applies only to the Continuity Android app.</p>
   <p><strong>Continuity</strong> - Last updated: July 24, 2026</p>
 
   <h2>1. What the App Itself Stores</h2>
@@ -72,5 +161,6 @@
   <div class="footer">
     <p>© 2026 VATTECK. This privacy policy applies solely to the Continuity Android application published by VATTECK on Google Play.</p>
   </div>
+  </main>
 </body>
 </html>

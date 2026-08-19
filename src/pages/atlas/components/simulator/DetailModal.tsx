@@ -88,7 +88,7 @@ export const DetailModal: React.FC<DetailModalProps> = ({
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h1 className="text-lg font-bold text-slate-100">{pkg.name}</h1>
+                <h3 className="text-lg font-bold text-slate-100">{pkg.name}</h3>
                 <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border uppercase tracking-wider ${getSourcePillStyles(pkg.selectedSource)}`}>
                   {pkg.selectedSource}
                 </span>
