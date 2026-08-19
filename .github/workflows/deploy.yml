@@ -34,6 +34,9 @@ jobs:
       - name: Typecheck
         run: npm run lint
       - name: Build project
+        env:
+          # ubuntu-latest ships Chrome; the postbuild prerender step needs it.
+          CHROME_PATH: /usr/bin/google-chrome
         run: npm run build
 
       # Only pushes to main and manual runs produce a deployable artifact.
