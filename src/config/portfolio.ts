@@ -212,13 +212,13 @@ export const projectsData: ProjectItem[] = [
     siteUrl: "vatteck.com/lifeos/",
     status: "building",
     version: "v1.1.0",
-    summary: "A life simulator from birth to death, every path playable.",
-    description: "A deep cross-platform life simulator. Build a character from birth to death — careers, relationships, crime, politics, the supernatural. Every path is playable.",
-    tags: ["Flutter", "Dart", "Simulation", "Cross-Platform"],
+    summary: "A life simulator from birth to obituary, every path playable.",
+    description: "A life simulator for Android. Build a character from birth to obituary — careers, relationships, crime, politics, the supernatural. Every path is playable.",
+    tags: ["Flutter", "Dart", "Simulation", "Android"],
     media: {
       src: "/lifeos/screenshots/01-lifelog.webp",
       kind: "phone",
-      alt: "LifeOS life log — a timeline of narrated events for a character at age 18"
+      alt: "LifeOS life log — a timeline of narrated events for a character at age 37"
     },
     gallery: [
       {
@@ -229,25 +229,25 @@ export const projectsData: ProjectItem[] = [
       {
         src: "/lifeos/screenshots/03-interact.webp",
         kind: "phone",
-        alt: "LifeOS interaction menu for a friend, with socialize, romance and gift options"
+        alt: "LifeOS interaction menu for a family member, with socialize, activities, gift and conflict options"
       },
       {
-        src: "/lifeos/screenshots/04-underworld.webp",
+        src: "/lifeos/screenshots/07-lifestyle.webp",
         kind: "phone",
-        alt: "LifeOS activity directory showing crime, underworld and economy options"
+        alt: "LifeOS activity directory showing last will, social media and romance options"
       }
     ],
     specs: [
-      { label: "Platform", value: "Android, iOS, web, desktop" },
+      { label: "Platform", value: "Android (beta)" },
       { label: "Language", value: "Dart" },
       { label: "Framework", value: "Flutter" },
-      { label: "Scale", value: "14 modules · 18 tables · schema v25" }
+      { label: "Scale", value: "22 modules · 47 tables · schema v79" }
     ],
     highlights: [
       "Event-sourced life log — every decision stays in the record",
-      "Yarn-driven narrative engine for branching story beats",
-      "14 feature modules over an 18-table schema",
-      "One codebase targeting mobile, web and desktop"
+      "Yarn-driven narrative engine, 21 scripts over 104 story nodes",
+      "22 feature modules over a 47-table schema",
+      "19 career tracks across 29 playable countries"
     ]
   }
 ];
