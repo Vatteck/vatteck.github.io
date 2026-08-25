@@ -96,6 +96,16 @@ async function main() {
     // Let the clock tick once and lazy effects settle.
     await new Promise((r) => setTimeout(r, 800));
 
+    // On the Atlas route, below-fold sections are intersection-gated. Scroll
+    // to the bottom so their observers fire and the lazy chunks render, then
+    // return to the top so the snapshot's layout state is pristine.
+    if (route === "/atlas/") {
+      await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+      await new Promise((r) => setTimeout(r, 600));
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await new Promise((r) => setTimeout(r, 200));
+    }
+
     const snapshot = await page.evaluate(() => {
       const root = document.querySelector("#root");
       if (!root || !root.firstElementChild) throw new Error("React never mounted");

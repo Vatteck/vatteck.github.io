@@ -13,7 +13,7 @@ import {
   Sparkles,
   Info
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 
 interface PermissionsViewProps {}
 
@@ -152,7 +152,7 @@ export const PermissionsView: React.FC<PermissionsViewProps> = () => {
   };
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
@@ -219,7 +219,7 @@ export const PermissionsView: React.FC<PermissionsViewProps> = () => {
               {/* Items List */}
               <AnimatePresence initial={false}>
                 {isExpanded && (
-                  <motion.div
+                  <m.div
                     initial={{ height: 0 }}
                     animate={{ height: 'auto' }}
                     exit={{ height: 0 }}
@@ -254,7 +254,7 @@ export const PermissionsView: React.FC<PermissionsViewProps> = () => {
                         </div>
                       ))}
                     </div>
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </div>
@@ -287,6 +287,6 @@ export const PermissionsView: React.FC<PermissionsViewProps> = () => {
           </button>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 };

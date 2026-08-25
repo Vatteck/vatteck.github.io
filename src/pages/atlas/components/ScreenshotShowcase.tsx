@@ -1,5 +1,5 @@
 import { useState, useEffect, ComponentType } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 import { 
   LayoutDashboard, 
   BookOpen, 
@@ -234,7 +234,7 @@ export function ScreenshotShowcase() {
                 onClick={() => setLightboxOpen(true)}
               >
                 <AnimatePresence mode="wait">
-                  <motion.img
+                  <m.img
                     key={activeTab.id}
                     src={activeTab.image}
                     alt={activeTab.label}
@@ -285,7 +285,7 @@ export function ScreenshotShowcase() {
       {/* --- SCREENSHOT LIGHTBOX MODAL --- */}
       <AnimatePresence>
         {lightboxOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -323,7 +323,7 @@ export function ScreenshotShowcase() {
 
               {/* Main Expanded Image */}
               <div className="max-w-[90vw] max-h-[75vh] border border-slate-800 rounded-xl overflow-hidden shadow-2xl shadow-black">
-                <motion.img
+                <m.img
                   key={activeTab.id}
                   src={activeTab.image}
                   alt={activeTab.label}
@@ -367,7 +367,7 @@ export function ScreenshotShowcase() {
               </div>
             </div>
 
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </section>

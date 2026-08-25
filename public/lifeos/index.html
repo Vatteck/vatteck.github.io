@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0F1117">
+  <link rel="icon" type="image/svg+xml" href="/lifeos/favicon.svg">
   <title>LifeOS — every choice writes your story.</title>
   <meta name="description" content="A life simulator for Android, in beta. Born somewhere, to someone — then a lifetime of choices across careers, relationships, crime, property and legacy. The game remembers all of it.">
   <link rel="canonical" href="https://vatteck.com/lifeos/">
@@ -16,9 +17,8 @@
   <meta name="twitter:title" content="LifeOS — Every Choice Writes Your Story">
   <meta name="twitter:description" content="A life simulator for Android, built with Flutter. In beta.">
   <meta name="twitter:image" content="https://vatteck.com/og-vatteck.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="/fonts/playfair-display-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -42,6 +42,14 @@
     }
   </script>
   <style>
+    @font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/inter-latin-400-normal.woff2') format('woff2')}
+    @font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/inter-latin-500-normal.woff2') format('woff2')}
+    @font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/inter-latin-600-normal.woff2') format('woff2')}
+    @font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/inter-latin-700-normal.woff2') format('woff2')}
+    @font-face{font-family:'Inter';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/inter-latin-800-normal.woff2') format('woff2')}
+    @font-face{font-family:'Playfair Display';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/playfair-display-latin-600-normal.woff2') format('woff2')}
+    @font-face{font-family:'Playfair Display';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/playfair-display-latin-700-normal.woff2') format('woff2')}
+    @font-face{font-family:'Playfair Display';font-style:italic;font-weight:600;font-display:swap;src:url('/fonts/playfair-display-latin-600-italic.woff2') format('woff2')}
     :root {
       --bg: #0F1117;
       --bg-card: rgba(22,24,34,0.7);

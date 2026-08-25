@@ -36,7 +36,7 @@ import {
   FolderLock,
   FileCode
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 import { BrowseView } from './simulator/BrowseView';
 import { NewsView } from './simulator/NewsView';
 import { HealthView } from './simulator/HealthView';
@@ -1009,7 +1009,7 @@ export const AppSimulator: React.FC<{ version?: string }> = ({ version }) => {
             
             {/* TAB: DASHBOARD */}
             {activeTab === 'dashboard' && (
-              <motion.div
+              <m.div
                 key="dashboard-view"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1250,7 +1250,7 @@ export const AppSimulator: React.FC<{ version?: string }> = ({ version }) => {
                     </div>
                   )}
                 </div>
-              </motion.div>
+              </m.div>
             )}
 
             {/* TAB: BROWSE */}
@@ -1309,7 +1309,7 @@ export const AppSimulator: React.FC<{ version?: string }> = ({ version }) => {
 
             {/* TAB: INSTALLED */}
             {activeTab === 'installed' && (
-              <motion.div
+              <m.div
                 key="installed-view"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1369,12 +1369,12 @@ export const AppSimulator: React.FC<{ version?: string }> = ({ version }) => {
                     ))}
                   </div>
                 )}
-              </motion.div>
+              </m.div>
             )}
 
             {/* TAB: UPDATES */}
             {activeTab === 'updates' && (
-              <motion.div
+              <m.div
                 key="updates-view"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1431,12 +1431,12 @@ export const AppSimulator: React.FC<{ version?: string }> = ({ version }) => {
                     ))}
                   </div>
                 )}
-              </motion.div>
+              </m.div>
             )}
 
             {/* TAB: DISK */}
             {activeTab === 'disk' && (
-              <motion.div
+              <m.div
                 key="disk-view"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1519,12 +1519,12 @@ export const AppSimulator: React.FC<{ version?: string }> = ({ version }) => {
                     </div>
                   ))}
                 </div>
-              </motion.div>
+              </m.div>
             )}
 
             {/* TAB: ACTIVITY */}
             {activeTab === 'activity' && (
-              <motion.div
+              <m.div
                 key="activity-view"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1579,12 +1579,12 @@ export const AppSimulator: React.FC<{ version?: string }> = ({ version }) => {
                     </div>
                   </div>
                 )}
-              </motion.div>
+              </m.div>
             )}
 
             {/* TAB: SETTINGS */}
             {activeTab === 'settings' && (
-              <motion.div
+              <m.div
                 key="settings-view"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1802,7 +1802,7 @@ export const AppSimulator: React.FC<{ version?: string }> = ({ version }) => {
                   <Shield size={14} className="text-slate-400" />
                   <span>Other package sources (Snap packages, Debian .deb index repositories, standard Webapp Nativefiers) can be re-enabled here if preferred.</span>
                 </div>
-              </motion.div>
+              </m.div>
             )}
 
           </AnimatePresence>
@@ -1813,7 +1813,7 @@ export const AppSimulator: React.FC<{ version?: string }> = ({ version }) => {
       <AnimatePresence>
         {installStep && (
           <div className="absolute inset-0 bg-black/85 backdrop-blur-sm z-30 flex items-center justify-center p-4">
-            <motion.div
+            <m.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
@@ -2000,7 +2000,7 @@ export const AppSimulator: React.FC<{ version?: string }> = ({ version }) => {
                 </div>
               )}
 
-            </motion.div>
+            </m.div>
           </div>
         )}
       </AnimatePresence>

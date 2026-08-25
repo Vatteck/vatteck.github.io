@@ -8,7 +8,7 @@ import {
   FileCode,
   AlertTriangle
 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 
 interface PkgbuildViewerProps {
   pkgName: string;
@@ -147,7 +147,7 @@ package() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 select-none">
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
@@ -235,7 +235,7 @@ package() {
             </div>
           </div>
         </div>
-      </motion.div>
+      </m.div>
     </div>
   );
 };

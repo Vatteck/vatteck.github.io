@@ -1,9 +1,46 @@
-import { useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
 import { AtlasLogo } from './components/AtlasLogo';
-import { AppSimulator } from './components/AppSimulator';
-import { ScreenshotShowcase } from './components/ScreenshotShowcase';
 import { InstallGuide } from './components/InstallGuide';
 import { useLatestVersion } from './hooks/useLatestVersion';
+
+// Below-the-fold heavy sections: kept out of the initial parse so the hero
+// paints fast, and only loaded once they approach the viewport (700px margin)
+// so their parse never lands in the post-FCP TBT window. The build-time
+// prerender scrolls the page, which triggers these observers, so the
+// snapshot still contains the full content.
+const AppSimulator = lazy(() =>
+  import('./components/AppSimulator').then((m) => ({ default: m.AppSimulator }))
+);
+const ScreenshotShowcase = lazy(() =>
+  import('./components/ScreenshotShowcase').then((m) => ({ default: m.ScreenshotShowcase }))
+);
+
+function LazyBelowFold({ children }: { children: ReactNode }) {
+  const [show, setShow] = useState(false);
+  const ref = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      setShow(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setShow(true);
+            io.disconnect();
+          }
+        }
+      },
+      { rootMargin: '700px 0px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return <div ref={ref}>{show ? children : null}</div>;
+}
 import { 
   Github, 
   Layers, 
@@ -22,7 +59,7 @@ import {
   Sparkles,
   Star
 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 
 export default function App() {
   const [copied, setCopied] = useState(false);
@@ -105,48 +142,48 @@ export default function App() {
       <section className="relative z-10 max-w-6xl mx-auto px-4 pt-12 pb-16 text-center space-y-8 select-none">
         
         {/* Soft Release version pill heading */}
-        <motion.div 
+        <m.div 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="inline-flex items-center gap-2 px-3 py-1 bg-rose-950/25 border border-rose-900/40 rounded-full text-xs font-semibold tracking-wide text-rose-300 mx-auto select-none"
         >
           <Sparkles size={12} className="text-rose-450 animate-pulse" />
           <span>Latest Release: {version}</span>
-        </motion.div>
+        </m.div>
 
         {/* Dynamic Display Slogan Heading */}
         <div className="space-y-4 max-w-3xl mx-auto">
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-[1.1]"
           >
             The AUR Isn't as Safe as It Used to Be.<br />Atlas <span className="text-transparent bg-clip-text bg-gradient-to-r from-atlas-red-bright via-pink-500 to-rose-400">Makes It Legible</span>
-          </motion.div>
+          </m.div>
           
-          <motion.p 
+          <m.p 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="text-sm sm:text-base text-slate-400 font-sans tracking-wide leading-relaxed"
           >
             PKGBUILD diffs in a terminal are overwhelming - most people skip past them. Atlas surfaces suspicious build patterns, maintainer changes, and source-level trust signals in a clean GUI, so you actually see the warning before you click install. Arch repos, AUR, Flatpak, and AppImage - all in one app, with themes, accent colors, and a ~30% faster launch in 0.14.
-          </motion.p>
+          </m.p>
         </div>
 
         {/* Big centered visual emblem showcasing craftsmanship */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: 'spring', stiffness: 80, delay: 0.25 }}
           className="flex justify-center"
         >
           <AtlasLogo size={140} withGlow={true} />
-        </motion.div>
+        </m.div>
 
         {/* Dynamic inline CLI install command wrapper */}
-        <motion.div 
+        <m.div 
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
@@ -176,10 +213,10 @@ export default function App() {
             </button>
           </div>
           <span className="text-[10px] text-slate-500 font-mono text-center block">Instantly compiled and packaged locally through standard Arch build chains.</span>
-        </motion.div>
+        </m.div>
 
         {/* Feature badge summaries under emblem */}
-        <motion.div 
+        <m.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
@@ -201,7 +238,7 @@ export default function App() {
             <ArrowRight size={13} className="text-indigo-400" />
             <span>AppImage Integrations</span>
           </span>
-        </motion.div>
+        </m.div>
 
       </section>
 
@@ -217,13 +254,21 @@ export default function App() {
           </div>
 
           {/* Interactive mounted simulation console app */}
-          <AppSimulator version={version} />
+          <LazyBelowFold>
+            <Suspense fallback={null}>
+              <AppSimulator version={version} />
+            </Suspense>
+          </LazyBelowFold>
 
         </div>
       </section>
 
       {/* --- SECTION: SCREENSHOT SHOWCASE --- */}
-      <ScreenshotShowcase />
+      <LazyBelowFold>
+        <Suspense fallback={null}>
+          <ScreenshotShowcase />
+        </Suspense>
+      </LazyBelowFold>
 
       {/* --- SECTION: BENTO GRID HIGHLIGHTS/FEATURES --- */}
       <section id="features" className="py-20 bg-[#07090e] relative z-10">

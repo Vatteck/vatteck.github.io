@@ -19,7 +19,7 @@ import {
   ChevronRight,
   Sparkles
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 
 interface HealthViewProps {
   onNavigate: (tab: SidebarTab) => void;
@@ -147,7 +147,7 @@ export const HealthView: React.FC<HealthViewProps> = ({
   ];
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
@@ -156,7 +156,7 @@ export const HealthView: React.FC<HealthViewProps> = ({
       {/* Toast Notification */}
       <AnimatePresence>
         {toastMessage && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
@@ -164,14 +164,14 @@ export const HealthView: React.FC<HealthViewProps> = ({
           >
             <CheckCircle className="w-4 h-4 text-emerald-400" />
             <span>{toastMessage}</span>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
       <AnimatePresence mode="wait">
         {!viewingPacnews ? (
           /* Main System Health Dashboard */
-          <motion.div
+          <m.div
             key="dashboard"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -260,10 +260,10 @@ export const HealthView: React.FC<HealthViewProps> = ({
                 );
               })}
             </div>
-          </motion.div>
+          </m.div>
         ) : (
           /* Pacnew File Management Sub-View */
-          <motion.div
+          <m.div
             key="pacnew"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -361,9 +361,9 @@ export const HealthView: React.FC<HealthViewProps> = ({
                 })
               )}
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </m.div>
   );
 };

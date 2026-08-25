@@ -6,7 +6,7 @@ import {
   Circle,
   CheckCheck
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 
 interface NewsViewProps {}
 
@@ -68,7 +68,7 @@ export const NewsView: React.FC<NewsViewProps> = () => {
   };
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
@@ -137,7 +137,7 @@ export const NewsView: React.FC<NewsViewProps> = () => {
               {/* Expandable Body */}
               <AnimatePresence initial={false}>
                 {isExpanded && (
-                  <motion.div
+                  <m.div
                     initial={{ height: 0 }}
                     animate={{ height: 'auto' }}
                     exit={{ height: 0 }}
@@ -146,13 +146,13 @@ export const NewsView: React.FC<NewsViewProps> = () => {
                     <div className="px-4 pb-4 pt-1 border-t border-slate-900 text-[11px] text-slate-400 leading-relaxed font-mono whitespace-pre-wrap bg-[#0e111b] select-text">
                       {item.summary}
                     </div>
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </div>
           );
         })}
       </div>
-    </motion.div>
+    </m.div>
   );
 };

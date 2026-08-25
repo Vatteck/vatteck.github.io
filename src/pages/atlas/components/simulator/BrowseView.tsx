@@ -17,7 +17,7 @@ import {
   Check,
   Download
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 
 interface BrowseViewProps {
   onNavigate: (tab: SidebarTab) => void;
@@ -124,7 +124,7 @@ export const BrowseView: React.FC<BrowseViewProps> = ({
   ];
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
@@ -133,7 +133,7 @@ export const BrowseView: React.FC<BrowseViewProps> = ({
       {/* Toast Notification */}
       <AnimatePresence>
         {toastMessage && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
@@ -141,7 +141,7 @@ export const BrowseView: React.FC<BrowseViewProps> = ({
           >
             <span className="text-amber-500 font-bold">ℹ️</span>
             <span>{toastMessage}</span>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
@@ -285,6 +285,6 @@ export const BrowseView: React.FC<BrowseViewProps> = ({
           })}
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 };

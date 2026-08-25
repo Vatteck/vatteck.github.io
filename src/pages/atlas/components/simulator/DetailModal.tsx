@@ -15,7 +15,7 @@ import {
   CheckCircle,
   AlertTriangle
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 
 interface DetailModalProps {
   pkg: AppPackage | null;
@@ -74,7 +74,7 @@ export const DetailModal: React.FC<DetailModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 select-none">
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
@@ -129,7 +129,7 @@ export const DetailModal: React.FC<DetailModalProps> = ({
         {/* Modal Content Area */}
         <div className="flex-grow overflow-y-auto p-6 min-h-0 select-text">
           <AnimatePresence mode="wait">
-            <motion.div
+            <m.div
               key={activeTab}
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
@@ -443,7 +443,7 @@ export const DetailModal: React.FC<DetailModalProps> = ({
                   )}
                 </div>
               )}
-            </motion.div>
+            </m.div>
           </AnimatePresence>
         </div>
 
@@ -479,7 +479,7 @@ export const DetailModal: React.FC<DetailModalProps> = ({
             )}
           </div>
         </div>
-      </motion.div>
+      </m.div>
     </div>
   );
 };

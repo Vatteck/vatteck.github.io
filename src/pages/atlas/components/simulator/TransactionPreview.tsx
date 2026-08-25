@@ -12,7 +12,7 @@ import {
   Download,
   X
 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 
 interface TransactionPreviewProps {
   pkg: AppPackage | null;
@@ -76,7 +76,7 @@ export const TransactionPreview: React.FC<TransactionPreviewProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 select-none">
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
@@ -213,7 +213,7 @@ export const TransactionPreview: React.FC<TransactionPreviewProps> = ({
             </button>
           </div>
         </div>
-      </motion.div>
+      </m.div>
     </div>
   );
 };

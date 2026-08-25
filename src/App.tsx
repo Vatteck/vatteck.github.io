@@ -13,7 +13,7 @@ import {
   Send,
   MessageSquare
 } from 'lucide-react';
-import { motion, AnimatePresence, useScroll, useSpring } from 'motion/react';
+import { m, LazyMotion, domAnimation, AnimatePresence, useScroll, useSpring } from 'motion/react';
 import {
   bioData,
   deepDiveData,
@@ -109,7 +109,7 @@ const SectionHeader = ({
   lead?: string;
   size?: 'md' | 'lg';
 }) => (
-  <motion.div
+  <m.div
     initial={{ opacity: 0, y: 12 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, margin: '-80px' }}
@@ -134,7 +134,7 @@ const SectionHeader = ({
       {title}
     </h2>
     {lead && <p className="relative mt-3 max-w-2xl leading-relaxed text-slate-400">{lead}</p>}
-  </motion.div>
+  </m.div>
 );
 
 const StatusMark = ({ status, version }: { status: ProjectStatus; version?: string }) => (
@@ -218,14 +218,14 @@ const ProjectDialog = ({
   }, [onClose]);
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
       className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-black/85 p-4 backdrop-blur-md sm:p-6"
     >
-      <motion.div
+      <m.div
         initial={{ scale: 0.97, opacity: 0, y: 8 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.97, opacity: 0, y: 8 }}
@@ -354,8 +354,8 @@ const ProjectDialog = ({
             )}
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 };
 
@@ -376,7 +376,7 @@ const ProjectCard = ({
 
   return (
     <>
-      <motion.article
+      <m.article
         initial={{ opacity: 0, y: 18 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-60px' }}
@@ -458,7 +458,7 @@ const ProjectCard = ({
             )}
           </div>
         </div>
-      </motion.article>
+      </m.article>
 
       <AnimatePresence>
         {isOpen && (
@@ -485,14 +485,14 @@ const TraceDivider = () => (
       className="trace"
       focusable="false"
     >
-      <motion.path
+      <m.path
         d="M0 15 H280 L300 7 L310 23 L320 15 H560 L580 9 L590 21 L600 15 H850 L870 4 L885 26 L895 15 H1090 V25 H1150"
         initial={{ pathLength: 0 }}
         whileInView={{ pathLength: 1 }}
         viewport={{ once: true, margin: '-60px' }}
         transition={{ duration: 1.1, ease: 'easeOut' }}
       />
-      <motion.path
+      <m.path
         className="fault"
         d="M850 15 L870 4 L885 26 L895 15"
         initial={{ opacity: 0 }}
@@ -500,7 +500,7 @@ const TraceDivider = () => (
         viewport={{ once: true, margin: '-60px' }}
         transition={{ delay: 1, duration: 0.35 }}
       />
-      <motion.g
+      <m.g
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-60px' }}
@@ -508,8 +508,8 @@ const TraceDivider = () => (
       >
         <circle cx="8" cy="15" r="5" fill="none" stroke="rgba(231, 161, 94, 0.4)" />
         <circle cx="8" cy="15" r="2" fill="rgba(231, 161, 94, 0.6)" />
-      </motion.g>
-      <motion.g
+      </m.g>
+      <m.g
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-60px' }}
@@ -517,7 +517,7 @@ const TraceDivider = () => (
       >
         <circle cx="1150" cy="25" r="5" fill="none" stroke="rgba(231, 161, 94, 0.4)" />
         <circle cx="1150" cy="25" r="2" fill="rgba(231, 161, 94, 0.6)" />
-      </motion.g>
+      </m.g>
     </svg>
   </div>
 );
@@ -813,7 +813,7 @@ const TerminalEasterEgg = () => {
 
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.96, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 12 }}
@@ -862,7 +862,7 @@ const TerminalEasterEgg = () => {
                 className="w-full border-none bg-transparent font-mono text-[11px] text-white outline-none"
               />
             </form>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>
@@ -958,8 +958,9 @@ export default function App() {
   const [leadProject, ...restProjects] = projectsData;
 
   return (
+    <LazyMotion features={domAnimation} strict>
     <div className="min-h-screen">
-      <motion.div
+      <m.div
         className="scroll-progress"
         style={{ scaleX: progressScaleX }}
         aria-hidden="true"
@@ -968,7 +969,7 @@ export default function App() {
 
       <AnimatePresence>
         {showScrollTop && (
-          <motion.button
+          <m.button
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 12 }}
@@ -977,7 +978,7 @@ export default function App() {
             aria-label="Scroll to top"
           >
             <ArrowUp size={16} />
-          </motion.button>
+          </m.button>
         )}
       </AnimatePresence>
 
@@ -1032,9 +1033,9 @@ export default function App() {
         </div>
 
         <div className="relative mx-auto grid max-w-7xl items-start gap-14 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-28">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+          <m.div
+            initial={{ y: 20 }}
+            animate={{ y: 0 }}
             transition={{ duration: 0.6 }}
           >
             <p className="mb-6 flex flex-wrap items-center gap-3 font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-substrate-accent sm:text-xs">
@@ -1084,15 +1085,15 @@ export default function App() {
               github.com/Vatteck
               <ExternalLink size={11} className="text-slate-600" aria-hidden="true" />
             </a>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.12 }}
           >
             <ScopePanel />
-          </motion.div>
+          </m.div>
         </div>
       </header>
 
@@ -1174,7 +1175,7 @@ export default function App() {
 
             <div className="relative grid gap-5 md:grid-cols-2">
               {deepDiveData.map((item, idx) => (
-                <motion.div
+                <m.div
                   key={item.title}
                   initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -1202,7 +1203,7 @@ export default function App() {
                   </div>
                   <h3 className="mb-2 text-base font-bold text-slate-50">{item.title}</h3>
                   <p className="text-sm leading-relaxed text-slate-400">{item.description}</p>
-                </motion.div>
+                </m.div>
               ))}
             </div>
           </div>
@@ -1534,5 +1535,6 @@ export default function App() {
         </div>
       </footer>
     </div>
+    </LazyMotion>
   );
 }
