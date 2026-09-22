@@ -1,3 +1,0 @@
-# Cloudflare Pages redirects — inert on GitHub Pages.
-# Canonical host stays the apex, exactly like GitHub Pages serves today.
-https://www.vatteck.com/* https://vatteck.com/:splat 301
