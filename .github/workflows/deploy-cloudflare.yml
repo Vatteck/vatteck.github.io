@@ -1,0 +1,73 @@
+# Deploy the built site to Cloudflare Pages (direct upload).
+#
+# Lives alongside the existing GitHub Pages deploy and stays INERT until two
+# repository secrets exist (Settings ▸ Secrets and variables ▸ Actions):
+#
+#   CLOUDFLARE_API_TOKEN   — custom token: Account ▸ Cloudflare Pages ▸ Edit
+#   CLOUDFLARE_ACCOUNT_ID  — Workers & Pages ▸ Account ID (right-hand side)
+#
+# Until they are set, the publish step skips itself with a notice and the
+# workflow stays green. The new host is reachable for review, before any DNS
+# change, at:
+#   https://vatteck-portfolio.pages.dev
+#
+# The cutover is deliberate and separate: attach vatteck.com + www.vatteck.com
+# to the Pages project, then retire the four GitHub Pages apex A records.
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "cloudflare-pages-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run lint
+
+      - name: Build project
+        env:
+          # ubuntu-latest ships Chrome; the postbuild prerender step needs it.
+          CHROME_PATH: /usr/bin/google-chrome
+        run: npm run build
+
+      - name: Cloudflare secrets present?
+        id: cf
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -n "$TOKEN" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Cloudflare Pages::CLOUDFLARE_API_TOKEN is not set yet — skipping the Cloudflare deploy. Add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID in Settings ▸ Secrets and variables ▸ Actions to enable it."
+          fi
+
+      - name: Publish to Cloudflare Pages
+        if: steps.cf.outputs.ready == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=vatteck-portfolio --branch=main
